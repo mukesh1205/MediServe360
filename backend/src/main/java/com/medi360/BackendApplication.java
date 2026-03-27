@@ -8,7 +8,6 @@ public class BackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackendApplication.class, args);
-		System.out.println("Mukesh");
-		System.out.println("Reddy");
+		System.out.print("mukesh commited");
 	}
 }
