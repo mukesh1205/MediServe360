@@ -1,9 +1,15 @@
 package com.medi360.PatientDoctorRegestration.Doctor;
 
+import java.util.List;
+
+import com.medi360.AppointmentSchedule.Appointment.Appointment;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,6 +22,14 @@ public class Doctor {
 	private String doctorDepartment;
 	private String doctorAvailabilitSchedule;
 	
+	@OneToMany(mappedBy="doctor",cascade=CascadeType.ALL)
+	private List<Appointment> appointments;
+	public List<Appointment> getAppointments() {
+		return appointments;
+	}
+	public void setAppointments(List<Appointment> appointments) {
+		this.appointments = appointments;
+	}
 	public int getDoctorId() {
 		return DoctorId;
 	}

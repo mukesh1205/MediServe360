@@ -1,9 +1,16 @@
 package com.medi360.IdentityAccessManagement.user;
 
+import java.util.List;
+
+import com.medi360.IdentityAccessManagement.Auditlog.Auditlog;
+import com.medi360.NotificationsAlerts.Notification.Notification;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -14,6 +21,17 @@ public class User {
 	private String role;
 	private String email;
 	private String phone;
+	@OneToMany(mappedBy="userId",cascade=CascadeType.ALL)
+	private List<Auditlog> auditLogs;
+	
+	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
+	private List<Notification> notifications;
+	public List<Auditlog> getAuditLogs() {
+		return auditLogs;
+	}
+	public void setAuditLogs(List<Auditlog> auditLogs) {
+		this.auditLogs = auditLogs;
+	}
 	public int getUserId() {
 		return UserId;
 	}
