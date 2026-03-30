@@ -1,9 +1,15 @@
 package com.medi360.WardBedManagenment.Ward;
 
+import java.util.List;
+
+import com.medi360.WardBedManagenment.Bed.Bed;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Ward {
@@ -14,6 +20,9 @@ public class Ward {
 	private String wardname;
 	private int wardcapacity;
 	private String wardstatus;
+	
+	@OneToMany(mappedBy="ward",cascade=CascadeType.ALL)
+	private List<Bed> beds;
 	public int getWardId() {
 		return wardId;
 	}
