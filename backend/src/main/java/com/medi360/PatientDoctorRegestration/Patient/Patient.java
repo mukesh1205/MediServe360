@@ -3,6 +3,8 @@ package com.medi360.PatientDoctorRegestration.Patient;
 import java.util.List;
 
 import com.medi360.AppointmentSchedule.Appointment.Appointment;
+import com.medi360.BillingInsuranceManagement.IInsuranceClaim.InsuranceClaim;
+import com.medi360.BillingInsuranceManagement.Invoice.Invoice;
 import com.medi360.WardBedManagenment.Bed.Bed;
 
 import jakarta.persistence.CascadeType;
@@ -34,6 +36,30 @@ public class Patient {
 	
 	@OneToOne
 	private Bed bed;
+	
+	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
+	private List<Invoice> invoices;
+	
+	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
+	private List<InsuranceClaim> claims;
+	public List<InsuranceClaim> getClaims() {
+		return claims;
+	}
+	public void setClaims(List<InsuranceClaim> claims) {
+		this.claims = claims;
+	}
+	public Bed getBed() {
+		return bed;
+	}
+	public void setBed(Bed bed) {
+		this.bed = bed;
+	}
+	public List<Invoice> getInvoices() {
+		return invoices;
+	}
+	public void setInvoices(List<Invoice> invoices) {
+		this.invoices = invoices;
+	}
 	public List<Appointment> getAppointments() {
 		return appointments;
 	}

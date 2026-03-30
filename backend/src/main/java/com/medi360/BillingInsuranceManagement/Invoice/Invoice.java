@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Invoice {
@@ -18,6 +20,8 @@ public class Invoice {
 	private Date InvoiceDate;
 	private String status;
 	
+	@ManyToOne
+	@JoinColumn(name="patient_id")
 	private Patient patient;
 
 	public Invoice() {
