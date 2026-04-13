@@ -1,8 +1,6 @@
-package com.medi360.IdentityAccessManagement.Auditlog;
+package com.medi360.entities;
 
 import java.sql.Timestamp;
-
-import com.medi360.IdentityAccessManagement.user.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

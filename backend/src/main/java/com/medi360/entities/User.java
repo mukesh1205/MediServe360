@@ -1,9 +1,6 @@
-package com.medi360.IdentityAccessManagement.user;
+package com.medi360.entities;
 
 import java.util.List;
-
-import com.medi360.IdentityAccessManagement.Auditlog.Auditlog;
-import com.medi360.NotificationsAlerts.Notification.Notification;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

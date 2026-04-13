@@ -1,8 +1,6 @@
-package com.medi360.PatientDoctorRegestration.Doctor;
+package com.medi360.entities;
 
 import java.util.List;
-
-import com.medi360.AppointmentSchedule.Appointment.Appointment;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

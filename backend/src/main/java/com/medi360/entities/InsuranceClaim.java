@@ -1,6 +1,4 @@
-package com.medi360.BillingInsuranceManagement.IInsuranceClaim;
-
-import com.medi360.PatientDoctorRegestration.Patient.Patient;
+package com.medi360.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
