@@ -1,8 +1,6 @@
-package com.medi360.NotificationsAlerts.Notification;
+package com.medi360.entities;
 
 import java.util.Date;
-
-import com.medi360.IdentityAccessManagement.user.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

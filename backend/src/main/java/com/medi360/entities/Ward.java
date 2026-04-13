@@ -1,8 +1,6 @@
-package com.medi360.WardBedManagenment.Ward;
+package com.medi360.entities;
 
 import java.util.List;
-
-import com.medi360.WardBedManagenment.Bed.Bed;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

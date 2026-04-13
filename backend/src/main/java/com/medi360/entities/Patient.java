@@ -1,11 +1,6 @@
-package com.medi360.PatientDoctorRegestration.Patient;
+package com.medi360.entities;
 
 import java.util.List;
-
-import com.medi360.AppointmentSchedule.Appointment.Appointment;
-import com.medi360.BillingInsuranceManagement.IInsuranceClaim.InsuranceClaim;
-import com.medi360.BillingInsuranceManagement.Invoice.Invoice;
-import com.medi360.WardBedManagenment.Bed.Bed;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -34,7 +29,7 @@ public class Patient {
 	@OneToMany(mappedBy="doctor",cascade=CascadeType.ALL)
 	private List<Appointment> appointments;
 	
-	@OneToOne
+	@OneToOne(mappedBy="patient",cascade=CascadeType.ALL)
 	private Bed bed;
 	
 	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)

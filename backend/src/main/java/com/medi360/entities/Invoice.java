@@ -1,8 +1,6 @@
-package com.medi360.BillingInsuranceManagement.Invoice;
+package com.medi360.entities;
 
 import java.util.Date;
-
-import com.medi360.PatientDoctorRegestration.Patient.Patient;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

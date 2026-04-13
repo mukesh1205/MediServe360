@@ -1,9 +1,7 @@
-package com.medi360.AnalyticsReporting.KPIReport;
+package com.medi360.entities;
 
 
 import java.util.Date;
-
-import com.medi360.ComplianceAuditManagement.ComplianceReport.ComplianceReport;
 
 import jakarta.persistence.Entity;
 

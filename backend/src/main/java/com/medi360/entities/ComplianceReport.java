@@ -1,4 +1,4 @@
-package com.medi360.ComplianceAuditManagement.ComplianceReport;
+package com.medi360.entities;
 
 import java.util.Date;
 

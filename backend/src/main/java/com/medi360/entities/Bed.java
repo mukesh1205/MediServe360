@@ -1,7 +1,4 @@
-package com.medi360.WardBedManagenment.Bed;
-
-import com.medi360.PatientDoctorRegestration.Patient.Patient;
-import com.medi360.WardBedManagenment.Ward.Ward;
+package com.medi360.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +19,7 @@ public class Bed {
 	private Ward ward;
 	
 	@OneToOne
+	@JoinColumn(name="patient_id")
 	private Patient patient;
 	private String bedStatus;
 	public int getBedId() {

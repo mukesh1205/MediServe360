@@ -1,7 +1,4 @@
-package com.medi360.AppointmentSchedule.Appointment;
-
-import com.medi360.PatientDoctorRegestration.Doctor.Doctor;
-import com.medi360.PatientDoctorRegestration.Patient.Patient;
+package com.medi360.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
