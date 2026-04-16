@@ -18,7 +18,7 @@ public class User {
 	private String role;
 	private String email;
 	private String phone;
-	@OneToMany(mappedBy="userId",cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
 	private List<Auditlog> auditLogs;
 	
 	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
