@@ -26,7 +26,7 @@ public class Patient {
 	private String patientMedicalHistory;
 	private String patientStatus;
 	
-	@OneToMany(mappedBy="doctor",cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
 	private List<Appointment> appointments;
 	
 	@OneToOne(mappedBy="patient",cascade=CascadeType.ALL)
