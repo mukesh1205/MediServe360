@@ -2,10 +2,12 @@ package com.medi360.entities;
 
 import java.util.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class ComplianceReport {
@@ -17,6 +19,8 @@ public class ComplianceReport {
 	private String reportScope;
 	private String reportmatrics;
 	private Date reportgeneratedDate;
+	@OneToOne(cascade=CascadeType.ALL,mappedBy="report")
+	private KPIReport report;
 	public ComplianceReport() {
 		super();
 	}

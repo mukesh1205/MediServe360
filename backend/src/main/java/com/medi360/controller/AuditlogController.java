@@ -26,11 +26,7 @@ public class AuditlogController {
 	AuditlogService auds;
 	
 	@PostMapping("/insertauditlogdata")
-	@Operation(summary = "Get user by ID", description = "Returns a single user object based on ID")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully retrieved user"),
-        @ApiResponse(responseCode = "404", description = "User not found")
-    })
+	
 	public ResponseEntity<AuditlogResponseDTO> f1(@RequestBody AuditLogDTO ald){
 		Auditlog l=this.auds.insertUsers(ald.getAuditlog());
 		AuditlogResponseDTO aud=new AuditlogResponseDTO();

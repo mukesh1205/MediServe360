@@ -3,12 +3,22 @@ package com.medi360.entities;
 
 import java.util.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class KPIReport {
-	
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="reportID")
 	private ComplianceReport report;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int KPIId;
 	private String KPIReportScope;
 	private String KPImetrics;
 	private Date KPIgeneratedDate;

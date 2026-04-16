@@ -18,7 +18,7 @@ public class Notification {
 	
 	@ManyToOne
 	@JoinColumn(name="user_id")
-	private User userId;
+	private User user;
 	
 	private String notificationmessage;
 	private String notificationcategory;
@@ -30,7 +30,7 @@ public class Notification {
 	public Notification(User userId, String notificationmessage, String notificationcategory, String notificationStatus,
 			Date notificationCreatedDate) {
 		super();
-		this.userId = userId;
+		this.user = userId;
 		this.notificationmessage = notificationmessage;
 		this.notificationcategory = notificationcategory;
 		this.notificationStatus = notificationStatus;
@@ -43,10 +43,10 @@ public class Notification {
 		this.notificationId = notificationId;
 	}
 	public User getUserId() {
-		return userId;
+		return user;
 	}
 	public void setUserId(User userId) {
-		this.userId = userId;
+		this.user = userId;
 	}
 	public String getNotificationmessage() {
 		return notificationmessage;

@@ -22,18 +22,14 @@ public class UserController {
 	@Autowired
 	UserService us;
 	
-//	@PostMapping("/insertuserdata")
-//	@Operation(summary = "Get user by ID", description = "Returns a single user object based on ID")
-//    @ApiResponses(value = {
-//        @ApiResponse(responseCode = "200", description = "Successfully retrieved user"),
-//        @ApiResponse(responseCode = "404", description = "User not found")
-//    })
-//	public ResponseEntity<UserResponseDTO> f1(@RequestBody UserDTO ald){
-//		User l=this.us.insertUsers(ald.getUser());
-//		UserResponseDTO aud=new UserResponseDTO();
-//		aud.setUser(l);
-//		aud.setStatusCode(200);
-//		aud.setMessage("Inserted successfully");
-//		return ResponseEntity.status(201).body(aud);
-//	}
+	@PostMapping("/insertuserdata")
+	
+	public ResponseEntity<UserResponseDTO> f1(@RequestBody UserDTO ald){
+		User l=this.us.insertUsers(ald.getUser());
+		UserResponseDTO aud=new UserResponseDTO();
+		aud.setUser(l);
+		aud.setStatusCode(200);
+		aud.setMessage("Inserted successfully");
+		return ResponseEntity.status(201).body(aud);
+	}
 }

@@ -12,7 +12,7 @@ public class UserService {
 	@Autowired
 	private UserRepository userrepo;
 	
-//	public User insertUsers(User u) {
-//		
-//	}
+	public User insertUsers(User u) {
+		return this.userrepo.save(u);
+	}
 }
