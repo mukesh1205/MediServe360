@@ -1,9 +1,11 @@
-package com.medi360.Service;
+package com.medi360.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.medi360.Repository.NotificationRepository;
+import com.medi360.db.NotificationRepository;
 
+@Service
 public class NotificationService {
 	
 	@Autowired
