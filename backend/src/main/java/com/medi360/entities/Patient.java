@@ -1,5 +1,6 @@
 package com.medi360.entities;
 
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -18,12 +19,17 @@ public class Patient {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int PatientID;
+	@Column
 	private String patientname;
-	private String patientDOB;
+	@Column
+	private Date patientDOB;
+	@Column
 	private String patientgender;
+	@Column
 	private String patientPhoneNumber;
 	@Column(length=100)
 	private String patientMedicalHistory;
+	@Column
 	private String patientStatus;
 	
 	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
@@ -74,10 +80,10 @@ public class Patient {
 	public void setPatientname(String patientname) {
 		this.patientname = patientname;
 	}
-	public String getPatientDOB() {
+	public Date getPatientDOB() {
 		return patientDOB;
 	}
-	public void setPatientDOB(String patientDOB) {
+	public void setPatientDOB(Date patientDOB) {
 		this.patientDOB = patientDOB;
 	}
 	public String getPatientgender() {
@@ -98,7 +104,7 @@ public class Patient {
 	public void setPatientMedicalHistory(String patientMedicalHistory) {
 		this.patientMedicalHistory = patientMedicalHistory;
 	}
-	public Patient(String patientname, String patientDOB, String patientgender, String patientPhoneNumber,
+	public Patient(String patientname, Date patientDOB, String patientgender, String patientPhoneNumber,
 			String patientMedicalHistory, String patientStatus) {
 		super();
 		this.patientname = patientname;

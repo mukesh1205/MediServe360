@@ -1,5 +1,6 @@
 package com.medi360.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,24 +14,27 @@ public class InsuranceClaim {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int claimId;
+	@Column
 	@ManyToOne
 	@JoinColumn(name="patient_id")
-	private Patient patient;
+	private int patientId;
+	@Column
 	private String policynumber;
+	@Column
 	private double amount;
+	@Column
 	private String status;
-	
 	public int getClaimId() {
 		return claimId;
 	}
 	public void setClaimId(int claimId) {
 		this.claimId = claimId;
 	}
-	public Patient getPatient() {
-		return patient;
+	public int getPatientId() {
+		return patientId;
 	}
-	public void setPatient(Patient patient) {
-		this.patient = patient;
+	public void setPatientId(int patientId) {
+		this.patientId = patientId;
 	}
 	public String getPolicynumber() {
 		return policynumber;
@@ -50,17 +54,19 @@ public class InsuranceClaim {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public InsuranceClaim(Patient patient, String policynumber, double amount, String status) {
+	public InsuranceClaim(int claimId, int patientId, String policynumber, double amount, String status) {
 		super();
-		this.patient = patient;
+		this.claimId = claimId;
+		this.patientId = patientId;
 		this.policynumber = policynumber;
 		this.amount = amount;
 		this.status = status;
 	}
 	public InsuranceClaim() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
-	
+		
 	
 	
 }
