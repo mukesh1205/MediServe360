@@ -15,7 +15,7 @@ public class BedService {
 		this.bedRepository=bedRepository;
 	}
 	
-	public Bed CreateBed(Bed bed) {
+	public Bed createBed(Bed bed) {
 		return bedRepository.save(bed);
 	}
 	public List<Bed> getAllBeds(){
@@ -28,16 +28,9 @@ public class BedService {
 		return bedRepository.findByWardId(wardId);
 	}
 	
-	public Bed UpdateBed(int bedId,Bed updatedBed) {
-		Bed existingBed=bedRepository.findById(bedId).orElse(null);
-		if(existingBed!=null) {
-			existingBed.setWard(updatedBed.getWard());
-			existingBed.setPatient(updatedBed.getPatient());
-			existingBed.setBedStatus(updatedBed.getBedStatus());
-			return bedRepository.save(existingBed);
-			
-		}
-		return null;
+	public Bed updateBed(Bed bed) {
+		return bedRepository.save(bed);
+		
 	}
 	public void delete(int bedId) {
 		bedRepository.deleteById(bedId);

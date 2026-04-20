@@ -24,16 +24,8 @@ public class WardService {
 	public Ward getWardById(int wardId) {
 		return wardRepository.findById(wardId).orElse(null);
 	}
-	public Ward updateWard(int wardId,Ward updatedWard) {
-		Ward existingWard=wardRepository.findById(wardId).orElse(null);
-		
-		if(existingWard!=null) {
-			existingWard.setWardname(updatedWard.getWardname());
-			existingWard.setWardstatus(updatedWard.getWardstatus());
-			existingWard.setWardcapacity(updatedWard.getWardcapacity());
-			return wardRepository.save(existingWard);
-		}
-		return null;
+	public Ward updateWard(Ward ward) {
+		return wardRepository.save(ward);
 	}
 	public void deleteWard(int wardId) {
 		wardRepository.deleteById(wardId);
