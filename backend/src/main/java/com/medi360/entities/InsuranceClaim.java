@@ -7,40 +7,41 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name="InsuranceClaim")
 public class InsuranceClaim {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int claimId;
-	@Column
+	private int insuranceClaimId;
 	@ManyToOne
 	@JoinColumn(name="patient_id")
-	private int patientId;
+	private Patient patient;
 	@Column
-	private String policynumber;
+	private String policyNumber;
 	@Column
 	private double amount;
 	@Column
 	private String status;
-	public int getClaimId() {
-		return claimId;
+	public int getInsuranceClaimId() {
+		return insuranceClaimId;
 	}
-	public void setClaimId(int claimId) {
-		this.claimId = claimId;
+	public void setInsuranceClaimId(int claimId) {
+		this.insuranceClaimId = claimId;
 	}
-	public int getPatientId() {
-		return patientId;
+	public Patient getPatient() {
+		return patient;
 	}
-	public void setPatientId(int patientId) {
-		this.patientId = patientId;
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
-	public String getPolicynumber() {
-		return policynumber;
+	public String getPolicyNumber() {
+		return policyNumber;
 	}
-	public void setPolicynumber(String policynumber) {
-		this.policynumber = policynumber;
+	public void setPolicyNumber(String policynumber) {
+		this.policyNumber = policynumber;
 	}
 	public double getAmount() {
 		return amount;
@@ -54,11 +55,11 @@ public class InsuranceClaim {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public InsuranceClaim(int claimId, int patientId, String policynumber, double amount, String status) {
+	public InsuranceClaim(Patient patient, String policyNumber, double amount, String status) {
 		super();
-		this.claimId = claimId;
-		this.patientId = patientId;
-		this.policynumber = policynumber;
+	
+		this.patient = patient;
+		this.policyNumber = policyNumber;
 		this.amount = amount;
 		this.status = status;
 	}
