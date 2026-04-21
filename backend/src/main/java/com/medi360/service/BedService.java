@@ -2,6 +2,7 @@ package com.medi360.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.medi360.db.BedRepository;
@@ -9,7 +10,8 @@ import com.medi360.entities.Bed;
 
 @Service
 public class BedService {
-	private final BedRepository bedRepository;
+	@Autowired
+	private  BedRepository bedRepository;
 	
 	public BedService(BedRepository bedRepository) {
 		this.bedRepository=bedRepository;
@@ -25,7 +27,7 @@ public class BedService {
 		return bedRepository.findById(bedId).orElse(null);
 	}
 	public List<Bed> getBedByWard(int wardId){
-		return bedRepository.findByWardId(wardId);
+		return bedRepository.findByWard_WardId(wardId);
 	}
 	
 	public Bed updateBed(Bed bed) {

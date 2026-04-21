@@ -1,7 +1,9 @@
 package com.medi360.entities;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -21,8 +23,9 @@ public class Patient {
 	private int PatientID;
 	@Column
 	private String patientname;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Column
-	private Date patientDOB;
+	private LocalDate patientDOB;
 	@Column
 	private String patientgender;
 	@Column
@@ -32,15 +35,16 @@ public class Patient {
 	@Column
 	private String patientStatus;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
 	private List<Appointment> appointments;
-	
+	@JsonIgnore
 	@OneToOne(mappedBy="patient",cascade=CascadeType.ALL)
 	private Bed bed;
-	
+	@JsonIgnore
 	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
 	private List<Invoice> invoices;
-	
+	@JsonIgnore
 	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
 	private List<InsuranceClaim> claims;
 	public List<InsuranceClaim> getClaims() {
@@ -80,10 +84,10 @@ public class Patient {
 	public void setPatientname(String patientname) {
 		this.patientname = patientname;
 	}
-	public Date getPatientDOB() {
+	public LocalDate getPatientDOB() {
 		return patientDOB;
 	}
-	public void setPatientDOB(Date patientDOB) {
+	public void setPatientDOB(LocalDate patientDOB) {
 		this.patientDOB = patientDOB;
 	}
 	public String getPatientgender() {
@@ -104,7 +108,7 @@ public class Patient {
 	public void setPatientMedicalHistory(String patientMedicalHistory) {
 		this.patientMedicalHistory = patientMedicalHistory;
 	}
-	public Patient(String patientname, Date patientDOB, String patientgender, String patientPhoneNumber,
+	public Patient(String patientname, LocalDate patientDOB, String patientgender, String patientPhoneNumber,
 			String patientMedicalHistory, String patientStatus) {
 		super();
 		this.patientname = patientname;

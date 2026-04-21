@@ -14,10 +14,9 @@ public class InsuranceClaim {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int claimId;
-	@Column
 	@ManyToOne
 	@JoinColumn(name="patient_id")
-	private int patientId;
+	private Patient patient;
 	@Column
 	private String policynumber;
 	@Column
@@ -30,11 +29,11 @@ public class InsuranceClaim {
 	public void setClaimId(int claimId) {
 		this.claimId = claimId;
 	}
-	public int getPatientId() {
-		return patientId;
+	public Patient getPatient() {
+		return patient;
 	}
-	public void setPatientId(int patientId) {
-		this.patientId = patientId;
+	public void setPatientId(Patient patient) {
+		this.patient = patient;
 	}
 	public String getPolicynumber() {
 		return policynumber;
@@ -54,10 +53,10 @@ public class InsuranceClaim {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public InsuranceClaim(int claimId, int patientId, String policynumber, double amount, String status) {
+	public InsuranceClaim(int claimId, Patient patient, String policynumber, double amount, String status) {
 		super();
 		this.claimId = claimId;
-		this.patientId = patientId;
+		this.patient = patient;
 		this.policynumber = policynumber;
 		this.amount = amount;
 		this.status = status;

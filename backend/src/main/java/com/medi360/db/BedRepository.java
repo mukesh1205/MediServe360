@@ -10,6 +10,6 @@ import com.medi360.entities.Bed;
 @Repository
 public interface BedRepository extends JpaRepository<Bed, Integer> {
 
-	List<Bed> findByWardId(int wardId);
+	List<Bed> findByWard_WardId(int wardId);
 
 }

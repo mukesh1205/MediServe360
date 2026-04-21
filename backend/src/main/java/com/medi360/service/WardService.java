@@ -8,8 +8,8 @@ import com.medi360.entities.Ward;
 
 @Service
 public class WardService {
-	
-	private final WardRepository wardRepository;
+	@Autowired
+	private  WardRepository wardRepository;
 	
 	public WardService(WardRepository wardRepository) {
 		this.wardRepository=wardRepository;
