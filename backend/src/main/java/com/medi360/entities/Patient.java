@@ -1,7 +1,10 @@
+
 package com.medi360.entities;
 
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,17 +17,17 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="patients")
+@Table(name="Patient")
 public class Patient {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int PatientID;
+	private int patientId;
 	@Column
-	private String patientname;
+	private String patientName;
 	@Column
 	private Date patientDOB;
 	@Column
-	private String patientgender;
+	private String patientGender;
 	@Column
 	private String patientPhoneNumber;
 	@Column(length=100)
@@ -33,15 +36,19 @@ public class Patient {
 	private String patientStatus;
 	
 	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
+	@JsonIgnore
 	private List<Appointment> appointments;
 	
 	@OneToOne(mappedBy="patient",cascade=CascadeType.ALL)
+	@JsonIgnore
 	private Bed bed;
 	
 	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
+	@JsonIgnore
 	private List<Invoice> invoices;
 	
 	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
+	@JsonIgnore
 	private List<InsuranceClaim> claims;
 	public List<InsuranceClaim> getClaims() {
 		return claims;
@@ -68,17 +75,17 @@ public class Patient {
 		this.appointments = appointments;
 	}
 	
-	public int getPatientID() {
-		return PatientID;
+	public int getPatientId() {
+		return patientId;
 	}
-	public void setPatientID(int patientID) {
-		PatientID = patientID;
+	public void setPatientId(int patientId) {
+		this.patientId = patientId;
 	}
-	public String getPatientname() {
-		return patientname;
+	public String getPatientName() {
+		return patientName;
 	}
-	public void setPatientname(String patientname) {
-		this.patientname = patientname;
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
 	}
 	public Date getPatientDOB() {
 		return patientDOB;
@@ -86,11 +93,11 @@ public class Patient {
 	public void setPatientDOB(Date patientDOB) {
 		this.patientDOB = patientDOB;
 	}
-	public String getPatientgender() {
-		return patientgender;
+	public String getPatientGender() {
+		return patientGender;
 	}
-	public void setPatientgender(String patientgender) {
-		this.patientgender = patientgender;
+	public void setPatientGender(String patientGender) {
+		this.patientGender = patientGender;
 	}
 	public String getPatientPhoneNumber() {
 		return patientPhoneNumber;
@@ -107,9 +114,9 @@ public class Patient {
 	public Patient(String patientname, Date patientDOB, String patientgender, String patientPhoneNumber,
 			String patientMedicalHistory, String patientStatus) {
 		super();
-		this.patientname = patientname;
+		this.patientName = patientname;
 		this.patientDOB = patientDOB;
-		this.patientgender = patientgender;
+		this.patientGender = patientgender;
 		this.patientPhoneNumber = patientPhoneNumber;
 		this.patientMedicalHistory = patientMedicalHistory;
 		this.patientStatus = patientStatus;

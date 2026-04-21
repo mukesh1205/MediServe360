@@ -2,6 +2,8 @@ package com.medi360.entities;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,21 +11,23 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name="Invoice")
 public class Invoice {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int invoiceId;
 	
-	@Column
 	@ManyToOne
 	@JoinColumn(name="patient_id")
-	private int patientId;
+	private Patient patient;
 	@Column
 	private double amount;
 	@Column
-	private Date InvoiceDate;
+	@JsonFormat(shape=JsonFormat.Shape.STRING,pattern="yyyy-MM-dd")
+	private Date invoiceDate;
 	@Column
 	private String status;
 	
@@ -32,7 +36,7 @@ public class Invoice {
 		return invoiceId;
 	}
 
-	public void setInvoiceId(int invoiceId) {
+	public void setInvoiceId(Integer invoiceId) {
 		this.invoiceId = invoiceId;
 	}
 
@@ -45,11 +49,11 @@ public class Invoice {
 	}
 
 	public Date getInvoiceDate() {
-		return InvoiceDate;
+		return invoiceDate;
 	}
 
 	public void setInvoiceDate(Date invoiceDate) {
-		InvoiceDate = invoiceDate;
+		this.invoiceDate = invoiceDate;
 	}
 
 	public String getStatus() {
@@ -60,21 +64,20 @@ public class Invoice {
 		this.status = status;
 	}
 
-	public int getPatientId() {
-		return patientId;
+	public Patient getPatient() {
+		return patient;
 	}
 
-	public void setPatientId(int patientId) {
-		this.patientId = patientId;
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 
-	public Invoice(int invoiceId, double amount, Date invoiceDate, String status, int patientId) {
+	public Invoice(double amount, Date invoiceDate, String status, Patient patient) {
 		super();
-		this.invoiceId = invoiceId;
 		this.amount = amount;
-		InvoiceDate = invoiceDate;
+		this.invoiceDate = invoiceDate;
 		this.status = status;
-		this.patientId = patientId;
+		this.patient = patient;
 	}
 
 	public Invoice() {

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,6 @@ import com.medi360.DTO.PatientDTO;
 import com.medi360.DTO.PatientResponseDTO;
 import com.medi360.entities.Patient;
 import com.medi360.service.PatientService;
-
 @RestController
 @RequestMapping("/api")
 public class PatientController {
@@ -44,9 +44,9 @@ public class PatientController {
 		
 		return ResponseEntity.status(201).body(dto);
 	}
-	@DeleteMapping("/deletePatient")
-	public String f3(@RequestBody Patient p) {
-		return this.patientService.deletePatient(p);
+	@DeleteMapping("/deletePatient/{id}")
+	public String f3(@PathVariable int id) {
+		return this.patientService.deletePatient(id);
 	}
 	
 	@GetMapping("/fetchAllPatients")

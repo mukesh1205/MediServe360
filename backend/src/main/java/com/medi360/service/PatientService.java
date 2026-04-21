@@ -20,8 +20,8 @@ public class PatientService {
 		return this.patientRepository.save(patient);
 	}
 	
-	public String deletePatient(Patient patient) {
-		this.patientRepository.delete(patient);
+	public String deletePatient(int id) {
+		this.patientRepository.deleteById(id);
 		return "successfully deleted";
 	}
 	public List<Patient> getAllPatients() {
