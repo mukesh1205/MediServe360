@@ -13,7 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+
 import jakarta.persistence.Table;
 
 @Entity
@@ -39,9 +39,7 @@ public class Patient {
 	@JsonIgnore
 	private List<Appointment> appointments;
 	
-	@OneToOne(mappedBy="patient",cascade=CascadeType.ALL)
-	@JsonIgnore
-	private Bed bed;
+	
 	
 	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
 	@JsonIgnore
@@ -56,12 +54,7 @@ public class Patient {
 	public void setClaims(List<InsuranceClaim> claims) {
 		this.claims = claims;
 	}
-	public Bed getBed() {
-		return bed;
-	}
-	public void setBed(Bed bed) {
-		this.bed = bed;
-	}
+	
 	public List<Invoice> getInvoices() {
 		return invoices;
 	}
