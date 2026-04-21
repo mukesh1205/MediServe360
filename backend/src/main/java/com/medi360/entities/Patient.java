@@ -39,7 +39,7 @@ public class Patient {
 	@JsonIgnore
 	private List<Appointment> appointments;
 	
-	
+
 	
 	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
 	@JsonIgnore
