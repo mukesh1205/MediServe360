@@ -2,6 +2,7 @@ package com.medi360.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,56 +19,54 @@ import com.medi360.entities.Bed;
 import com.medi360.service.BedService;
 
 @RestController
-@RequestMapping("/api/beds")
+@RequestMapping("/bed")
 public class BedController {
-	private final BedService bedService ;
-	
-	public BedController(BedService bedService) {
-		this.bedService=bedService;
-	}
-	
+	@Autowired
+	private BedService bedService;
+
 	@PostMapping("/create")
-	public ResponseEntity<BedResponseDTO> createBed(@RequestBody BedDTO bedDTO){	
-		Bed bed=bedService.createBed(bedDTO.getBed());
-		BedResponseDTO response=new BedResponseDTO();
+	public ResponseEntity<BedResponseDTO> createBed(@RequestBody BedDTO bedDTO) {
+		Bed bed = bedService.createBed(bedDTO.getBed());
+		BedResponseDTO response = new BedResponseDTO();
 		response.setBed(bed);
 		response.setStatusCode(201);
 		response.setMessage("Bed created successfully");
 		return ResponseEntity.status(201).body(response);
 	}
+
 	@GetMapping("/getAllBeds")
-	public List<Bed> getAllBeds(){
-		return bedService.getAllBeds();
+	public ResponseEntity<List<Bed>> getAllBeds() {
+		List<Bed> bed = bedService.getAllBeds();
+		return ResponseEntity.status(201).body(bed);
 	}
-	
-	@GetMapping("/getBedById/{id}")
-	public Bed getBedById(@PathVariable("id") int bedId) {
-		return bedService.getBedById(bedId);
-		
+
+	@GetMapping("/getBed/{bedId}")
+	public ResponseEntity<BedResponseDTO> getBedById(@PathVariable int bedId) {
+		Bed bed = bedService.getBedById(bedId);
+		BedResponseDTO dto = new BedResponseDTO();
+		dto.setBed(bed);
+		dto.setMessage("Found bed with ID: " + bedId);
+		dto.setStatusCode(200);
+		return ResponseEntity.status(200).body(dto);
+
 	}
-	@PutMapping("/updateBed/{id}")
-	public ResponseEntity<BedResponseDTO> updateBed(@PathVariable("id")int bedId, @RequestBody BedDTO bedDTO) {
-		Bed bed=bedDTO.getBed();
-        bed.setBedId(bedId);   // important: ensures UPDATE, not INSERT
 
-        Bed updatedBed = bedService.updateBed(bed);
+	@PutMapping("/updateBed")
+	public ResponseEntity<BedResponseDTO> updateBed(@RequestBody BedDTO bedDTO) {
+		Bed bed = bedService.updateBed(bedDTO.getBed());
+		BedResponseDTO dto = new BedResponseDTO();
+		dto.setBed(bed);
+		dto.setStatusCode(200);
+		dto.setMessage("Bed updated successfully");
 
-        BedResponseDTO response = new BedResponseDTO();
-        response.setBed(updatedBed);
-        response.setStatusCode(200);
-        response.setMessage("Bed updated successfully");
+		return ResponseEntity.status(200).body(dto);
 
-        return ResponseEntity.ok(response);
+	}
 
-		}
-	
-	@DeleteMapping("/delete/{id}")
-
-public ResponseEntity<String> deleteBed(@PathVariable("id") int bedId) {
-        bedService.delete(bedId);
-        return ResponseEntity.ok("Bed deleted successfully");
-    }
-
-	
+	@DeleteMapping("/delete/{bedId}")
+	public ResponseEntity<String> deleteBed(@PathVariable int bedId) {
+		bedService.delete(bedId);
+		return ResponseEntity.status(200).body("Bed deleted successfully");
+	}
 
 }

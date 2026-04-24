@@ -3,6 +3,7 @@ package com.medi360.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,15 +20,10 @@ import com.medi360.entities.Ward;
 import com.medi360.service.WardService;
 
 @RestController
-@RequestMapping("/api/ward")
+@RequestMapping("/ward")
 public class WardController {
+	@Autowired
 	private  WardService wardService;
-	
-	public WardController(WardService wardService) {
-		// TODO Auto-generated constructor stub
-		this.wardService=wardService;
-	}
-	
 	 @PostMapping("/create")
 	 public ResponseEntity<WardResponseDTO> createWard(@RequestBody WardDTO wardDTO) {
 		 Ward ward=wardService.createWard(wardDTO.getWard());
@@ -38,29 +34,33 @@ public class WardController {
 		 return ResponseEntity.status(201).body(response);
 	 }
 	@GetMapping("/getAllWards")
-	public List<Ward> getAllWard(){
-		return wardService.getAllWard();
+	public ResponseEntity<List<Ward>> getAllWard(){
+		List <Ward> ward=wardService.getAllWard();
+		return ResponseEntity.status(201).body(ward);
 	}
-	@GetMapping("/getWardById/{id}")
-	public Ward getWardById(@PathVariable("id") int wardId) {
-		return wardService.getWardById(wardId);
+	@GetMapping("/getWard/{wardId}")
+	public ResponseEntity<WardResponseDTO> getWardById(@PathVariable int wardId) {
+		Ward ward=wardService.getWardById(wardId);
+		WardResponseDTO dto=new WardResponseDTO();
+		dto.setWard(ward);
+		dto.setStatusCode(200);
+		dto.setMessage("found ward with Id: "+wardId);
+		return ResponseEntity.status(200).body(dto);
 	}
-	@PutMapping("/updateWard/{id}")
-	public ResponseEntity<WardResponseDTO> updateWard(@PathVariable("id")int wardId,@RequestBody WardDTO wardDTO) {
-		Ward ward=wardDTO.getWard();
-		ward.setWardId(wardId);
-		Ward updateWard=wardService.updateWard(ward);
+	@PutMapping("/updateWard")
+	public ResponseEntity<WardResponseDTO> updateWard(@RequestBody WardDTO wardDTO) {
+		Ward ward=wardService.updateWard(wardDTO.getWard());
 		WardResponseDTO response=new WardResponseDTO();
-		response.setWard(updateWard);
+		response.setWard(ward);
 		response.setStatusCode(200);
 		response.setMessage("Ward updated successfully");
 		
-	return ResponseEntity.ok(response);
+		return ResponseEntity.status(200).body(response);
 			}
-	@DeleteMapping("/deleteWard/{id}")
-	public ResponseEntity<String>deleteWard(@PathVariable("id") int wardId) {
+	@DeleteMapping("/deleteWard/{wardId}")
+	public ResponseEntity<String>deleteWard(@PathVariable int wardId) {
 		 wardService.deleteWard(wardId);
-		 return ResponseEntity.ok("Ward deleted successfully");
+		 return ResponseEntity.status(200).body("ward deleted succesfully");
 	}
 	 
 }

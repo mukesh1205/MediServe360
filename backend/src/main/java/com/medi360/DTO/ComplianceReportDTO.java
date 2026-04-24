@@ -14,3 +14,4 @@ public class ComplianceReportDTO {
         this.complianceReport = complianceReport;
     }
 }
+
