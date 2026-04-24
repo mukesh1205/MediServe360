@@ -1,61 +1,86 @@
 package com.medi360.entities;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.*;
 
 @Entity
 public class ComplianceReport {
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int reportId;
-	
-	private String reportScope;
-	private String reportmatrics;
-	private Date reportgeneratedDate;
-	@OneToOne(cascade=CascadeType.ALL,mappedBy="report")
-	private KPIReport report;
-	public ComplianceReport() {
-		super();
-	}
-	public ComplianceReport(String reportScope, String reportmatrics, Date reportgeneratedDate) {
-		super();
-		
-		this.reportScope = reportScope;
-		this.reportmatrics = reportmatrics;
-		this.reportgeneratedDate = reportgeneratedDate;
-	}
-	public int getReportId() {
-		return reportId;
-	}
-	public void setReportId(int reportId) {
-		this.reportId = reportId;
-	}
-	public String getReportScope() {
-		return reportScope;
-	}
-	public void setReportScope(String reportScope) {
-		this.reportScope = reportScope;
-	}
-	public String getReportmatrics() {
-		return reportmatrics;
-	}
-	public void setReportmatrics(String reportmatrics) {
-		this.reportmatrics = reportmatrics;
-	}
-	public Date getReportgeneratedDate() {
-		return reportgeneratedDate;
-	}
-	public void setReportgeneratedDate(Date reportgeneratedDate) {
-		this.reportgeneratedDate = reportgeneratedDate;
-	}
-	
-	
-	
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int reportId;
+
+    private String reportScope;
+    private String reportMetrics;
+    private LocalDate reportGeneratedDate;
+
+    // ✅ One ComplianceReport → Many KPIReports
+    @OneToMany(
+        mappedBy = "complianceReport",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    @JsonIgnore   // ✅ Prevent infinite JSON recursion
+    private List<KPIReport> kpiReports;
+
+    public ComplianceReport() {}
+
+    // ---------- Getters & Setters ----------
+
+    public int getReportId() {
+        return reportId;
+    }
+
+    public void setReportId(int reportId) {
+        this.reportId = reportId;
+    }
+
+    public String getReportScope() {
+        return reportScope;
+    }
+
+    public void setReportScope(String reportScope) {
+        this.reportScope = reportScope;
+    }
+
+    public String getReportMetrics() {
+        return reportMetrics;
+    }
+
+    public void setReportMetrics(String reportMetrics) {
+        this.reportMetrics = reportMetrics;
+    }
+
+    public LocalDate getReportGeneratedDate() {
+        return reportGeneratedDate;
+    }
+
+    public void setReportGeneratedDate(LocalDate reportGeneratedDate) {
+        this.reportGeneratedDate = reportGeneratedDate;
+    }
+
+    public List<KPIReport> getKpiReports() {
+        return kpiReports;
+    }
+
+    public void setKpiReports(List<KPIReport> kpiReports) {
+        this.kpiReports = kpiReports;
+    }
+
+    // ---------- Helper Methods (Optional but Best Practice) ----------
+
+    public void addKpiReport(KPIReport kpiReport) {
+        kpiReports.add(kpiReport);
+        kpiReport.setComplianceReport(this);
+    }
+
+    public void removeKpiReport(KPIReport kpiReport) {
+        kpiReports.remove(kpiReport);
+        kpiReport.setComplianceReport(null);
+    }
 }
