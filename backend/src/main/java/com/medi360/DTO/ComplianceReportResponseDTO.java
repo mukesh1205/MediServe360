@@ -10,7 +10,7 @@ public class ComplianceReportResponseDTO {
     private String reportMetrics;
     private LocalDate reportGeneratedDate;
 
-   
+    
     private List<Integer> kpiReportIds;
 
     private int statusCode;

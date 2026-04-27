@@ -1,5 +1,6 @@
 package com.medi360.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,12 +12,19 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="appointments")
 public class Appointment {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int appointmentid;
-	private String appointmentdate;
-	private String appointmenttime;
-	private String appointmentstatus;
+	private int id;
+	
+	@Column
+	private String date;
+	
+	@Column
+	private String time;
+	
+	@Column
+	private String status;
 	
 	@ManyToOne
 	@JoinColumn(name="patient_id")
@@ -25,54 +33,67 @@ public class Appointment {
 	@ManyToOne
 	@JoinColumn(name="doctor_id")
 	private Doctor doctor;
-	public int getAppointmentid() {
-		return appointmentid;
+	
+	
+	public int getId() {
+		return id;
 	}
-	public void setAppointmentid(int appointmentid) {
-		this.appointmentid = appointmentid;
+	public void setId(int id) {
+		this.id = id;
 	}
-	public String getAppointmentdate() {
-		return appointmentdate;
+	public String getDate() {
+		return date;
 	}
-	public void setAppointmentdate(String appointmentdate) {
-		this.appointmentdate = appointmentdate;
+	public void setDate(String date) {
+		this.date = date;
 	}
-	public String getAppointmenttime() {
-		return appointmenttime;
+	public String getTime() {
+		return time;
 	}
-	public void setAppointmenttime(String appointmenttime) {
-		this.appointmenttime = appointmenttime;
+	public void setTime(String time) {
+		this.time = time;
 	}
-	public String getAppointmentstatus() {
-		return appointmentstatus;
+	public String getStatus() {
+		return status;
 	}
-	public void setAppointmentstatus(String appointmentstatus) {
-		this.appointmentstatus = appointmentstatus;
+	public void setStatus(String status) {
+		this.status = status;
 	}
+	
 	public Patient getPatient() {
 		return patient;
 	}
+	
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
+	
 	public Doctor getDoctor() {
 		return doctor;
 	}
+	
 	public void setDoctor(Doctor doctor) {
 		this.doctor = doctor;
 	}
-	public Appointment(String appointmentdate, String appointmenttime, String appointmentstatus, Patient patient,
-			Doctor doctor) {
+	
+	public Appointment(String date, String time, String status, Patient patient, Doctor doctor) {
+		
 		super();
-		this.appointmentdate = appointmentdate;
-		this.appointmenttime = appointmenttime;
-		this.appointmentstatus = appointmentstatus;
+		this.date = date;
+		this.time = time;
+		this.status = status;
 		this.patient = patient;
 		this.doctor = doctor;
+		
 	}
+	
 	public Appointment() {
 		super();
 	}
 	
-	
 }
+
+
+
+
+
