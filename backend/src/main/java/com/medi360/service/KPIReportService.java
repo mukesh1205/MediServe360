@@ -2,6 +2,8 @@ package com.medi360.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.medi360.db.KPIReportRepository;
@@ -38,6 +40,12 @@ public class KPIReportService {
     public List<KPIReport> getAllKPIReports() {
         return kpiReportRepository.findAll();
     }
+    
+
+    public Page<KPIReport> getKPIReportsWithPagination(Pageable pageable) {
+         return kpiReportRepository.findAll(pageable);
+     }
+
 
     public String deleteKPIReport(int id) {
         kpiReportRepository.deleteById(id);
