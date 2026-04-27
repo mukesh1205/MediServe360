@@ -11,6 +11,8 @@ import com.medi360.db.InsuranceClaimRepository;
 import com.medi360.db.PatientRepository;
 import com.medi360.entities.InsuranceClaim;
 import com.medi360.entities.Patient;
+import com.medi360.exception.InsuranceClaimNotFoundException;
+import com.medi360.exception.PatientNotFoundException;
 
 @Service
 public class InsuranceClaimService {
@@ -18,25 +20,46 @@ public class InsuranceClaimService {
 	InsuranceClaimRepository insuranceClaimRepository;
 	@Autowired
 	PatientRepository patientRepository;
-	public InsuranceClaim addInsuranceClaim(InsuranceClaim insuranceClaim) {
-		int patientId=insuranceClaim.getPatient().getPatientId();
-		Patient patient=patientRepository.findById(patientId).orElseThrow(()->new RuntimeException("Patient not found"));
+
+	public InsuranceClaim addInsuranceClaim(InsuranceClaim insuranceClaim) throws PatientNotFoundException {
+		int patientId = insuranceClaim.getPatient().getPatientId();
+		Patient patient = patientRepository.findById(patientId)
+				.orElseThrow(() -> new PatientNotFoundException("Patient not found with id " + patientId));
 		insuranceClaim.setPatient(patient);
 		return this.insuranceClaimRepository.save(insuranceClaim);
 	}
-	
-	public InsuranceClaim updateInsuranceClaim(InsuranceClaim insuranceClaim) {
+
+	public InsuranceClaim updateInsuranceClaim(InsuranceClaim insuranceClaim) throws InsuranceClaimNotFoundException, PatientNotFoundException {
+
+		if (!insuranceClaimRepository.existsById(insuranceClaim.getInsuranceClaimId())) {
+			throw new InsuranceClaimNotFoundException(
+					"Insurance claim not found with id " + insuranceClaim.getInsuranceClaimId());
+		}
+
+		int patientId = insuranceClaim.getPatient().getPatientId();
+		Patient patient = patientRepository.findById(patientId)
+				.orElseThrow(() -> new PatientNotFoundException("Patient not found with id " + patientId));
+
+		insuranceClaim.setPatient(patient);
+
 		return this.insuranceClaimRepository.save(insuranceClaim);
 	}
-	
-	public String deleteInsuranceClaim(int id) {
+
+	public String deleteInsuranceClaim(int id) throws InsuranceClaimNotFoundException {
+
+		if (!insuranceClaimRepository.existsById(id)) {
+			throw new InsuranceClaimNotFoundException("Insurance claim not found with id " + id);
+		}
+
 		this.insuranceClaimRepository.deleteById(id);
 		return "successfully deleted insuranceClaim";
 	}
+
 	public List<InsuranceClaim> getAllInsuranceClaims() {
 		return this.insuranceClaimRepository.findAll();
 	}
-	public Page<InsuranceClaim> getAllInsuranceClaimsWithPagination(Pageable pageable){
+
+	public Page<InsuranceClaim> getAllInsuranceClaimsWithPagination(Pageable pageable) {
 		return this.insuranceClaimRepository.findAll(pageable);
 	}
 
