@@ -1,7 +1,10 @@
 
 package com.medi360.service;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,5 +42,8 @@ public class BedService {
 		bedRepository.deleteById(bedId);
 		
 	}
+	public Page<Bed> getAllBedsWithPaginated(Pageable pageable){
+		return this.bedRepository.findAll(pageable);
+		}
 
 }
