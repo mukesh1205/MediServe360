@@ -18,19 +18,19 @@ public class ComplianceReport {
     private String reportMetrics;
     private LocalDate reportGeneratedDate;
 
-    // ✅ One ComplianceReport → Many KPIReports
+    
     @OneToMany(
         mappedBy = "complianceReport",
         cascade = CascadeType.ALL,
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
-    @JsonIgnore   // ✅ Prevent infinite JSON recursion
+    @JsonIgnore   
     private List<KPIReport> kpiReports;
 
     public ComplianceReport() {}
 
-    // ---------- Getters & Setters ----------
+ 
 
     public int getReportId() {
         return reportId;
@@ -72,7 +72,6 @@ public class ComplianceReport {
         this.kpiReports = kpiReports;
     }
 
-    // ---------- Helper Methods (Optional but Best Practice) ----------
 
     public void addKpiReport(KPIReport kpiReport) {
         kpiReports.add(kpiReport);

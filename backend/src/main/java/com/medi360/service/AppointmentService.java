@@ -35,17 +35,14 @@ public class AppointmentService {
     @Transactional
     public Appointment addAppointment(Appointment appointment) {
 
-        // ✅ Fetch managed Patient
         Patient patient = patientRepository
                 .findById(appointment.getPatient().getPatientId())
                 .orElseThrow(() -> new RuntimeException("Patient not found"));
 
-        // ✅ Fetch managed Doctor
         Doctor doctor = doctorRepository
                 .findById(appointment.getDoctor().getId())
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
-        // ✅ Attach managed entities
         appointment.setPatient(patient);
         appointment.setDoctor(doctor);
 
@@ -54,29 +51,24 @@ public class AppointmentService {
     @Transactional
     public Appointment updateAppointment(Appointment updatedAppointment) {
 
-        // ✅ 1. Fetch existing appointment
         Appointment existingAppointment = appointmentRepository.findById(
                 updatedAppointment.getId()
         ).orElseThrow(() -> new RuntimeException("Appointment not found"));
 
-        // ✅ 2. Fetch managed patient
         Patient patient = patientRepository.findById(
                 updatedAppointment.getPatient().getPatientId()
         ).orElseThrow(() -> new RuntimeException("Patient not found"));
 
-        // ✅ 3. Fetch managed doctor
         Doctor doctor = doctorRepository.findById(
                 updatedAppointment.getDoctor().getId()
         ).orElseThrow(() -> new RuntimeException("Doctor not found"));
 
-        // ✅ 4. Update fields
         existingAppointment.setDate(updatedAppointment.getDate());
         existingAppointment.setTime(updatedAppointment.getTime());
         existingAppointment.setStatus(updatedAppointment.getStatus());
         existingAppointment.setPatient(patient);
         existingAppointment.setDoctor(doctor);
 
-        // ✅ 5. Save managed entity
         return appointmentRepository.save(existingAppointment);
     }
 
@@ -84,7 +76,6 @@ public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
     }
 
-    // ✅ DELETE APPOINTMENT BY ID
     @Transactional
     public void deleteAppointment(int id) {
 
