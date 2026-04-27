@@ -9,16 +9,15 @@ public class KPIReportResponseDTO {
     private String kpiMetrics;
     private LocalDate kpiGeneratedDate;
 
+    
     private Integer complianceReportId;
 
     private int statusCode;
     private String message;
 
-    
     public KPIReportResponseDTO() {
     }
 
-   
 
     public int getKpiId() {
         return kpiId;

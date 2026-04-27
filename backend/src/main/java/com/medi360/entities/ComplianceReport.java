@@ -18,14 +18,14 @@ public class ComplianceReport {
     private String reportMetrics;
     private LocalDate reportGeneratedDate;
 
-   
+    
     @OneToMany(
         mappedBy = "complianceReport",
         cascade = CascadeType.ALL,
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
- 
+    @JsonIgnore   
     private List<KPIReport> kpiReports;
 
     public ComplianceReport() {}
@@ -72,7 +72,6 @@ public class ComplianceReport {
         this.kpiReports = kpiReports;
     }
 
- 
 
     public void addKpiReport(KPIReport kpiReport) {
         kpiReports.add(kpiReport);

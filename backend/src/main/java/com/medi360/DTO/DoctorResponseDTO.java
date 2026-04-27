@@ -2,7 +2,7 @@ package com.medi360.DTO;
 
 import com.medi360.entities.Doctor;
 
-public class DoctorResponse {
+public class DoctorResponseDTO {
 
 	private Doctor doctor;
 	private int statusCode;

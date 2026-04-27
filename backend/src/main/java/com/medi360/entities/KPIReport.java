@@ -15,7 +15,7 @@ public class KPIReport {
     private String kpiMetrics;
     private LocalDate kpiGeneratedDate;
 
- 
+    
     @ManyToOne
     @JoinColumn(name = "report_id")
     private ComplianceReport complianceReport;

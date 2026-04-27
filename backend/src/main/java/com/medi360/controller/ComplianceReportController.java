@@ -19,7 +19,7 @@ public class ComplianceReportController {
     @Autowired
     private ComplianceReportService complianceReportService;
 
-   
+    
     @PostMapping("/addComplianceReport")
     public ResponseEntity<ComplianceReportResponseDTO> addComplianceReport(
             @RequestBody ComplianceReportDTO complianceReportDTO) {
@@ -34,7 +34,7 @@ public class ComplianceReportController {
         response.setReportMetrics(report.getReportMetrics());
         response.setReportGeneratedDate(report.getReportGeneratedDate());
 
-       
+        
         if (report.getKpiReports() != null) {
             response.setKpiReportIds(
                     report.getKpiReports()
@@ -50,7 +50,7 @@ public class ComplianceReportController {
         return ResponseEntity.status(201).body(response);
     }
 
-   
+    
     @PutMapping("/updateComplianceReport")
     public ResponseEntity<ComplianceReportResponseDTO> updateComplianceReport(
             @RequestBody ComplianceReportDTO complianceReportDTO) {
@@ -65,7 +65,7 @@ public class ComplianceReportController {
         response.setReportMetrics(report.getReportMetrics());
         response.setReportGeneratedDate(report.getReportGeneratedDate());
 
-       
+        
         if (report.getKpiReports() != null) {
             response.setKpiReportIds(
                     report.getKpiReports()
@@ -81,12 +81,10 @@ public class ComplianceReportController {
         return ResponseEntity.ok(response);
     }
 
-   
     @DeleteMapping("/deleteComplianceReport/{id}")
     public String deleteComplianceReport(@PathVariable int id) {
         return complianceReportService.deleteComplianceReport(id);
     }
-
 
     @GetMapping("/fetchAllComplianceReports")
     public List<ComplianceReport> fetchAllComplianceReports() {
