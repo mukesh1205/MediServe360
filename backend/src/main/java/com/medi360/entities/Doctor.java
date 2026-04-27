@@ -69,11 +69,11 @@ public class Doctor {
 	}
 	
 	
-	public Doctor(String name, String department, String availabilitSchedule) {
+	public Doctor(String name, String department, String availabilitySchedule) {
 		super();
 		this.name = name;
 		this.department = department;
-		this.availabilitySchedule = availabilitSchedule;
+		this.availabilitySchedule = availabilitySchedule;
 	}
 	
 	
