@@ -75,11 +75,11 @@ public class DoctorController {
 		return doctorService.getAllDoctors();
 	}
 	
-	/* @GetMapping("/getAllAppointmentsPaginated")
-	public Page<Doctor> getAllDoctorsPaginated (@RequestParam (name = "pgno") int pgno, 
-			                 @RequestParam (name = "size") int size, 
-			                 @RequestParam (name = "sorting") String sorting, 
-			                 @RequestParam (name = "asc") boolean asc) 
+	@GetMapping("/getAllPaginated")
+	public Page<Doctor> getAllDoctorsWithPagination (@RequestParam (name = "pgno") int pgno, 
+			                                         @RequestParam (name = "size") int size, 
+			                                         @RequestParam (name = "sorting") String sorting, 
+			                                         @RequestParam (name = "asc") boolean asc) 
 	{
 		
 	Sort sort = asc ? Sort.by(sorting).ascending() : Sort.by(sorting).descending();
@@ -87,7 +87,7 @@ public class DoctorController {
 	Pageable pageable = PageRequest.of(pgno, size, sort);
 	return doctorService.getAllDoctorsWithPagination(pageable);
 	
-	} */	
+	} 	
 }
 
 
