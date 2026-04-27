@@ -2,6 +2,8 @@ package com.medi360.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.medi360.db.ComplianceReportRepository;
@@ -54,4 +56,11 @@ public class ComplianceReportService {
         complianceReportRepository.deleteById(id);
         return "Compliance report deleted successfully";
     }
+    
+
+    public Page<ComplianceReport> getComplianceReportsWithPagination(Pageable pageable) {
+           return complianceReportRepository.findAll(pageable);
+       }
+
+     
 }
