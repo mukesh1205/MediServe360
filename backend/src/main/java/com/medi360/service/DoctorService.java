@@ -27,8 +27,8 @@ public class DoctorService {
 		return doctorRepository.save(doctor);
 	}
 	
-	public void deleteDoctor(int docterId) {
-	   doctorRepository.deleteById(docterId);
+	public void deleteDoctor(int doctorId) {
+	   doctorRepository.deleteById(doctorId);
 	}
 	
     public Doctor getDoctorById(int id) {
@@ -39,9 +39,9 @@ public class DoctorService {
 		return doctorRepository.findAll();
 	}
 	
-	/* public Page<Doctor> getAllDoctorsWithPagination (Pageable pageable){
+	public Page<Doctor> getAllDoctorsWithPagination (Pageable pageable){
 		return doctorRepository.findAll(pageable);
-	} */
+	}
     
 }
 
