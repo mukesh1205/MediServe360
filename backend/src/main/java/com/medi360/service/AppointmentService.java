@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.example.model.Employee;
 import com.medi360.db.AppointmentRepository;
 import com.medi360.db.DoctorRepository;
 import com.medi360.db.PatientRepository;
@@ -92,9 +91,9 @@ public List<Appointment> getAllAppointments() {
                         new RuntimeException("Appointment not found with id: " + id));
     }
     
-	/* public Page<Appointment> getAllAppointmentsWithPagination (Pageable pageable){
+	public Page<Appointment> getAllAppointmentsWithPagination (Pageable pageable){
 		return appointmentRepository.findAll(pageable);
-	} */
+	}
 }
 
 

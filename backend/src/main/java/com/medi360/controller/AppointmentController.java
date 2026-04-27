@@ -75,11 +75,11 @@ public class AppointmentController {
 		return appointmentService.getAllAppointments();
 	}
 	
-	/* @GetMapping("/getAllAppointmentsPaginated")
-	public Page<Appointment> getAllAppointmentsPaginated (@RequestParam (name = "pgno") int pgno, 
-			                 @RequestParam (name = "size") int size, 
-			                 @RequestParam (name = "sorting") String sorting, 
-			                 @RequestParam (name = "asc") boolean asc) 
+	@GetMapping("/getAllPaginated")
+	public Page<Appointment> getAllAppointmentsWithPagination(@RequestParam (name = "pgno") int pgno, 
+			                                                  @RequestParam (name = "size") int size, 
+			                                                  @RequestParam (name = "sorting") String sorting, 
+			                                                  @RequestParam (name = "asc") boolean asc) 
 	{
 		
 	Sort sort = asc ? Sort.by(sorting).ascending() : Sort.by(sorting).descending();
@@ -87,7 +87,7 @@ public class AppointmentController {
 	Pageable pageable = PageRequest.of(pgno, size, sort);
 	return appointmentService.getAllAppointmentsWithPagination(pageable);
 	
-	} */
+	} 
 }
 
 

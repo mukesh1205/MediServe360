@@ -3,6 +3,8 @@ package com.medi360.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.medi360.db.InsuranceClaimRepository;
@@ -34,4 +36,8 @@ public class InsuranceClaimService {
 	public List<InsuranceClaim> getAllInsuranceClaims() {
 		return this.insuranceClaimRepository.findAll();
 	}
+	public Page<InsuranceClaim> getAllInsuranceClaimsWithPagination(Pageable pageable){
+		return this.insuranceClaimRepository.findAll(pageable);
+	}
+
 }
