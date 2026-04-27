@@ -9,17 +9,16 @@ public class KPIReportResponseDTO {
     private String kpiMetrics;
     private LocalDate kpiGeneratedDate;
 
-    // ✅ ComplianceReport is MANY‑to‑ONE here
     private Integer complianceReportId;
 
     private int statusCode;
     private String message;
 
-    // ✅ REQUIRED: No‑argument constructor
+    
     public KPIReportResponseDTO() {
     }
 
-    // -------- Getters & Setters --------
+   
 
     public int getKpiId() {
         return kpiId;

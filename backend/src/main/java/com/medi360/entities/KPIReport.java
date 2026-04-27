@@ -15,7 +15,7 @@ public class KPIReport {
     private String kpiMetrics;
     private LocalDate kpiGeneratedDate;
 
-    // ✅ Owning side (foreign key here)
+ 
     @ManyToOne
     @JoinColumn(name = "report_id")
     private ComplianceReport complianceReport;
