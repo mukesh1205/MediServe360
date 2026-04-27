@@ -2,7 +2,10 @@ package com.medi360.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,55 +16,74 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="doctors")
 public class Doctor {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int DoctorId;
-	private String doctorname;
-	private String doctorDepartment;
-	private String doctorAvailabilitSchedule;
+	private int id;
+	
+	@Column
+	private String name;
+	
+	@Column
+	private String department;
+	
+	@Column
+	private String availabilitySchedule;
 	
 	@OneToMany(mappedBy="doctor",cascade=CascadeType.ALL)
+	@JsonIgnore
 	private List<Appointment> appointments;
+	
 	public List<Appointment> getAppointments() {
 		return appointments;
 	}
+	
 	public void setAppointments(List<Appointment> appointments) {
 		this.appointments = appointments;
 	}
-	public int getDoctorId() {
-		return DoctorId;
+	
+	
+	public int getId() {
+		return id;
 	}
-	public void setDoctorId(int doctorId) {
-		DoctorId = doctorId;
+	public void setId(int id) {
+		this.id = id;
 	}
-	public String getDoctorname() {
-		return doctorname;
+	public String getName() {
+		return name;
 	}
-	public void setDoctorname(String doctorname) {
-		this.doctorname = doctorname;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public String getDoctorDepartment() {
-		return doctorDepartment;
+	public String getDepartment() {
+		return department;
 	}
-	public void setDoctorDepartment(String doctorDepartment) {
-		this.doctorDepartment = doctorDepartment;
+	public void setDepartment(String department) {
+		this.department = department;
 	}
-	public String getDoctorAvailabilitSchedule() {
-		return doctorAvailabilitSchedule;
+	public String getAvailabilitySchedule() {
+		return availabilitySchedule;
 	}
-	public void setDoctorAvailabilitSchedule(String doctorAvailabilitSchedule) {
-		this.doctorAvailabilitSchedule = doctorAvailabilitSchedule;
+	public void setAvailabilitySchedule(String availabilitySchedule) {
+		this.availabilitySchedule = availabilitySchedule;
 	}
-	public Doctor(String doctorname, String doctorDepartment, String doctorAvailabilitSchedule) {
+	
+	
+	public Doctor(String name, String department, String availabilitySchedule) {
 		super();
-		this.doctorname = doctorname;
-		this.doctorDepartment = doctorDepartment;
-		this.doctorAvailabilitSchedule = doctorAvailabilitSchedule;
+		this.name = name;
+		this.department = department;
+		this.availabilitySchedule = availabilitySchedule;
 	}
+	
+	
 	public Doctor() {
 		super();
 	}
 	
-	
-	
 }
+
+
+
+
+

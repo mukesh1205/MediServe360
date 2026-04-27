@@ -10,13 +10,12 @@ public class ComplianceReportResponseDTO {
     private String reportMetrics;
     private LocalDate reportGeneratedDate;
 
-    // ✅ IMPORTANT: Must be a List for One-to-Many
+    
     private List<Integer> kpiReportIds;
 
     private int statusCode;
     private String message;
 
-    // -------- Getters & Setters --------
 
     public int getReportId() {
         return reportId;
