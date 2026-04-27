@@ -3,6 +3,8 @@ package com.medi360.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.medi360.db.InvoiceRepository;
@@ -34,5 +36,8 @@ public class InvoiceService {
 	}
 	public List<Invoice> getAllInvoices() {
 		return this.invoiceRepository.findAll();
+	}
+	public Page<Invoice> getAllInvoicesWithPagination(Pageable pageable){
+		return this.invoiceRepository.findAll(pageable);
 	}
 }
