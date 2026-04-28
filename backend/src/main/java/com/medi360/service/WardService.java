@@ -3,6 +3,8 @@ package com.medi360.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.medi360.db.WardRepository;
 import com.medi360.entities.Ward;
@@ -31,7 +33,9 @@ public class WardService {
 	public void deleteWard(int wardId) {
 		wardRepository.deleteById(wardId);
 	}
-	
+	public Page<Ward>getAllWardsWithPaginated(Pageable pageable){
+		return this.wardRepository.findAll(pageable);
+	}
 	
 
 }

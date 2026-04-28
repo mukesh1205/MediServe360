@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.medi360.DTO.InvoiceDTO;
 import com.medi360.DTO.InvoiceResponseDTO;
 import com.medi360.entities.Invoice;
+import com.medi360.exception.InvoiceNotFoundException;
+import com.medi360.exception.PatientNotFoundException;
 import com.medi360.service.InvoiceService;
 
 @RestController
@@ -30,7 +32,7 @@ public class InvoiceController {
 	InvoiceService invoiceService;
 	
 	@PostMapping("/addInvoice")
-	public ResponseEntity<InvoiceResponseDTO> f1(@RequestBody InvoiceDTO invoiceDTO) {
+	public ResponseEntity<InvoiceResponseDTO> f1(@RequestBody InvoiceDTO invoiceDTO) throws PatientNotFoundException {
 		Invoice i=this.invoiceService.addInvoice(invoiceDTO.getInvoice());
 		InvoiceResponseDTO dto=new InvoiceResponseDTO();
 		dto.setInvoice(i);
@@ -41,17 +43,17 @@ public class InvoiceController {
 	}
 	
 	@PutMapping("/updateInvoice")
-	public ResponseEntity<InvoiceResponseDTO> f2(@RequestBody InvoiceDTO invoiceDTO){
+	public ResponseEntity<InvoiceResponseDTO> f2(@RequestBody InvoiceDTO invoiceDTO) throws InvoiceNotFoundException, PatientNotFoundException{
 		Invoice i=this.invoiceService.updateInvoice(invoiceDTO.getInvoice());
 		InvoiceResponseDTO dto=new InvoiceResponseDTO();
 		dto.setInvoice(i);
-		dto.setStatusCode(201);
+		dto.setStatusCode(200);
 		dto.setMessage("Invoice updated successfully");
 		
-		return ResponseEntity.status(201).body(dto);
+		return ResponseEntity.status(200).body(dto);
 	}
 	@DeleteMapping("/deleteInvoice/{id}")
-	public String f3(@PathVariable int id) {
+	public String f3(@PathVariable int id) throws InvoiceNotFoundException {
 		return this.invoiceService.deleteInvoice(id);
 	}
 	

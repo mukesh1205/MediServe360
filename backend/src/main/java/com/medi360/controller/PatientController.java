@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.medi360.DTO.PatientDTO;
 import com.medi360.DTO.PatientResponseDTO;
 import com.medi360.entities.Patient;
+import com.medi360.exception.PatientNotFoundException;
 import com.medi360.service.PatientService;
 @RestController
 @RequestMapping("/api")
@@ -40,17 +41,17 @@ public class PatientController {
 	}
 	
 	@PutMapping("/updatePatient")
-	public ResponseEntity<PatientResponseDTO> f2(@RequestBody PatientDTO patientDTO){
+	public ResponseEntity<PatientResponseDTO> f2(@RequestBody PatientDTO patientDTO) throws PatientNotFoundException{
 		Patient p=this.patientService.updatePatient(patientDTO.getPatient());
 		PatientResponseDTO dto=new PatientResponseDTO();
 		dto.setPatient(p);
-		dto.setStatusCode(201);
+		dto.setStatusCode(200);
 		dto.setMessage("Patient updated successfully");
 		
-		return ResponseEntity.status(201).body(dto);
+		return ResponseEntity.status(200).body(dto);
 	}
 	@DeleteMapping("/deletePatient/{id}")
-	public String f3(@PathVariable int id) {
+	public String f3(@PathVariable int id) throws PatientNotFoundException {
 		return this.patientService.deletePatient(id);
 	}
 	

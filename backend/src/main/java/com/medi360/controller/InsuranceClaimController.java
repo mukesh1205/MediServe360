@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.medi360.DTO.InsuranceClaimDTO;
 import com.medi360.DTO.InsuranceClaimResponse;
 import com.medi360.entities.InsuranceClaim;
+import com.medi360.exception.InsuranceClaimNotFoundException;
+import com.medi360.exception.PatientNotFoundException;
 import com.medi360.service.InsuranceClaimService;
 
 @RestController
@@ -30,7 +32,7 @@ public class InsuranceClaimController {
 	InsuranceClaimService insuranceClaimService;
 	
 	@PostMapping("/addInsuranceClaim")
-	public ResponseEntity<InsuranceClaimResponse> f1(@RequestBody InsuranceClaimDTO insuranceClaimDTO) {
+	public ResponseEntity<InsuranceClaimResponse> f1(@RequestBody InsuranceClaimDTO insuranceClaimDTO) throws PatientNotFoundException {
 		InsuranceClaim i=this.insuranceClaimService.addInsuranceClaim(insuranceClaimDTO.getInsuranceClaim());
 		InsuranceClaimResponse dto=new InsuranceClaimResponse();
 		dto.setInsuranceClaim(i);
@@ -41,17 +43,17 @@ public class InsuranceClaimController {
 	}
 	
 	@PutMapping("/updateInsuranceClaim")
-	public ResponseEntity<InsuranceClaimResponse> f2(@RequestBody InsuranceClaimDTO insuranceClaimDTO){
+	public ResponseEntity<InsuranceClaimResponse> f2(@RequestBody InsuranceClaimDTO insuranceClaimDTO) throws InsuranceClaimNotFoundException, PatientNotFoundException{
 		InsuranceClaim i=this.insuranceClaimService.updateInsuranceClaim(insuranceClaimDTO.getInsuranceClaim());
 		InsuranceClaimResponse dto=new InsuranceClaimResponse();
 		dto.setInsuranceClaim(i);
-		dto.setStatusCode(201);
-		dto.setMessage("InsuranceClaim created successfully");
+		dto.setStatusCode(200);
+		dto.setMessage("InsuranceClaim updated successfully");
 		
-		return ResponseEntity.status(201).body(dto);
+		return ResponseEntity.status(200).body(dto);
 	}
 	@DeleteMapping("/deleteInsuranceClaim/{id}")
-	public String f3(@PathVariable int id) {
+	public String f3(@PathVariable int id) throws InsuranceClaimNotFoundException {
 		return this.insuranceClaimService.deleteInsuranceClaim(id);
 	}
 	
