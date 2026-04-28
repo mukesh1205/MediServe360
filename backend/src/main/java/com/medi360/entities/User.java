@@ -14,21 +14,22 @@ public class User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int UserId;
+	
 	private String name;
 	private String role;
 	private String email;
 	private String phone;
-	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
-	private List<Auditlog> auditLogs;
-	
-	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
-	private List<Notification> notifications;
-	public List<Auditlog> getAuditLogs() {
-		return auditLogs;
-	}
-	public void setAuditLogs(List<Auditlog> auditLogs) {
-		this.auditLogs = auditLogs;
-	}
+//	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
+//	private List<Auditlog> auditLogs;
+//	
+//	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
+//	private List<Notification> notifications;
+//	public List<Auditlog> getAuditLogs() {
+//		return auditLogs;
+//	}
+//	public void setAuditLogs(List<Auditlog> auditLogs) {
+//		this.auditLogs = auditLogs;
+//	}
 	public int getUserId() {
 		return UserId;
 	}
