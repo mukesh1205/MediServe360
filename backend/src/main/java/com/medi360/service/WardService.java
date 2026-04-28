@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.medi360.db.WardRepository;
 import com.medi360.entities.Ward;
-import com.medi360.exception.BedNotFoundException;
 import com.medi360.exception.WardNotFoundException;
 
 @Service
