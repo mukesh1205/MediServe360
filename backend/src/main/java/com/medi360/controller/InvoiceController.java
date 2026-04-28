@@ -25,6 +25,8 @@ import com.medi360.exception.InvoiceNotFoundException;
 import com.medi360.exception.PatientNotFoundException;
 import com.medi360.service.InvoiceService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api")
 public class InvoiceController {
@@ -32,7 +34,7 @@ public class InvoiceController {
 	InvoiceService invoiceService;
 	
 	@PostMapping("/addInvoice")
-	public ResponseEntity<InvoiceResponseDTO> f1(@RequestBody InvoiceDTO invoiceDTO) throws PatientNotFoundException {
+	public ResponseEntity<InvoiceResponseDTO> f1(@Valid @RequestBody InvoiceDTO invoiceDTO) throws PatientNotFoundException {
 		Invoice i=this.invoiceService.addInvoice(invoiceDTO.getInvoice());
 		InvoiceResponseDTO dto=new InvoiceResponseDTO();
 		dto.setInvoice(i);
@@ -43,7 +45,7 @@ public class InvoiceController {
 	}
 	
 	@PutMapping("/updateInvoice")
-	public ResponseEntity<InvoiceResponseDTO> f2(@RequestBody InvoiceDTO invoiceDTO) throws InvoiceNotFoundException, PatientNotFoundException{
+	public ResponseEntity<InvoiceResponseDTO> f2(@Valid @RequestBody InvoiceDTO invoiceDTO) throws InvoiceNotFoundException, PatientNotFoundException{
 		Invoice i=this.invoiceService.updateInvoice(invoiceDTO.getInvoice());
 		InvoiceResponseDTO dto=new InvoiceResponseDTO();
 		dto.setInvoice(i);

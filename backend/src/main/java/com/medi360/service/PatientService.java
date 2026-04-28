@@ -20,6 +20,23 @@ public class PatientService {
 		return this.patientRepository.save(patient);
 	}
 
+	public Patient getPatientById(int id) throws PatientNotFoundException {
+
+		return patientRepository.findById(id)
+				.orElseThrow(() -> new PatientNotFoundException("Patient not found with id " + id));
+	}
+
+	public List<Patient> getPatientByName(String name) throws PatientNotFoundException {
+
+		List<Patient> patients = patientRepository.findByPatientNameContainingIgnoreCase(name);
+
+		if (patients.isEmpty()) {
+			throw new PatientNotFoundException("No patient records found with name " + name);
+		}
+
+		return patients;
+	}
+
 	public Patient updatePatient(Patient patient) throws PatientNotFoundException {
 
 		if (!patientRepository.existsById(patient.getPatientId())) {

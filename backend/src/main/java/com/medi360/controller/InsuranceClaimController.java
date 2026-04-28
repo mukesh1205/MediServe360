@@ -25,6 +25,8 @@ import com.medi360.exception.InsuranceClaimNotFoundException;
 import com.medi360.exception.PatientNotFoundException;
 import com.medi360.service.InsuranceClaimService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api")
 public class InsuranceClaimController {
@@ -32,7 +34,7 @@ public class InsuranceClaimController {
 	InsuranceClaimService insuranceClaimService;
 	
 	@PostMapping("/addInsuranceClaim")
-	public ResponseEntity<InsuranceClaimResponse> f1(@RequestBody InsuranceClaimDTO insuranceClaimDTO) throws PatientNotFoundException {
+	public ResponseEntity<InsuranceClaimResponse> f1(@Valid @RequestBody InsuranceClaimDTO insuranceClaimDTO) throws PatientNotFoundException {
 		InsuranceClaim i=this.insuranceClaimService.addInsuranceClaim(insuranceClaimDTO.getInsuranceClaim());
 		InsuranceClaimResponse dto=new InsuranceClaimResponse();
 		dto.setInsuranceClaim(i);
@@ -43,7 +45,7 @@ public class InsuranceClaimController {
 	}
 	
 	@PutMapping("/updateInsuranceClaim")
-	public ResponseEntity<InsuranceClaimResponse> f2(@RequestBody InsuranceClaimDTO insuranceClaimDTO) throws InsuranceClaimNotFoundException, PatientNotFoundException{
+	public ResponseEntity<InsuranceClaimResponse> f2(@Valid @RequestBody InsuranceClaimDTO insuranceClaimDTO) throws InsuranceClaimNotFoundException, PatientNotFoundException{
 		InsuranceClaim i=this.insuranceClaimService.updateInsuranceClaim(insuranceClaimDTO.getInsuranceClaim());
 		InsuranceClaimResponse dto=new InsuranceClaimResponse();
 		dto.setInsuranceClaim(i);
