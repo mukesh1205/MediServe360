@@ -3,11 +3,13 @@ package com.medi360.controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +30,7 @@ import com.medi360.service.WardService;
 @RestController
 @RequestMapping("/ward")
 public class WardController {
+
 	@Autowired
 	private WardService wardService;
 
@@ -40,6 +43,7 @@ public class WardController {
 		response.setMessage("Ward created successfully");
 		return ResponseEntity.status(201).body(response);
 	}
+
 
 	@GetMapping("/getAllWards")
 	public ResponseEntity<List<Ward>> getAllWard() {
@@ -56,6 +60,7 @@ public class WardController {
 		dto.setMessage("found ward with Id: " + wardId);
 		return ResponseEntity.status(200).body(dto);
 	}
+
 
 	@PutMapping("/updateWard")
 	public ResponseEntity<WardResponseDTO> updateWard(@RequestBody WardDTO wardDTO) throws WardNotFoundException {
@@ -79,6 +84,7 @@ public class WardController {
 		Sort sort = asc ? Sort.by(sorting).ascending() : Sort.by(sorting).descending();
 		Pageable pageable = PageRequest.of(pgno, size, sort);
 		return this.wardService.getAllWardsWithPaginated(pageable);
+
 
 	}
 }
