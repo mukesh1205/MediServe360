@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.medi360.DTO.BedDTO;
 import com.medi360.DTO.BedResponseDTO;
 import com.medi360.entities.Bed;
+import com.medi360.exception.BedNotFoundException;
 import com.medi360.service.BedService;
 
 @RestController
@@ -57,7 +58,7 @@ public class BedController {
 	}
 
 	@PutMapping("/updateBed")
-	public ResponseEntity<BedResponseDTO> updateBed(@RequestBody BedDTO bedDTO) {
+	public ResponseEntity<BedResponseDTO> updateBed(@RequestBody BedDTO bedDTO) throws BedNotFoundException {
 		Bed bed = bedService.updateBed(bedDTO.getBed());
 		BedResponseDTO dto = new BedResponseDTO();
 		dto.setBed(bed);
@@ -69,7 +70,7 @@ public class BedController {
 	}
 
 	@DeleteMapping("/delete/{bedId}")
-	public ResponseEntity<String> deleteBed(@PathVariable int bedId) {
+	public ResponseEntity<String> deleteBed(@PathVariable int bedId) throws BedNotFoundException {
 		bedService.delete(bedId);
 		return ResponseEntity.status(200).body("Bed deleted successfully");
 	}

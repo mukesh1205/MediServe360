@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.medi360.db.WardRepository;
 import com.medi360.entities.Ward;
+import com.medi360.exception.BedNotFoundException;
+import com.medi360.exception.WardNotFoundException;
 
 @Service
 public class WardService {
@@ -27,10 +29,16 @@ public class WardService {
 	public Ward getWardById(int wardId) {
 		return wardRepository.findById(wardId).orElse(null);
 	}
-	public Ward updateWard(Ward ward) {
+	public Ward updateWard(Ward ward) throws WardNotFoundException {
+		if (!wardRepository.existsById(ward.getWardId())){
+			throw new WardNotFoundException("ward not found with id " + ward.getWardId());
+		}
 		return wardRepository.save(ward);
 	}
-	public void deleteWard(int wardId) {
+	public void deleteWard(int wardId) throws WardNotFoundException{
+		if (!wardRepository.existsById(wardId)) {
+			throw new WardNotFoundException("ward not found with id " + wardId);
+		}
 		wardRepository.deleteById(wardId);
 	}
 	public Page<Ward>getAllWardsWithPaginated(Pageable pageable){
