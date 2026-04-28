@@ -1,7 +1,7 @@
 package com.medi360.DTO;
-
+ 
 import com.medi360.entities.Patient;
-
+ 
 public class PatientResponseDTO {
 	private Patient patient;
 	private int statusCode;

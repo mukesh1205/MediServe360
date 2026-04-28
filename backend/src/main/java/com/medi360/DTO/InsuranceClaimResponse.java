@@ -1,7 +1,7 @@
 package com.medi360.DTO;
-
+ 
 import com.medi360.entities.InsuranceClaim;
-
+ 
 public class InsuranceClaimResponse {
 	private InsuranceClaim insuranceClaim;
 	private int statusCode;

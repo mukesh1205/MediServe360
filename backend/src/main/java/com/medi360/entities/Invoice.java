@@ -1,6 +1,6 @@
 package com.medi360.entities;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -12,6 +12,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name="Invoice")
@@ -21,14 +24,20 @@ public class Invoice {
 	private int invoiceId;
 	
 	@ManyToOne
-	@JoinColumn(name="patient_id")
+	@JoinColumn(name = "patient_id", nullable = false)
+	@NotNull
 	private Patient patient;
+	
 	@Column
+	@Positive
 	private double amount;
+	
 	@Column
 	@JsonFormat(shape=JsonFormat.Shape.STRING,pattern="yyyy-MM-dd")
-	private Date invoiceDate;
+	private LocalDate invoiceDate;
+	
 	@Column
+	@NotBlank
 	private String status;
 	
 
@@ -48,11 +57,11 @@ public class Invoice {
 		this.amount = amount;
 	}
 
-	public Date getInvoiceDate() {
+	public LocalDate getInvoiceDate() {
 		return invoiceDate;
 	}
 
-	public void setInvoiceDate(Date invoiceDate) {
+	public void setInvoiceDate(LocalDate invoiceDate) {
 		this.invoiceDate = invoiceDate;
 	}
 
@@ -72,7 +81,7 @@ public class Invoice {
 		this.patient = patient;
 	}
 
-	public Invoice(double amount, Date invoiceDate, String status, Patient patient) {
+	public Invoice(double amount, LocalDate invoiceDate, String status, Patient patient) {
 		super();
 		this.amount = amount;
 		this.invoiceDate = invoiceDate;
