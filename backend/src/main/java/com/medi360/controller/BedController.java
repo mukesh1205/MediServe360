@@ -74,6 +74,24 @@ public class BedController {
 		bedService.delete(bedId);
 		return ResponseEntity.status(200).body("Bed deleted successfully");
 	}
+	@PostMapping("/{bedId}/assign")
+	public ResponseEntity<BedResponseDTO> assignPatient(@PathVariable int bedId, @RequestBody com.medi360.entities.Patient patient) throws BedNotFoundException {
+	    Bed bed = bedService.assignPatientToBed(bedId, patient);
+	    BedResponseDTO dto = new BedResponseDTO();
+	    dto.setBed(bed);
+	    dto.setStatusCode(200);
+	    dto.setMessage("Patient assigned to bed " + bedId + " successfully");
+	    return ResponseEntity.ok(dto);
+	}
+	@PutMapping("/{bedId}/discharge")
+	public ResponseEntity<BedResponseDTO> dischargePatient(@PathVariable int bedId) throws BedNotFoundException {
+	    Bed bed = bedService.dischargePatient(bedId);
+	    BedResponseDTO dto = new BedResponseDTO();
+	    dto.setBed(bed);
+	    dto.setStatusCode(200);
+	    dto.setMessage("Patient discharged and bed " + bedId + " is now available");
+	    return ResponseEntity.ok(dto);
+	}
 	@GetMapping("/getAllPatientsPaginated")
 	public Page<Bed> f6(@RequestParam(name="pgno") int pgno,
 							@RequestParam(name="size") int size,
@@ -84,5 +102,6 @@ public class BedController {
 		Pageable pageable=PageRequest.of(pgno, size,sort);
 		return this.bedService.getAllBedsWithPaginated(pageable);
 	}
+	
 
 }

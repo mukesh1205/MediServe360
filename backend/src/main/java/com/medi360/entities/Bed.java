@@ -1,6 +1,9 @@
 
 package com.medi360.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +20,7 @@ public class Bed {
 	private int bedId;
 	@ManyToOne
 	@JoinColumn(name="ward_id")
+	@JsonIgnore
 	private Ward ward;
 	
 	@OneToOne

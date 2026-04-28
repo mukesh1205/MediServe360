@@ -73,7 +73,12 @@ public class WardController {
 		wardService.deleteWard(wardId);
 		return ResponseEntity.status(200).body("ward deleted succesfully");
 	}
-
+	
+	@GetMapping("/{wardId}/occupancy-report")
+	public ResponseEntity<String> getOccupancyReport(@PathVariable int wardId) throws com.medi360.exception.WardNotFoundException {
+	    String report = wardService.getWardOccupancyReport(wardId);
+	    return ResponseEntity.ok(report);
+	}
 	@GetMapping("/getAllWardsPaginated")
 	public Page<Ward> f6(@RequestParam(name = "pgno") int pgno, @RequestParam(name = "size") int size,@RequestParam(name = "sorting") String sorting, @RequestParam(name = "asc") boolean asc) {
 		Sort sort = asc ? Sort.by(sorting).ascending() : Sort.by(sorting).descending();

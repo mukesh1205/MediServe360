@@ -3,6 +3,8 @@ package com.medi360.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,14 @@ public class Ward {
 	
 	@OneToMany(mappedBy="ward",cascade=CascadeType.ALL)
 	private List<Bed> beds;
+	public List<Bed> getBeds() {
+	    return beds;
+	}
+
+	// Add this setter
+	public void setBeds(List<Bed> beds) {
+	    this.beds = beds;
+	}
 	public int getWardId() {
 		return wardId;
 	}

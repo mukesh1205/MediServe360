@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.medi360.db.BedRepository;
 import com.medi360.entities.Bed;
+import com.medi360.entities.Patient;
 import com.medi360.exception.BedNotFoundException;
 
 @Service
@@ -55,5 +56,29 @@ public class BedService {
 	public Page<Bed> getAllBedsWithPaginated(Pageable pageable){
 		return this.bedRepository.findAll(pageable);
 		}
+	
+	// Add these to your existing BedService.java
 
+	public Bed assignPatientToBed(int bedId, Patient patient) throws BedNotFoundException {
+	    Bed bed = bedRepository.findById(bedId)
+	            .orElseThrow(() -> new BedNotFoundException("Bed not found with id " + bedId));
+	    
+	    // Check if bed is already taken
+	    if ("OCCUPIED".equalsIgnoreCase(bed.getBedStatus())) {
+	        throw new IllegalStateException("Bed " + bedId + " is already occupied.");
+	    }
+
+	    bed.setPatient(patient);
+	    bed.setBedStatus("OCCUPIED"); // Requirement 4.5: Ward allocation 
+	    return bedRepository.save(bed);
+	}
+
+	public Bed dischargePatient(int bedId) throws BedNotFoundException {
+	    Bed bed = bedRepository.findById(bedId)
+	            .orElseThrow(() -> new BedNotFoundException("Bed not found with id " + bedId));
+
+	    bed.setPatient(null);
+	    bed.setBedStatus("AVAILABLE"); // Requirement 4.5: Discharge workflow 
+	    return bedRepository.save(bed);
+	}
 }
