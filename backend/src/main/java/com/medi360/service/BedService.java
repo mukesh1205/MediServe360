@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.medi360.db.BedRepository;
 import com.medi360.entities.Bed;
+import com.medi360.exception.BedNotFoundException;
 
 @Service
 public class BedService {
@@ -34,11 +35,20 @@ public class BedService {
 		return bedRepository.findByWard_WardId(wardId);
 	}
 	
-	public Bed updateBed(Bed bed) {
+	public Bed updateBed(Bed bed) throws BedNotFoundException {
+		if (!bedRepository.existsById(bed.getBedId())){
+			throw new BedNotFoundException("Bed not found with id " + bed.getBedId());
+		}
+
 		return bedRepository.save(bed);
 		
 	}
-	public void delete(int bedId) {
+	public void delete(int bedId) throws BedNotFoundException{
+
+		if (!bedRepository.existsById(bedId)) {
+			throw new BedNotFoundException("Bed not found with id " + bedId);
+		}
+
 		bedRepository.deleteById(bedId);
 		
 	}
