@@ -3,6 +3,7 @@ package com.medi360.DTO;
 import com.medi360.entities.User;
 
 public class UserResponseDTO {
+	
 	private User user;
 	private int statusCode;
 	private String message;
@@ -24,7 +25,6 @@ public class UserResponseDTO {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
 	
 	
 }

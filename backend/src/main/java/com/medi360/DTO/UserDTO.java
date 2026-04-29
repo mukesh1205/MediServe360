@@ -3,6 +3,7 @@ package com.medi360.DTO;
 import com.medi360.entities.User;
 
 public class UserDTO {
+	
 	private User user;
 
 	public User getUser() {
@@ -12,5 +13,6 @@ public class UserDTO {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
 	
 }

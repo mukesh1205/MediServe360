@@ -1,10 +1,21 @@
 package com.medi360.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.medi360.DTO.NotificationDTO;
@@ -12,26 +23,56 @@ import com.medi360.DTO.NotificationResponseDTO;
 import com.medi360.entities.Notification;
 import com.medi360.service.NotificationService;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/notification")
 public class NotificationController {
 	
 	@Autowired
-	NotificationService ns;
+	private NotificationService ns;
 	
-	@PostMapping("/insetnotification")
-	public ResponseEntity<NotificationResponseDTO> f1(@RequestBody NotificationDTO nd) {
-		Notification n=this.ns.insertNotifications(nd.getNotification());
-		NotificationResponseDTO nr=new NotificationResponseDTO();
-		nr.setNotification(n);
-		nr.setMessage("Successfully Inserted");
-		nr.setStatusCode(200);
+	@PostMapping("/insertnotificationdata")
+	public ResponseEntity<NotificationResponseDTO> addNotification(@RequestBody NotificationDTO notificationDto) {
+		Notification u=this.ns.addNotification(notificationDto.getNotification());
+		NotificationResponseDTO urd=new NotificationResponseDTO();
 		
-		return ResponseEntity.status(201).body(nr);
+		urd.setNotification(u);
+		urd.setStatusCode(201);
+		urd.setMessage("Successfully added");
+		
+		return ResponseEntity.status(201).body(urd);
 	}
+	
+	@PutMapping("/updatenotification")
+	public ResponseEntity<NotificationResponseDTO> updateUser(@RequestBody NotificationDTO notificationDto) {
+		Notification u=this.ns.updateNotification(notificationDto.getNotification());
+		NotificationResponseDTO urd=new NotificationResponseDTO();
+		
+		urd.setNotification(u);
+		urd.setMessage("Successfully updated notification");
+		urd.setStatusCode(200);
+		
+		return ResponseEntity.status(200).body(urd);
+	}
+	
+	@DeleteMapping("/deletenotification/{nid}")
+	public String deleteNotification(@PathVariable int nid) {
+		return this.ns.deleteNotification(nid);
+	}
+	
+	@GetMapping("/fetchallnotifications")
+	public List<Notification> getAllNotification(){
+		return this.ns.getAllNotification();
+	}
+	
+	@GetMapping("/fetchAllNotificationsPaginated")
+	public Page<Notification> f6(@RequestParam(name="pgno") int pgno,
+							@RequestParam(name="size") int size,
+							@RequestParam(name="sorting") String sorting,
+							@RequestParam(name="asc") boolean asc){
+		Sort sort=asc?Sort.by(sorting).ascending() : Sort.by(sorting).descending();
+		
+		Pageable pageable=PageRequest.of(pgno, size,sort);
+		return this.ns.getAllNotificationsWithPagination(pageable);
+	}
+	
 }
