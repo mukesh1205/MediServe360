@@ -17,18 +17,20 @@ public class UserService {
 	@Autowired
 	private UserRepository userrepo;
 	
-	public User insertUsers(User u) {
-		return this.userrepo.save(u);
+	public User addUser(User user) {
+		return this.userrepo.save(user);
 	}
-	public User updateUsers(User u) {
-		return this.userrepo.save(u);
+	
+	public User updateUser(User user) {
+		return this.userrepo.save(user);
 	}
 	
 	public String deleteUser(int id) {
 		this.userrepo.deleteById(id);
-		return "successfully deleted";
+		return "Successfully Deleted";
 	}
-	public List<User> getAllUsers() {
+	
+	public List<User> getAllUser(){
 		return this.userrepo.findAll();
 	}
 	

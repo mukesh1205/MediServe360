@@ -14,4 +14,5 @@ public class NotificationDTO {
 		this.notification = notification;
 	}
 	
+	
 }

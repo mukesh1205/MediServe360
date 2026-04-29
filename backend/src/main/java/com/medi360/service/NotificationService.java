@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.medi360.db.NotificationRepository;
 import com.medi360.entities.Notification;
-import com.medi360.entities.Patient;
 import com.medi360.entities.User;
 
 @Service
@@ -18,19 +17,20 @@ public class NotificationService {
 	@Autowired
 	private NotificationRepository notificationrepo;
 	
-	public Notification insertNotifications(Notification n) {
-		return this.notificationrepo.save(n);
+	public Notification addNotification(Notification notification) {
+		return this.notificationrepo.save(notification);
 	}
 	
-	public Notification updateNotifications(Notification u) {
-		return this.notificationrepo.save(u);
+	public Notification updateNotification(Notification notification) {
+		return this.notificationrepo.save(notification);
 	}
 	
 	public String deleteNotification(int id) {
 		this.notificationrepo.deleteById(id);
-		return "successfully deleted";
+		return "Successfully deleted";
 	}
-	public List<Notification> getAllNotifications() {
+	
+	public List<Notification> getAllNotification(){
 		return this.notificationrepo.findAll();
 	}
 	

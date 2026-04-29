@@ -1,18 +1,17 @@
 package com.medi360.DTO;
 
-import com.medi360.entities.Auditlog;
+import com.medi360.entities.AuditLog;
 
-public class AuditLogDTO {
+public class AuditlogDTO {
 	
-	private Auditlog auditlog;
+	private AuditLog auditLog;
 
-	public Auditlog getAuditlog() {
-		return auditlog;
+	public AuditLog getAuditLog() {
+		return auditLog;
 	}
 
-	public void setAuditlog(Auditlog auditlog) {
-		this.auditlog = auditlog;
+	public void setAuditLog(AuditLog auditLog) {
+		this.auditLog = auditLog;
 	}
-	
 	
 }
