@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.medi360.DTO.NotificationDTO;
 import com.medi360.DTO.NotificationResponseDTO;
 import com.medi360.entities.Notification;
+import com.medi360.exception.NotificationNotfoundException;
 import com.medi360.service.NotificationService;
 
 @RestController
@@ -43,7 +44,7 @@ public class NotificationController {
 	}
 	
 	@PutMapping("/updatenotification")
-	public ResponseEntity<NotificationResponseDTO> updateUser(@RequestBody NotificationDTO notificationDto) {
+	public ResponseEntity<NotificationResponseDTO> updateUser(@RequestBody NotificationDTO notificationDto) throws NotificationNotfoundException{
 		Notification u=this.ns.updateNotification(notificationDto.getNotification());
 		NotificationResponseDTO urd=new NotificationResponseDTO();
 		
@@ -55,7 +56,7 @@ public class NotificationController {
 	}
 	
 	@DeleteMapping("/deletenotification/{nid}")
-	public String deleteNotification(@PathVariable int nid) {
+	public String deleteNotification(@PathVariable int nid) throws NotificationNotfoundException{
 		return this.ns.deleteNotification(nid);
 	}
 	
@@ -73,6 +74,11 @@ public class NotificationController {
 		
 		Pageable pageable=PageRequest.of(pgno, size,sort);
 		return this.ns.getAllNotificationsWithPagination(pageable);
+	}
+	
+	@GetMapping("/findNotificationById/{id}")
+	public Notification findbyid(@PathVariable int id) throws NotificationNotfoundException{
+		return this.ns.findById(id);
 	}
 	
 }
