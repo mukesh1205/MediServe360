@@ -1,5 +1,8 @@
 package com.medi360.entities;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,13 +21,16 @@ public class Appointment {
 	private int id;
 	
 	@Column
-	private String date;
+	private LocalDate date;
 	
 	@Column
-	private String time;
+	private LocalTime time;
 	
 	@Column
 	private String status;
+	
+	@Column
+	private int durationMinutes; 
 	
 	@ManyToOne
 	@JoinColumn(name="patient_id")
@@ -41,16 +47,16 @@ public class Appointment {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
-	public void setDate(String date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	public String getTime() {
+	public LocalTime getTime() {
 		return time;
 	}
-	public void setTime(String time) {
+	public void setTime(LocalTime time) {
 		this.time = time;
 	}
 	public String getStatus() {
@@ -58,6 +64,13 @@ public class Appointment {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	public int getDurationMinutes() {
+		return durationMinutes;
+	}
+	public void setDurationMinutes(int durationMinutes) {
+		this.durationMinutes = durationMinutes;
 	}
 	
 	public Patient getPatient() {
@@ -76,12 +89,13 @@ public class Appointment {
 		this.doctor = doctor;
 	}
 	
-	public Appointment(String date, String time, String status, Patient patient, Doctor doctor) {
+	public Appointment(LocalDate date, LocalTime time, String status, int durationMinutes, Patient patient, Doctor doctor) {
 		
 		super();
 		this.date = date;
 		this.time = time;
 		this.status = status;
+		this.durationMinutes = durationMinutes;
 		this.patient = patient;
 		this.doctor = doctor;
 		

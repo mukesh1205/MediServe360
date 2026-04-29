@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.medi360.DTO.DoctorDTO;
 import com.medi360.DTO.DoctorResponseDTO;
 import com.medi360.entities.Doctor;
+import com.medi360.exception.DoctorNotFoundException;
 import com.medi360.service.DoctorService;
 
 @RestController
@@ -58,17 +59,24 @@ public class DoctorController {
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<String> deleteDoctor(@PathVariable int id) {
+	public ResponseEntity<String> deleteDoctor(@PathVariable int id) throws DoctorNotFoundException {
 		
 		doctorService.deleteDoctor(id);
 		return ResponseEntity.ok("Doctor deleted successfully");
 		
 	}
 	
-	@GetMapping("/get/{id}")
+	/* @GetMapping("/get/{id}")
 	public Doctor getDoctorById(@PathVariable int id) {
 		return doctorService.getDoctorById(id);
+	}  */
+	
+	@GetMapping("/get/{id}")
+	public Doctor getDoctorById(@PathVariable int id)
+	        throws DoctorNotFoundException {
+	    return doctorService.getDoctorById(id);
 	}
+	
 	
 	@GetMapping("/getAll")
 	public List <Doctor> getAllDoctors() {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.medi360.db.DoctorRepository;
 import com.medi360.entities.Doctor;
+import com.medi360.exception.DoctorNotFoundException;
 
 @Service
 public class DoctorService {
@@ -27,12 +28,29 @@ public class DoctorService {
 		return doctorRepository.save(doctor);
 	}
 	
-	public void deleteDoctor(int doctorId) {
+	/*public void deleteDoctor(int doctorId) {
 	   doctorRepository.deleteById(doctorId);
-	}
-	
+	} 
+	 
     public Doctor getDoctorById(int id) {
 		return doctorRepository.findById(id).get();
+	}  */
+	
+	public void deleteDoctor(int doctorId) throws DoctorNotFoundException {
+
+	    if (!doctorRepository.existsById(doctorId)) {
+	        throw new DoctorNotFoundException(
+	                "Doctor not found with id " + doctorId);
+	    }
+
+	    doctorRepository.deleteById(doctorId);
+	}
+	
+	public Doctor getDoctorById(int id) throws DoctorNotFoundException {
+	    return doctorRepository.findById(id)
+	            .orElseThrow(() ->
+	                    new DoctorNotFoundException(
+	                            "Doctor not found with id " + id));
 	}
     
 	public List<Doctor> getAllDoctors() {
