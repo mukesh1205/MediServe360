@@ -27,31 +27,31 @@ public class UserService {
 		this.auditrepo.save(au);
 	}
 	public User addUser(User user) {
-		
+		User u=this.userrepo.save(user);
 		AuditLog au=new AuditLog();
-		au.setAction("User with Name "+user.getUserName()+" and Role "+user.getUserRole()+" successfully created");
+		au.setAction("User with Name "+u.getUserName()+" and Role "+u.getUserRole()+" successfully created");
 		au.setTimestamp(LocalDateTime.now());
-		au.setUser(user);
+		au.setUser(u);
 		
 		addUserAuditLog(au);
-		return this.userrepo.save(user);
+		return u;
 	}
 	
 	public User updateUser(User user) throws UserNotFoundException{
 		if (!userrepo.existsById(user.getUserId())) {
 			throw new UserNotFoundException("User not found with id " + user.getUserId());
 		}
-		
+		User u=this.userrepo.save(user);
 		AuditLog au=new AuditLog();
-		au.setAction("User with Name "+user.getUserName()+" and Role "+user.getUserRole()+" successfully updated");
+		au.setAction("User with Name "+u.getUserName()+" and Role "+u.getUserRole()+" successfully updated");
 		au.setTimestamp(LocalDateTime.now());
-		au.setUser(user);
+		au.setUser(u);
 		
-		addUserAuditLog(au);
+		auditrepo.save(au);
 		
 		
 		
-		return this.userrepo.save(user);
+		return u;
 		
 	}
 	
@@ -60,18 +60,8 @@ public class UserService {
 			throw new UserNotFoundException("User not found with id " + id);
 		}
 		
-		User u=this.userrepo.findById(id).get();
-		
-		AuditLog au=new AuditLog();
-		au.setAction("User with Name "+u.getUserName()+" and Role "+u.getUserRole()+" successfully deleted");
-		au.setTimestamp(LocalDateTime.now());
-		au.setUser(u);
-		
-		addUserAuditLog(au);
-		
-		
-		
 		this.userrepo.deleteById(id);
+		
 		return "Successfully Deleted";
 	}
 	

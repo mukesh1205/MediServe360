@@ -11,4 +11,5 @@ import com.medi360.entities.AuditLog;
 public interface AuditlogRepository extends JpaRepository<AuditLog,Integer>{
 	
 	List<AuditLog> findByUserUserId(int id);
+	void deleteByUserUserId(int id);
 }

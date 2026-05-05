@@ -20,7 +20,7 @@ public class AuditLog {
 	private LocalDateTime timestamp;
 	
 	@ManyToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name="user_id",nullable=true)
 	private User user;
 
 	public AuditLog(String action, LocalDateTime timestamp, User user) {
