@@ -45,10 +45,10 @@ public class Invoice {
 	private String paymentMode;
 
 	@Positive
-	private double adjustmentAmount; // refunded or adjusted amount
+	private double adjustmentAmount; 
 
 	@NotBlank
-	private String refundStatus; // NONE / PARTIAL / FULL
+	private String refundStatus;
 
 	public Invoice(@NotNull Patient patient, @Positive double amount, @NotNull LocalDate invoiceDate,
 			@NotBlank String paymentStatus, @NotBlank String paymentMode, @Positive double adjustmentAmount,
