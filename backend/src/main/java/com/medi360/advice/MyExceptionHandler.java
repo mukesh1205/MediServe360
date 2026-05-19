@@ -91,4 +91,28 @@ public class MyExceptionHandler {
 		response.setErrorMessage(e.getMessage());
 		return ResponseEntity.status(404).body(response);
 	}
+	
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleUserNotFound(Exception e){
+		ErrorResponse err=new ErrorResponse();
+		err.setHttpStatusCode(404);
+		err.setErrorMessage(e.getMessage());
+		return ResponseEntity.status(404).body(err);
+	}
+	
+	@ExceptionHandler(AuditNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleAuditNotFound(Exception e){
+		ErrorResponse err=new ErrorResponse();
+		err.setHttpStatusCode(404);
+		err.setErrorMessage(e.getMessage());
+		return ResponseEntity.status(404).body(err);
+	}
+	
+	@ExceptionHandler(NotificationNotfoundException.class)
+	public ResponseEntity<ErrorResponse> handleNotificationNotFound(Exception e){
+		ErrorResponse err=new ErrorResponse();
+		err.setHttpStatusCode(404);
+		err.setErrorMessage(e.getMessage());
+		return ResponseEntity.status(404).body(err);
+	}
 }

@@ -1,6 +1,6 @@
 package com.medi360.entities;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,63 +16,75 @@ public class Notification {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int notificationId;
 	
+	private String message;
+	private String category;
+	private String status;
+	private LocalDateTime createdDate;
+	
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private User user;
-	
-	private String notificationmessage;
-	private String notificationcategory;
-	private String notificationStatus;
-	private Date notificationCreatedDate;
+
+	public Notification(String message, String category, String status, LocalDateTime createdDate, User user) {
+		super();
+		this.message = message;
+		this.category = category;
+		this.status = status;
+		this.createdDate = createdDate;
+		this.user = user;
+	}
+
 	public Notification() {
 		super();
 	}
-	public Notification(User userId, String notificationmessage, String notificationcategory, String notificationStatus,
-			Date notificationCreatedDate) {
-		super();
-		this.user = userId;
-		this.notificationmessage = notificationmessage;
-		this.notificationcategory = notificationcategory;
-		this.notificationStatus = notificationStatus;
-		this.notificationCreatedDate = notificationCreatedDate;
-	}
+
 	public int getNotificationId() {
 		return notificationId;
 	}
+
 	public void setNotificationId(int notificationId) {
 		this.notificationId = notificationId;
 	}
-	public User getUserId() {
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public LocalDateTime getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(LocalDateTime createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public User getUser() {
 		return user;
 	}
-	public void setUserId(User userId) {
-		this.user = userId;
+
+	public void setUser(User user) {
+		this.user = user;
 	}
-	public String getNotificationmessage() {
-		return notificationmessage;
-	}
-	public void setNotificationmessage(String notificationmessage) {
-		this.notificationmessage = notificationmessage;
-	}
-	public String getNotificationcategory() {
-		return notificationcategory;
-	}
-	public void setNotificationcategory(String notificationcategory) {
-		this.notificationcategory = notificationcategory;
-	}
-	public String getNotificationStatus() {
-		return notificationStatus;
-	}
-	public void setNotificationStatus(String notificationStatus) {
-		this.notificationStatus = notificationStatus;
-	}
-	public Date getNotificationCreatedDate() {
-		return notificationCreatedDate;
-	}
-	public void setNotificationCreatedDate(Date notificationCreatedDate) {
-		this.notificationCreatedDate = notificationCreatedDate;
-	}
-	
 	
 	
 }

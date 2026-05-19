@@ -1,6 +1,6 @@
 package com.medi360.entities;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,26 +10,28 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Auditlog {
+public class AuditLog {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int auditId;
+	
 	private String action;
-	private Timestamp timestamp;
+	private LocalDateTime timestamp;
 	
 	@ManyToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name="user_id",nullable=true)
 	private User user;
 
-	public Auditlog() {
-		super();
-	}
-
-	public Auditlog(String action, Timestamp timestamp, User user) {
+	public AuditLog(String action, LocalDateTime timestamp, User user) {
 		super();
 		this.action = action;
 		this.timestamp = timestamp;
 		this.user = user;
+	}
+
+	public AuditLog() {
+		super();
 	}
 
 	public int getAuditId() {
@@ -48,11 +50,11 @@ public class Auditlog {
 		this.action = action;
 	}
 
-	public Timestamp getTimestamp() {
+	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Timestamp timestamp) {
+	public void setTimestamp(LocalDateTime timestamp) {
 		this.timestamp = timestamp;
 	}
 
@@ -63,4 +65,6 @@ public class Auditlog {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	
 }

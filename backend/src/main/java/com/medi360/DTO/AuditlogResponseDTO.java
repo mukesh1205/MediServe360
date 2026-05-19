@@ -1,15 +1,16 @@
 package com.medi360.DTO;
 
-import com.medi360.entities.Auditlog;
+import com.medi360.entities.AuditLog;
 
 public class AuditlogResponseDTO {
-	private Auditlog auditlog;
+	
+	private AuditLog auditlog;
 	private int statusCode;
 	private String message;
-	public Auditlog getAuditlog() {
+	public AuditLog getAuditlog() {
 		return auditlog;
 	}
-	public void setAuditlog(Auditlog auditlog) {
+	public void setAuditlog(AuditLog auditlog) {
 		this.auditlog = auditlog;
 	}
 	public int getStatusCode() {
