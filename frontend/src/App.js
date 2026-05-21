@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router';
@@ -51,7 +50,9 @@ import NotificationHome from './components/notification/NotificationHome';
 import AddNotification from './components/notification/AddNotification';
 import DeleteNotification from './components/notification/DeleteNotification';
 import FindNotification from './components/notification/FindNotification';
-
+import UpdateUser from './components/user/UpdateUser';
+import FindUser from './components/user/FindUser';
+import AddAuditlog from './components/auditlog/AddAuditlog';
 function App() {
   return (
     <Router>
@@ -64,8 +65,6 @@ function App() {
             <Route path="find" element={<FindAppointment />}></Route>
         </Route>
 
-
-        {/* Patient Routes */}
         <Route path="/patient" element={<PatientHome />}>
             <Route path="add" element={<AddPatient />} />
             <Route path="delete" element={<DeletePatient />} />
@@ -120,6 +119,7 @@ function App() {
             <Route path="delete" element={<DeleteNotification />} />
             <Route path="find" element={<FindNotification />} />
         </Route>
+
       </Routes>
 
     </Router>

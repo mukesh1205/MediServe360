@@ -1,5 +1,4 @@
 import { Outlet, useNavigate } from "react-router";
-import {Outlet} from "react-router";
 export default function NotificationHome(){
 
     const navigate=useNavigate();
