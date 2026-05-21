@@ -29,6 +29,19 @@ import DeleteInsuranceClaim from './components/insurance_claim/DeleteInsuranceCl
 import UpdateInsuranceClaim from './components/insurance_claim/UpdateInsuranceClaim';
 import FindInsuranceClaim from './components/insurance_claim/FindInsuranceClaim';
 
+// Compilance Report Imports
+import CompilanceReportHome from './components/compilance_report/CompilanceReportHome';
+import AddCompilanceReport from './components/compilance_report/AddCompilance';
+import DeleteCompilanceReport from './components/compilance_report/DeleteCompilance';
+import UpdateCompilanceReport from './components/compilance_report/UpdateCompilance';
+import FindCompilanceReport from './components/compilance_report/FindCompilance';
+
+// KPI Report Imports
+import KpiReportHome from './components/kpi_report/KpiReportHome';
+import AddKpiReport from './components/kpi_report/AddKpi';
+import DeleteKpiReport from './components/kpi_report/DeleteKpi';
+import UpdateKpiReport from './components/kpi_report/UpdateKpi';
+import FindKpiReport from './components/kpi_report/FindKpi';
 
 function App() {
   return (
@@ -65,6 +78,20 @@ function App() {
     <Route path="delete" element={<DeleteInsuranceClaim />} />
     <Route path="update" element={<UpdateInsuranceClaim />} />
     <Route path="find" element={<FindInsuranceClaim />} />
+</Route>
+
+<Route path="/compilance_report" element={<CompilanceReportHome />}>
+    <Route path="add" element={<AddCompilanceReport />} />
+    <Route path="delete" element={<DeleteCompilanceReport />} />
+    <Route path="update" element={<UpdateCompilanceReport />} />
+    <Route path="find" element={<FindCompilanceReport />} />
+</Route>
+
+<Route path="/kpi_report" element={<KpiReportHome />}>
+    <Route path="add" element={<AddKpiReport />} />
+    <Route path="delete" element={<DeleteKpiReport />} />
+    <Route path="update" element={<UpdateKpiReport />} />
+    <Route path="find" element={<FindKpiReport />} />
 </Route>
 
       </Routes>
