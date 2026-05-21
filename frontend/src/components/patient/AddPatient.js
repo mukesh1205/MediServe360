@@ -56,7 +56,7 @@ export default function AddPatient(){
 
     return(
         <div>
-
+            <h3>Add Patient component</h3>
             <label>Patient Name</label>
             <input type='text' onChange={patientNameHandler} required/>
             <br />
