@@ -1,21 +1,22 @@
-import { useNavigate } from "react-router"
+import { Outlet, useNavigate } from "react-router";
+import {Outlet} from "react-router";
 export default function NotificationHome(){
 
     const navigate=useNavigate();
 
     const addnotificatoinhandler=()=>{
-        navigate("/addnotification")
+        navigate("/add")
     }
 
     const updatenotificatoinhandler=()=>{
-        navigate("/addnotification")
+        navigate("/update")
     }
 
     const deletenotificatoinhandler=()=>{
-        navigate("/addnotification")
+        navigate("/delete")
     }
     const getnotificatoinhandler=()=>{
-        navigate("/addnotification")
+        navigate("/find")
     }
     return(
         <div>

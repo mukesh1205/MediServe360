@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router"
+import {Outlet} from "react-router";
+
 export default function AuditlogHome(){
     const navigate=useNavigate();
     const addAuditLogHandler=()=>{
-        navigate("/addauditlog")
+        navigate("add")
     }
 
     const getAuditLogHandler=()=>{
-        navigate("/getauditlog")
+        navigate("find")
     }
 
     return(

@@ -3,18 +3,18 @@ import { Outlet } from "react-router";
 export default function UserHome(){
     const navigate=useNavigate();
     const addUserHandler=()=>{
-        navigate("adduser")
+        navigate("add")
     }
 
     const findUserHandler=()=>{
-        navigate("/finduser")
+        navigate("find")
     }
 
     const updateUserHandler=()=>{
-        navigate("/updateuser")
+        navigate("update")
     }
     const deleteUserHandler=()=>{
-        navigate("/deleteuser")
+        navigate("delete")
     }
 
     return(
