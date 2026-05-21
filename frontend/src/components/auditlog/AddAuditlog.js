@@ -4,4 +4,5 @@ export default function AddAuditlog(){
             <h1>This is Add Auditlog component</h1>
         </div>
     )
-} 
+}
+
