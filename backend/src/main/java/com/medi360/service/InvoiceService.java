@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.medi360.DTO.FinancialReportDTO;
 import com.medi360.db.InvoiceRepository;
 import com.medi360.db.PatientRepository;
 import com.medi360.entities.Invoice;
@@ -43,6 +44,45 @@ public class InvoiceService {
 		return this.invoiceRepository.save(invoice);
 	}
 
+	public Invoice updatePaymentStatus(int invoiceId, String paymentStatus, String paymentMode)
+			throws InvoiceNotFoundException {
+
+		Invoice invoice = invoiceRepository.findById(invoiceId)
+				.orElseThrow(() -> new InvoiceNotFoundException("Invoice not found with id " + invoiceId));
+
+		invoice.setPaymentStatus(paymentStatus);
+		invoice.setPaymentMode(paymentMode);
+
+		return invoiceRepository.save(invoice);
+	}
+
+	public Invoice processRefund(
+	        int invoiceId,
+	        double refundAmount)
+	        throws InvoiceNotFoundException {
+
+	    Invoice invoice = invoiceRepository.findById(invoiceId)
+	            .orElseThrow(() ->
+	                new InvoiceNotFoundException(
+	                    "Invoice not found with id " + invoiceId));
+
+	    if (refundAmount <= 0 || refundAmount > invoice.getAmount()) {
+	        throw new IllegalArgumentException(
+	            "Invalid refund amount");
+	    }
+
+	    invoice.setAdjustmentAmount(refundAmount);
+
+	    if (refundAmount == invoice.getAmount()) {
+	        invoice.setRefundStatus("FULL");
+	        invoice.setPaymentStatus("REFUNDED");
+	    } else {
+	        invoice.setRefundStatus("PARTIAL");
+	        invoice.setPaymentStatus("PARTIAL");
+	    }
+
+	    return invoiceRepository.save(invoice);
+	}
 	public String deleteInvoice(int id) throws InvoiceNotFoundException {
 
 		if (!invoiceRepository.existsById(id)) {
@@ -57,7 +97,52 @@ public class InvoiceService {
 		return this.invoiceRepository.findAll();
 	}
 
+	public List<Invoice> getInvoicesByPatient(int patientId) throws InvoiceNotFoundException {
+
+		List<Invoice> invoices = invoiceRepository.findByPatientPatientId(patientId);
+
+		if (invoices.isEmpty()) {
+			throw new InvoiceNotFoundException("No invoices found for patient " + patientId);
+		}
+		return invoices;
+	}
+
+	public List<Invoice> getInvoicesByPaymentStatus(String paymentStatus) throws InvoiceNotFoundException {
+
+		List<Invoice> invoices = invoiceRepository.findByPaymentStatus(paymentStatus);
+
+		if (invoices.isEmpty()) {
+			throw new InvoiceNotFoundException("No invoices found with payment status " + paymentStatus);
+		}
+
+		return invoices;
+	}
+	
+	public FinancialReportDTO getFinancialReport() {
+
+	    Double totalBilled = invoiceRepository.getTotalBilledAmount();
+	    Double totalPaid = invoiceRepository.getTotalPaidAmount();
+
+	    long totalInvoices = invoiceRepository.getTotalInvoiceCount();
+	    long paidInvoices = invoiceRepository.getPaidInvoiceCount();
+	    long unpaidInvoices = invoiceRepository.getUnpaidInvoiceCount();
+
+	    FinancialReportDTO report = new FinancialReportDTO();
+	    report.setTotalBilledAmount(totalBilled != null ? totalBilled : 0);
+	    report.setTotalPaidAmount(totalPaid != null ? totalPaid : 0);
+	    report.setTotalPendingAmount(
+	            (totalBilled != null ? totalBilled : 0)
+	            - (totalPaid != null ? totalPaid : 0));
+
+	    report.setTotalInvoices(totalInvoices);
+	    report.setPaidInvoices(paidInvoices);
+	    report.setUnpaidInvoices(unpaidInvoices);
+
+	    return report;
+	}
+	
 	public Page<Invoice> getAllInvoicesWithPagination(Pageable pageable) {
 		return this.invoiceRepository.findAll(pageable);
 	}
+
 }

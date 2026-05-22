@@ -13,11 +13,11 @@ import io.swagger.v3.oas.annotations.info.Info;
 				version = "1.0",
 				description = "API documentation for managing MediServe360"
 		)
-)
+)  
 public class BackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackendApplication.class, args);
 		System.out.print("mediserve app");
 	}
-}
+} 

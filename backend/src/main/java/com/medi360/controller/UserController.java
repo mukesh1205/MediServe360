@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.medi360.DTO.UserDTO;
 import com.medi360.DTO.UserResponseDTO;
-import com.medi360.entities.Patient;
 import com.medi360.entities.User;
+import com.medi360.exception.UserNotFoundException;
 import com.medi360.service.UserService;
 
 
@@ -34,6 +34,8 @@ public class UserController {
 	
 	@PostMapping("/insertuserdata")
 	public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserDTO userDto) {
+		
+		
 		User u=this.us.addUser(userDto.getUser());
 		UserResponseDTO urd=new UserResponseDTO();
 		
@@ -45,7 +47,8 @@ public class UserController {
 	}
 	
 	@PutMapping("/updateuser")
-	public ResponseEntity<UserResponseDTO> updateUser(@RequestBody UserDTO userDto) {
+	public ResponseEntity<UserResponseDTO> updateUser(@RequestBody UserDTO userDto) throws UserNotFoundException{
+		
 		User u=this.us.updateUser(userDto.getUser());
 		UserResponseDTO urd=new UserResponseDTO();
 		
@@ -57,7 +60,8 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/deleteuser/{uid}")
-	public String deleteUser(@PathVariable int uid) {
+	public String deleteUser(@PathVariable int uid) throws UserNotFoundException{
+		
 		return this.us.deleteUser(uid);
 	}
 	
@@ -76,5 +80,19 @@ public class UserController {
 		Pageable pageable=PageRequest.of(pgno, size,sort);
 		return this.us.getAllUsersWithPagination(pageable);
 	}
+	
+	@GetMapping("/findbyid/{id}")
+	public ResponseEntity<UserResponseDTO> findById(@PathVariable int id) throws UserNotFoundException{
+		User u=this.us.findById(id);
+		UserResponseDTO dto=new UserResponseDTO();
+		
+		dto.setUser(u);
+		dto.setStatusCode(200);
+		dto.setMessage("Successfully retreived data by userid");
+		
+		return ResponseEntity.status(200).body(dto);
+	}
+	
+	
 	
 }

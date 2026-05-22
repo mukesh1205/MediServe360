@@ -28,14 +28,6 @@ public class DoctorService {
 		return doctorRepository.save(doctor);
 	}
 	
-	/*public void deleteDoctor(int doctorId) {
-	   doctorRepository.deleteById(doctorId);
-	} 
-	 
-    public Doctor getDoctorById(int id) {
-		return doctorRepository.findById(id).get();
-	}  */
-	
 	public void deleteDoctor(int doctorId) throws DoctorNotFoundException {
 
 	    if (!doctorRepository.existsById(doctorId)) {

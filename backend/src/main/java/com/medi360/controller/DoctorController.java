@@ -66,11 +66,7 @@ public class DoctorController {
 		
 	}
 	
-	/* @GetMapping("/get/{id}")
-	public Doctor getDoctorById(@PathVariable int id) {
-		return doctorService.getDoctorById(id);
-	}  */
-	
+
 	@GetMapping("/get/{id}")
 	public Doctor getDoctorById(@PathVariable int id)
 	        throws DoctorNotFoundException {
@@ -97,6 +93,8 @@ public class DoctorController {
 	
 	} 	
 }
+
+
 
 
 

@@ -32,46 +32,67 @@ import jakarta.validation.Valid;
 public class InsuranceClaimController {
 	@Autowired
 	InsuranceClaimService insuranceClaimService;
-	
+
 	@PostMapping("/addInsuranceClaim")
-	public ResponseEntity<InsuranceClaimResponse> f1(@Valid @RequestBody InsuranceClaimDTO insuranceClaimDTO) throws PatientNotFoundException {
-		InsuranceClaim i=this.insuranceClaimService.addInsuranceClaim(insuranceClaimDTO.getInsuranceClaim());
-		InsuranceClaimResponse dto=new InsuranceClaimResponse();
+	public ResponseEntity<InsuranceClaimResponse> f1(@Valid @RequestBody InsuranceClaimDTO insuranceClaimDTO)
+			throws PatientNotFoundException {
+		InsuranceClaim i = this.insuranceClaimService.addInsuranceClaim(insuranceClaimDTO.getInsuranceClaim());
+		InsuranceClaimResponse dto = new InsuranceClaimResponse();
 		dto.setInsuranceClaim(i);
 		dto.setStatusCode(201);
 		dto.setMessage("InsuranceClaim created successfully");
-		
+
 		return ResponseEntity.status(201).body(dto);
 	}
-	
+
 	@PutMapping("/updateInsuranceClaim")
-	public ResponseEntity<InsuranceClaimResponse> f2(@Valid @RequestBody InsuranceClaimDTO insuranceClaimDTO) throws InsuranceClaimNotFoundException, PatientNotFoundException{
-		InsuranceClaim i=this.insuranceClaimService.updateInsuranceClaim(insuranceClaimDTO.getInsuranceClaim());
-		InsuranceClaimResponse dto=new InsuranceClaimResponse();
+	public ResponseEntity<InsuranceClaimResponse> f2(@Valid @RequestBody InsuranceClaimDTO insuranceClaimDTO)
+			throws InsuranceClaimNotFoundException, PatientNotFoundException {
+		InsuranceClaim i = this.insuranceClaimService.updateInsuranceClaim(insuranceClaimDTO.getInsuranceClaim());
+		InsuranceClaimResponse dto = new InsuranceClaimResponse();
 		dto.setInsuranceClaim(i);
 		dto.setStatusCode(200);
 		dto.setMessage("InsuranceClaim updated successfully");
-		
+
 		return ResponseEntity.status(200).body(dto);
 	}
+
+	@PutMapping("/updateInsuranceClaimStatus/{claimId}")
+	public ResponseEntity<InsuranceClaimResponse> updateClaimStatus(@PathVariable int claimId,
+			@RequestParam String status) throws InsuranceClaimNotFoundException {
+
+		InsuranceClaim claim = insuranceClaimService.updateClaimStatus(claimId, status);
+
+		InsuranceClaimResponse dto = new InsuranceClaimResponse();
+		dto.setInsuranceClaim(claim);
+		dto.setStatusCode(200);
+		dto.setMessage("Insurance claim status updated successfully");
+
+		return ResponseEntity.ok(dto);
+	}
+
 	@DeleteMapping("/deleteInsuranceClaim/{id}")
 	public String f3(@PathVariable int id) throws InsuranceClaimNotFoundException {
 		return this.insuranceClaimService.deleteInsuranceClaim(id);
 	}
-	
+
 	@GetMapping("/fetchAllInsuranceClaims")
-	public List<InsuranceClaim> f4(){
+	public List<InsuranceClaim> f4() {
 		return this.insuranceClaimService.getAllInsuranceClaims();
 	}
-	
+
+	@GetMapping("/getInsuranceClaimsByStatus/{status}")
+	public List<InsuranceClaim> getClaimsByStatus(@PathVariable String status) throws InsuranceClaimNotFoundException {
+
+		return insuranceClaimService.getClaimsByStatus(status);
+	}
+
 	@GetMapping("/fetchAllInsuranceClaimsPaginated")
-	public Page<InsuranceClaim> f6(@RequestParam(name="pgno") int pgno,
-							@RequestParam(name="size") int size,
-							@RequestParam(name="sorting") String sorting,
-							@RequestParam(name="asc") boolean asc){
-		Sort sort=asc?Sort.by(sorting).ascending() : Sort.by(sorting).descending();
-		
-		Pageable pageable=PageRequest.of(pgno, size,sort);
+	public Page<InsuranceClaim> f6(@RequestParam(name = "pgno") int pgno, @RequestParam(name = "size") int size,
+			@RequestParam(name = "sorting") String sorting, @RequestParam(name = "asc") boolean asc) {
+		Sort sort = asc ? Sort.by(sorting).ascending() : Sort.by(sorting).descending();
+
+		Pageable pageable = PageRequest.of(pgno, size, sort);
 		return this.insuranceClaimService.getAllInsuranceClaimsWithPagination(pageable);
 	}
 }

@@ -29,7 +29,8 @@ public class InsuranceClaimService {
 		return this.insuranceClaimRepository.save(insuranceClaim);
 	}
 
-	public InsuranceClaim updateInsuranceClaim(InsuranceClaim insuranceClaim) throws InsuranceClaimNotFoundException, PatientNotFoundException {
+	public InsuranceClaim updateInsuranceClaim(InsuranceClaim insuranceClaim)
+			throws InsuranceClaimNotFoundException, PatientNotFoundException {
 
 		if (!insuranceClaimRepository.existsById(insuranceClaim.getInsuranceClaimId())) {
 			throw new InsuranceClaimNotFoundException(
@@ -45,6 +46,16 @@ public class InsuranceClaimService {
 		return this.insuranceClaimRepository.save(insuranceClaim);
 	}
 
+	public InsuranceClaim updateClaimStatus(int claimId, String status) throws InsuranceClaimNotFoundException {
+
+		InsuranceClaim claim = insuranceClaimRepository.findById(claimId)
+				.orElseThrow(() -> new InsuranceClaimNotFoundException("Insurance claim not found with id " + claimId));
+
+		claim.setStatus(status);
+
+		return insuranceClaimRepository.save(claim);
+	}
+
 	public String deleteInsuranceClaim(int id) throws InsuranceClaimNotFoundException {
 
 		if (!insuranceClaimRepository.existsById(id)) {
@@ -57,6 +68,17 @@ public class InsuranceClaimService {
 
 	public List<InsuranceClaim> getAllInsuranceClaims() {
 		return this.insuranceClaimRepository.findAll();
+	}
+
+	public List<InsuranceClaim> getClaimsByStatus(String status) throws InsuranceClaimNotFoundException {
+
+		List<InsuranceClaim> claims = insuranceClaimRepository.findByStatus(status);
+
+		if (claims.isEmpty()) {
+			throw new InsuranceClaimNotFoundException("No insurance claims found with status " + status);
+		}
+
+		return claims;
 	}
 
 	public Page<InsuranceClaim> getAllInsuranceClaimsWithPagination(Pageable pageable) {

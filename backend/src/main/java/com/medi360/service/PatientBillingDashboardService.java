@@ -26,13 +26,13 @@ public class PatientBillingDashboardService {
     
     public long countPaidInvoices(List<Invoice> invoices) {
         return invoices.stream()
-                .filter(i -> "PAID".equalsIgnoreCase(i.getStatus()))
+                .filter(i -> "PAID".equalsIgnoreCase(i.getPaymentStatus()))
                 .count();
     }
 
     public long countPendingInvoices(List<Invoice> invoices) {
         return invoices.stream()
-                .filter(i -> "PENDING".equalsIgnoreCase(i.getStatus()))
+                .filter(i -> "PENDING".equalsIgnoreCase(i.getPaymentStatus()))
                 .count();
     }
 

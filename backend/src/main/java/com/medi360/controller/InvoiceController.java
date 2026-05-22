@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.medi360.DTO.FinancialReportDTO;
 import com.medi360.DTO.InvoiceDTO;
 import com.medi360.DTO.InvoiceResponseDTO;
 import com.medi360.entities.Invoice;
@@ -32,45 +33,95 @@ import jakarta.validation.Valid;
 public class InvoiceController {
 	@Autowired
 	InvoiceService invoiceService;
-	
+
 	@PostMapping("/addInvoice")
-	public ResponseEntity<InvoiceResponseDTO> f1(@Valid @RequestBody InvoiceDTO invoiceDTO) throws PatientNotFoundException {
-		Invoice i=this.invoiceService.addInvoice(invoiceDTO.getInvoice());
-		InvoiceResponseDTO dto=new InvoiceResponseDTO();
+	public ResponseEntity<InvoiceResponseDTO> f1(@Valid @RequestBody InvoiceDTO invoiceDTO)
+			throws PatientNotFoundException {
+		Invoice i = this.invoiceService.addInvoice(invoiceDTO.getInvoice());
+		InvoiceResponseDTO dto = new InvoiceResponseDTO();
 		dto.setInvoice(i);
 		dto.setStatusCode(201);
 		dto.setMessage("Invoice created successfully");
-		
+
 		return ResponseEntity.status(201).body(dto);
 	}
-	
+
 	@PutMapping("/updateInvoice")
-	public ResponseEntity<InvoiceResponseDTO> f2(@Valid @RequestBody InvoiceDTO invoiceDTO) throws InvoiceNotFoundException, PatientNotFoundException{
-		Invoice i=this.invoiceService.updateInvoice(invoiceDTO.getInvoice());
-		InvoiceResponseDTO dto=new InvoiceResponseDTO();
+	public ResponseEntity<InvoiceResponseDTO> f2(@Valid @RequestBody InvoiceDTO invoiceDTO)
+			throws InvoiceNotFoundException, PatientNotFoundException {
+		Invoice i = this.invoiceService.updateInvoice(invoiceDTO.getInvoice());
+		InvoiceResponseDTO dto = new InvoiceResponseDTO();
 		dto.setInvoice(i);
 		dto.setStatusCode(200);
 		dto.setMessage("Invoice updated successfully");
-		
+
 		return ResponseEntity.status(200).body(dto);
 	}
+
+	@PutMapping("/updateInvoicePayment/{invoiceId}")
+	public ResponseEntity<InvoiceResponseDTO> updatePayment(@PathVariable int invoiceId,
+			@RequestParam String paymentStatus, @RequestParam String paymentMode) throws InvoiceNotFoundException {
+
+		Invoice invoice = invoiceService.updatePaymentStatus(invoiceId, paymentStatus, paymentMode);
+
+		InvoiceResponseDTO dto = new InvoiceResponseDTO();
+		dto.setInvoice(invoice);
+		dto.setStatusCode(200);
+		dto.setMessage("Payment status updated successfully");
+
+		return ResponseEntity.ok(dto);
+	}
+
+	@PutMapping("/refundInvoice/{invoiceId}")
+	public ResponseEntity<InvoiceResponseDTO> refundInvoice(@PathVariable int invoiceId,
+			@RequestParam double refundAmount) throws InvoiceNotFoundException {
+
+		Invoice invoice = invoiceService.processRefund(invoiceId, refundAmount);
+
+		InvoiceResponseDTO dto = new InvoiceResponseDTO();
+		dto.setInvoice(invoice);
+		dto.setStatusCode(200);
+		dto.setMessage("Invoice refund processed successfully");
+
+		return ResponseEntity.ok(dto);
+	}
+
 	@DeleteMapping("/deleteInvoice/{id}")
 	public String f3(@PathVariable int id) throws InvoiceNotFoundException {
 		return this.invoiceService.deleteInvoice(id);
 	}
-	
+
 	@GetMapping("/fetchAllInvoices")
-	public List<Invoice> f4(){
+	public List<Invoice> f4() {
 		return this.invoiceService.getAllInvoices();
 	}
+
+	@GetMapping("/getInvoicesByPatient/{patientId}")
+	public List<Invoice> getInvoicesByPatient(@PathVariable int patientId) throws InvoiceNotFoundException {
+
+		return invoiceService.getInvoicesByPatient(patientId);
+	}
+
+	@GetMapping("/getInvoicesByStatus/{status}")
+	public List<Invoice> getInvoicesByStatus(@PathVariable String status) throws InvoiceNotFoundException {
+
+		return invoiceService.getInvoicesByPaymentStatus(status);
+	}
+
+	@GetMapping("/financialReport")
+	public ResponseEntity<FinancialReportDTO> getFinancialReport() {
+
+		FinancialReportDTO report = invoiceService.getFinancialReport();
+
+		return ResponseEntity.ok(report);
+	}
+
 	@GetMapping("/fetchAllInvoicesPaginated")
-	public Page<Invoice> f6(@RequestParam(name="pgno") int pgno,
-							@RequestParam(name="size") int size,
-							@RequestParam(name="sorting") String sorting,
-							@RequestParam(name="asc") boolean asc){
-		Sort sort=asc?Sort.by(sorting).ascending() : Sort.by(sorting).descending();
-		
-		Pageable pageable=PageRequest.of(pgno, size,sort);
+	public Page<Invoice> f6(@RequestParam(name = "pgno") int pgno, @RequestParam(name = "size") int size,
+			@RequestParam(name = "sorting") String sorting, @RequestParam(name = "asc") boolean asc) {
+		Sort sort = asc ? Sort.by(sorting).ascending() : Sort.by(sorting).descending();
+
+		Pageable pageable = PageRequest.of(pgno, size, sort);
 		return this.invoiceService.getAllInvoicesWithPagination(pageable);
 	}
 }
