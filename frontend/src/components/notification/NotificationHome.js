@@ -4,18 +4,18 @@ export default function NotificationHome(){
     const navigate=useNavigate();
 
     const addnotificatoinhandler=()=>{
-        navigate("/add")
+        navigate("add")
     }
 
     const updatenotificatoinhandler=()=>{
-        navigate("/update")
+        navigate("update")
     }
 
     const deletenotificatoinhandler=()=>{
-        navigate("/delete")
+        navigate("delete")
     }
     const getnotificatoinhandler=()=>{
-        navigate("/find")
+        navigate("find")
     }
     return(
         <div>
