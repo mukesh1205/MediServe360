@@ -41,18 +41,22 @@ import AddKpiReport from './components/kpi_report/AddKpi';
 import DeleteKpiReport from './components/kpi_report/DeleteKpi';
 import UpdateKpiReport from './components/kpi_report/UpdateKpi';
 import FindKpiReport from './components/kpi_report/FindKpi';
+
 import UserHome from './components/user/UserHome';
 import AddUser from './components/user/AddUser';
 import DeleteUser from './components/user/DeleteUser';
+import UpdateUser from './components/user/UpdateUser';
+import FindUser from './components/user/FindUser';
+
 import AuditlogHome from './components/auditlog/AuditlogHome';
 import FindAuditlog from './components/auditlog/FindAuditlog';
+import AddAuditlog from './components/auditlog/AddAuditlog';
+
 import NotificationHome from './components/notification/NotificationHome';
 import AddNotification from './components/notification/AddNotification';
 import DeleteNotification from './components/notification/DeleteNotification';
 import FindNotification from './components/notification/FindNotification';
-import UpdateUser from './components/user/UpdateUser';
-import FindUser from './components/user/FindUser';
-import AddAuditlog from './components/auditlog/AddAuditlog';
+import UpdateNotification from './components/notification/UpdateNotification';
 function App() {
   return (
     <Router>
@@ -111,11 +115,11 @@ function App() {
 
         <Route path="/auditlog" element={<AuditlogHome />}>
             <Route path="add" element={<AddAuditlog />} />
-            <Route path="get" element={<FindAuditlog />} />
+            <Route path="find" element={<FindAuditlog />} />
         </Route>
         <Route path="/notification" element={<NotificationHome />}>
             <Route path="add" element={<AddNotification />} />
-            <Route path="get" element={<FindAuditlog />} />
+            <Route path="update" element={<UpdateNotification />} />
             <Route path="delete" element={<DeleteNotification />} />
             <Route path="find" element={<FindNotification />} />
         </Route>
