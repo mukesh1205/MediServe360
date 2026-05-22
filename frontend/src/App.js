@@ -1,19 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router';
+import AppointmentHome from './components/appointment/AppointmentHome';
+import AddAppointment from './components/appointment/AddAppointment';
+import DeleteAppointment from './components/appointment/DeleteAppointment';
+import UpdateAppointment from './components/appointment/UpdateAppointment';
+import FindAppointment from './components/appointment/FindAppointment';
+
+// Patient Imports
+import PatientHome from './components/patient/PatientHome';
 import AddPatient from './components/patient/AddPatient';
-import AddBed from './components/bed/AddBed';
-import FindBed from './components/bed/FindBed';
-import UpdateBed from './components/bed/UpdateBed';
-import DeleteBed from './components/bed/DeleteBed';
-import AddWard from './components/ward/AddWard';
-import FindWard from './components/ward/FindWard';
-import DeleteWard from './components/ward/DeleteWard';
-import UpdateWard from './components/ward/UpdateWard';
 
 function App() {
   return (
     <div>
-    
     </div>
   );
 }
