@@ -45,6 +45,19 @@ public class InsuranceClaimController {
 		return ResponseEntity.status(201).body(dto);
 	}
 
+	@GetMapping("/getInsuranceClaimById/{id}")
+	public ResponseEntity<InsuranceClaimResponse> getInsuranceClaimById(@PathVariable int id) throws InsuranceClaimNotFoundException {
+
+		InsuranceClaim insuranceClaim = insuranceClaimService.getInsuranceClaimById(id);
+
+		InsuranceClaimResponse dto = new InsuranceClaimResponse();
+		dto.setInsuranceClaim(insuranceClaim);
+		dto.setStatusCode(200);
+		dto.setMessage("InsuranceClaim record retrieved successfully");
+
+		return ResponseEntity.ok(dto);
+	}
+	
 	@PutMapping("/updateInsuranceClaim")
 	public ResponseEntity<InsuranceClaimResponse> f2(@Valid @RequestBody InsuranceClaimDTO insuranceClaimDTO)
 			throws InsuranceClaimNotFoundException, PatientNotFoundException {

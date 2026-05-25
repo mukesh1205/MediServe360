@@ -13,6 +13,7 @@ import AddPatient from './components/patient/AddPatient';
 import DeletePatient from './components/patient/DeletePatient';
 import UpdatePatient from './components/patient/UpdatePatient';
 import FindPatient from './components/patient/FindPatient';
+import DisplayPatients from './components/patient/DisplayPatients';
 
 // Invoice Imports
 import InvoiceHome from './components/invoice/InvoiceHome';
@@ -57,6 +58,13 @@ import AddNotification from './components/notification/AddNotification';
 import DeleteNotification from './components/notification/DeleteNotification';
 import FindNotification from './components/notification/FindNotification';
 import UpdateNotification from './components/notification/UpdateNotification';
+
+
+import DisplayPatientsPaginated from './components/patient/DisplayPatientsPaginated';
+import DisplayInvoices from './components/invoice/DisplayInvoices';
+import DisplayInsuranceClaims from './components/insurance_claim/DisplayInsuranceClaims';
+import DisplayInsuranceClaimsPaginated from './components/insurance_claim/DisplayInsuranceClaimsPaginated';
+import DisplayInvoicesPaginated from './components/invoice/DisplayInvoicesPaginated';
 function App() {
   return (
     <Router>
@@ -70,26 +78,32 @@ function App() {
         </Route>
 
         <Route path="/patient" element={<PatientHome />}>
-            <Route path="add" element={<AddPatient />} />
-            <Route path="delete" element={<DeletePatient />} />
-            <Route path="update" element={<UpdatePatient />} />
-            <Route path="find" element={<FindPatient />} />
+            <Route path="add" element={<AddPatient />} ></Route>
+            <Route path="update/:pid" element={<UpdatePatient />} ></Route>
+            <Route path="find" element={<FindPatient />}></Route>
+            <Route path="display" element={<DisplayPatients/>}></Route>
+            <Route path="displayPaginated" element={<DisplayPatientsPaginated/>}></Route>
+            <Route path="delete/:pid" element={<DeletePatient/>}></Route>
         </Route>
 
         {/* Invoice Routes */}
         <Route path="/invoice" element={<InvoiceHome />}>
             <Route path="add" element={<AddInvoice />} />
-            <Route path="delete" element={<DeleteInvoice />} />
-            <Route path="update" element={<UpdateInvoice />} />
+            <Route path="delete/:iid" element={<DeleteInvoice />} />
+            <Route path="display" element={<DisplayInvoices />} />
+            <Route path="displayPaginated" element={<DisplayInvoicesPaginated />} />
+            <Route path="update/:iid" element={<UpdateInvoice />} />
             <Route path="find" element={<FindInvoice />} />
         </Route>
 
         {/* Insurance Claim Routes */}
         <Route path="/insuranceClaim" element={<InsuranceClaimHome />}>
             <Route path="add" element={<AddInsuranceClaim />} />
-            <Route path="delete" element={<DeleteInsuranceClaim />} />
-            <Route path="update" element={<UpdateInsuranceClaim />} />
+            <Route path="delete/:claimId" element={<DeleteInsuranceClaim />} />
+            <Route path="update/:claimId" element={<UpdateInsuranceClaim />} />
             <Route path="find" element={<FindInsuranceClaim />} />
+            <Route path="display" element={<DisplayInsuranceClaims />} />
+            <Route path="displayPaginated" element={<DisplayInsuranceClaimsPaginated />} />
         </Route>
 
         <Route path="/compilance_report" element={<CompilanceReportHome />}>

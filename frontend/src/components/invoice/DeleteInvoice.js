@@ -1,7 +1,28 @@
-export default function DeleteInvoice(){
-    return(
+import axios from "axios";
+import { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
+export default function DeleteInvoice() {
+
+    const { iid } = useParams();   
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const url = "http://localhost:9002/api/deleteInvoice/" + iid;
+
+        axios.delete(url)
+            .then((res) => {
+                alert("Invoice deleted successfully");
+                navigate("/invoice");
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+
+    }, [iid, navigate]);
+    return (
         <div>
-            <h1>This is  Delete Invoice component</h1>
+            <h3>Deleting Invoice...</h3>
         </div>
-    )
+    );
 }
