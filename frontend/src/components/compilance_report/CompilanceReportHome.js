@@ -8,14 +8,12 @@ export default function CompilanceReportHome() {
                     <li>
                         <Link to="add">Add CompilanceReport</Link>
                     </li>
-                    <li>
-                        <Link to="delete">Delete CompilanceReport</Link>
-                    </li>
-                    <li>
-                        <Link to="update">Update CompilanceReport</Link>
-                    </li>
+                   
                     <li>
                         <Link to="find">Find CompilanceReport</Link>
+                    </li>
+                    <li>
+                        <Link to="display">Display CompilanceReport</Link>
                     </li>
                 </ul>
             </nav>

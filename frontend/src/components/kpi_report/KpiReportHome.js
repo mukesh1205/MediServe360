@@ -8,14 +8,12 @@ export default function KpiReportHome() {
                     <li>
                         <Link to="add">Add KpiReport</Link>
                     </li>
-                    <li>
-                        <Link to="delete">Delete KpiReport</Link>
-                    </li>
-                    <li>
-                        <Link to="update">Update KpiReport</Link>
-                    </li>
+                   
                     <li>
                         <Link to="find">Find KpiReport</Link>
+                    </li>
+                     <li>
+                        <Link to="display">Display KpiReport</Link>
                     </li>
                 </ul>
             </nav>

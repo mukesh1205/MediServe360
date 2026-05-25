@@ -35,6 +35,7 @@ import AddCompilanceReport from './components/compilance_report/AddCompilance';
 import DeleteCompilanceReport from './components/compilance_report/DeleteCompilance';
 import UpdateCompilanceReport from './components/compilance_report/UpdateCompilance';
 import FindCompilanceReport from './components/compilance_report/FindCompilance';
+import DisplayComplianceReport from './components/compilance_report/DisplayCompliance';
 
 // KPI Report Imports
 import KpiReportHome from './components/kpi_report/KpiReportHome';
@@ -42,62 +43,65 @@ import AddKpiReport from './components/kpi_report/AddKpi';
 import DeleteKpiReport from './components/kpi_report/DeleteKpi';
 import UpdateKpiReport from './components/kpi_report/UpdateKpi';
 import FindKpiReport from './components/kpi_report/FindKpi';
+import DisplayKPiReport from './components/kpi_report/DisplayKpi';
 
 function App() {
-  return (
-    <Router>
+    return (
+        <Router>
 
-      <Routes>
-        <Route path="/appointment" element={<AppointmentHome/>}>
-            <Route path="add" element={<AddAppointment/>}></Route>
-            <Route path="delete" element={<DeleteAppointment/>}></Route>
-            <Route path="update" element={<UpdateAppointment />}></Route>
-            <Route path="find" element={<FindAppointment />}></Route>
-        </Route>
+            <Routes>
+                <Route path="/appointment" element={<AppointmentHome />}>
+                    <Route path="add" element={<AddAppointment />}></Route>
+                    <Route path="delete" element={<DeleteAppointment />}></Route>
+                    <Route path="update" element={<UpdateAppointment />}></Route>
+                    <Route path="find" element={<FindAppointment />}></Route>
+                </Route>
 
 
-        {/* Patient Routes */}
-<Route path="/patient" element={<PatientHome />}>
-    <Route path="add" element={<AddPatient />} />
-    <Route path="delete" element={<DeletePatient />} />
-    <Route path="update" element={<UpdatePatient />} />
-    <Route path="find" element={<FindPatient />} />
-</Route>
+                {/* Patient Routes */}
+                <Route path="/patient" element={<PatientHome />}>
+                    <Route path="add" element={<AddPatient />} />
+                    <Route path="delete" element={<DeletePatient />} />
+                    <Route path="update" element={<UpdatePatient />} />
+                    <Route path="find" element={<FindPatient />} />
+                </Route>
 
-{/* Invoice Routes */}
-<Route path="/invoice" element={<InvoiceHome />}>
-    <Route path="add" element={<AddInvoice />} />
-    <Route path="delete" element={<DeleteInvoice />} />
-    <Route path="update" element={<UpdateInvoice />} />
-    <Route path="find" element={<FindInvoice />} />
-</Route>
+                {/* Invoice Routes */}
+                <Route path="/invoice" element={<InvoiceHome />}>
+                    <Route path="add" element={<AddInvoice />} />
+                    <Route path="delete" element={<DeleteInvoice />} />
+                    <Route path="update" element={<UpdateInvoice />} />
+                    <Route path="find" element={<FindInvoice />} />
+                </Route>
 
-{/* Insurance Claim Routes */}
-<Route path="/insuranceClaim" element={<InsuranceClaimHome />}>
-    <Route path="add" element={<AddInsuranceClaim />} />
-    <Route path="delete" element={<DeleteInsuranceClaim />} />
-    <Route path="update" element={<UpdateInsuranceClaim />} />
-    <Route path="find" element={<FindInsuranceClaim />} />
-</Route>
+                {/* Insurance Claim Routes */}
+                <Route path="/insuranceClaim" element={<InsuranceClaimHome />}>
+                    <Route path="add" element={<AddInsuranceClaim />} />
+                    <Route path="delete" element={<DeleteInsuranceClaim />} />
+                    <Route path="update" element={<UpdateInsuranceClaim />} />
+                    <Route path="find" element={<FindInsuranceClaim />} />
+                </Route>
 
-<Route path="/compilance_report" element={<CompilanceReportHome />}>
-    <Route path="add" element={<AddCompilanceReport />} />
-    <Route path="delete" element={<DeleteCompilanceReport />} />
-    <Route path="update" element={<UpdateCompilanceReport />} />
-    <Route path="find" element={<FindCompilanceReport />} />
-</Route>
+                <Route path="/compilance_report" element={<CompilanceReportHome />}>
+                    <Route path="add" element={<AddCompilanceReport />} />
+                    <Route path="delete/:id" element={<DeleteCompilanceReport />} />
+                    <Route path="update/:id" element={<UpdateCompilanceReport />} />
+                    <Route path="find" element={<FindCompilanceReport />} />
+                    <Route path="display" element={<DisplayComplianceReport />} />
+                </Route>
 
-<Route path="/kpi_report" element={<KpiReportHome />}>
-    <Route path="add" element={<AddKpiReport />} />
-    <Route path="delete" element={<DeleteKpiReport />} />
-    <Route path="update" element={<UpdateKpiReport />} />
-    <Route path="find" element={<FindKpiReport />} />
-</Route>
+                <Route path="/kpi_report" element={<KpiReportHome />}>
+                    <Route path="add" element={<AddKpiReport />} />
+                    <Route path="delete/:id" element={<DeleteKpiReport />} />
+                    <Route path="update/:id" element={<UpdateKpiReport />} />
+                    <Route path="find" element={<FindKpiReport />} />
+                    <Route path="display" element={<DisplayKPiReport />} />
+                </Route>
 
-      </Routes>
+            </Routes>
 
-    </Router>
-     );
+        </Router>
+    );
 }
 
 export default App;
