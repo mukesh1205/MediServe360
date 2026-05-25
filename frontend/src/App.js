@@ -74,8 +74,12 @@ import UpdateWard from './components/ward/UpdateWard';
 import DeleteWard from './components/ward/DeleteWard';
 import FindWard from './components/ward/FindWard';
 import FindAllWard from './components/ward/FindAllWard';
+import WardOccupancyReport from './components/ward/WardOccupancyReport';
 
 import UpdateNotification from './components/notification/UpdateNotification';
+import FindAllNotification from './components/notification/FindAllNotification';
+import FindAllUser from './components/user/FindAllUser';
+import FindAllAuditlog from './components/auditlog/FindAllAuditlog';
 
 
 import DisplayPatientsPaginated from './components/patient/DisplayPatientsPaginated';
@@ -144,17 +148,20 @@ function App() {
             <Route path="delete" element={<DeleteUser />} />
             <Route path="update" element={<UpdateUser />} />
             <Route path="find" element={<FindUser />} />
+            <Route path="findall" element={<FindAllUser />} />
         </Route>
 
         <Route path="/auditlog" element={<AuditlogHome />}>
             <Route path="add" element={<AddAuditlog />} />
             <Route path="find" element={<FindAuditlog />} />
+            <Route path="findall" element={<FindAllAuditlog />} />
         </Route>
         <Route path="/notification" element={<NotificationHome />}>
             <Route path="add" element={<AddNotification />} />
             <Route path="update" element={<UpdateNotification />} />
             <Route path="delete" element={<DeleteNotification />} />
             <Route path="find" element={<FindNotification />} />
+            <Route path="findall" element={<FindAllNotification />} />
         </Route>
 
         <Route path="/bed" element={<BedHome />}>
@@ -168,10 +175,11 @@ function App() {
         </Route>
          <Route path="/ward" element={<WardHome />}>
             <Route path="add" element={<AddWard/>}/>
-            <Route path="update" element={<UpdateWard/>}/>
-            <Route path="delete" element={<DeleteWard/>}/>
+            <Route path="update/:wardId" element={<UpdateWard/>}/>
+           <Route path="delete/:wardId" element={<DeleteWard/>}/>
             <Route path="find" element={<FindWard/>}/>
             <Route path="findAll" element={<FindAllWard/>}/>
+            <Route path="occupancy" element={<WardOccupancyReport/>}/>
         </Route>
         
 
