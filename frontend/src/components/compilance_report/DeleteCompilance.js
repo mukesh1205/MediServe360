@@ -1,30 +1,30 @@
-import { useParams } from "react-router";
-import axios from "axios";
-import { useEffect } from "react";
+import axios from 'axios';
+import { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router';
 
-export default function DeleteCompilance() {
+export default function DeleteCompliance(){
 
-  const { id } = useParams();   
-  
-let url = "http://localhost:9002/api/deleteComplianceReport"
-  useEffect(() => {
-    axios.delete(url ,{
-        data: {
-         id: id
-        }
-          })
-    .then((response) => {
-      alert(response.data);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }, [id]);
-        
-  return (
-    <div>
-      <h2>Deleting Compliance Report...</h2>
-      <p>ID: {id}</p>
-    </div>
-  );
+    let { id } = useParams();
+    let navigate = useNavigate();
+
+    useEffect(() => {
+
+        let url = "http://localhost:9002/api/deleteComplianceReport/" + id;
+
+        axios.delete(url)
+        .then((res) => {
+            alert("Compliance Report Deleted successfully");
+            navigate("/compliance");   // change route if needed
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+
+    }, [id, navigate]);
+
+    return(
+        <div>
+            <h3>Deleting Compliance Report...</h3>
+        </div>
+    );
 }

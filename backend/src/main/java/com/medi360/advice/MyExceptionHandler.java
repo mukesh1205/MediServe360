@@ -13,11 +13,14 @@ public class MyExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponse> handleAllExceptions(Exception e) {
-		ErrorResponse response = new ErrorResponse();
-		response.setHttpStatusCode(500);
-		response.setErrorMessage("Internal server error");
-		return ResponseEntity.status(500).body(response);
+	    
+	    
+	    ErrorResponse response = new ErrorResponse();
+	    response.setHttpStatusCode(500);
+	    response.setErrorMessage("Internal server error");
+	    return ResponseEntity.status(500).body(response);
 	}
+
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
@@ -32,15 +35,7 @@ public class MyExceptionHandler {
 		return ResponseEntity.badRequest().body(response);
 	}
 
-	@ExceptionHandler(IllegalArgumentException.class)
-	public ResponseEntity<ErrorResponse> handleIllegalArgs(IllegalArgumentException e) {
-
-		ErrorResponse response = new ErrorResponse();
-		response.setHttpStatusCode(400);
-		response.setErrorMessage(e.getMessage());
-
-		return ResponseEntity.badRequest().body(response);
-	}
+	
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
@@ -50,6 +45,17 @@ public class MyExceptionHandler {
 		response.setErrorMessage("Invalid request format or data type");
 
 		return ResponseEntity.badRequest().body(response);
+	}
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
+	    
+	    // ADD THIS LINE temporarily
+	    System.out.println("JACKSON ERROR: " + e.getMessage());
+	    
+	    ErrorResponse response = new ErrorResponse();
+	    response.setHttpStatusCode(400);
+	    response.setErrorMessage("Invalid request format or data type");
+	    return ResponseEntity.badRequest().body(response);
 	}
 
 	@ExceptionHandler(PatientNotFoundException.class)
@@ -92,6 +98,23 @@ public class MyExceptionHandler {
 		return ResponseEntity.status(404).body(response);
 	}
 	
+
+	
+	@ExceptionHandler({
+        AppointmentNotFoundException.class,
+        DoctorNotFoundException.class,
+        SlotNotAvailableException.class
+    })
+	
+    public ResponseEntity<ErrorResponse> handleAppointmentExceptions(Exception e) {
+
+    ErrorResponse response = new ErrorResponse();
+    response.setHttpStatusCode(404);
+    response.setErrorMessage(e.getMessage());
+
+    return ResponseEntity.status(404).body(response);
+  }
+		
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleUserNotFound(Exception e){
 		ErrorResponse err=new ErrorResponse();
@@ -116,3 +139,9 @@ public class MyExceptionHandler {
 		return ResponseEntity.status(404).body(err);
 	}
 }
+
+
+
+
+
+

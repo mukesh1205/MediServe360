@@ -7,6 +7,7 @@ public class AppointmentResponseDTO {
 	private Appointment appointment;
 	private int statusCode;
 	private String message;
+	private boolean wasRescheduled;
 	
 	public Appointment getAppointment() {
 		return appointment;
@@ -27,4 +28,12 @@ public class AppointmentResponseDTO {
 		this.message = message;
 	}
 	
+	public boolean isWasRescheduled() {
+	    return wasRescheduled;
+	}
+
+	public void setWasRescheduled(boolean wasRescheduled) {
+	    this.wasRescheduled = wasRescheduled;
+	}
+
 }

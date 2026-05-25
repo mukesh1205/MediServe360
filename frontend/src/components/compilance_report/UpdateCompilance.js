@@ -1,70 +1,97 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function UpdateComplianceReport() {
 
-  const { id } = useParams();
-  const navigate = useNavigate();
+  let { id } = useParams();
+  let navigate = useNavigate();
 
-  const [scope, setScope] = useState("");
-  const [metrics, setMetrics] = useState("");
-  const [date, setDate] = useState("");
+  let [scope, setScope] = useState("");
+  let [metrics, setMetrics] = useState("");
+  let [date, setDate] = useState("");
 
-  // ✅ Fetch existing data
-  useEffect(() => {
-    axios.get(`http://localhost:9002/api/fetchAllComplianceReports`)
+  let scopeHandler = (e) => {
+    setScope(e.target.value);
+  };
+
+  let metricsHandler = (e) => {
+    setMetrics(e.target.value);
+  };
+
+  let dateHandler = (e) => {
+    setDate(e.target.value);
+  };
+
+  let updateButtonHandler = () => {
+
+    let url = "http://localhost:9002/api/updateComplianceReport";
+
+    let data = {
+      "complianceReport": {
+        "reportId": id,
+        "reportScope": scope,
+        "reportMetrics": metrics,
+        "reportGeneratedDate": date
+      }
+    };
+
+    axios.put(url, data)
       .then((res) => {
-        const report = res.data.complianceReport.find(r => r.reportId == id);
+        alert("Updated successfully");
+        navigate("/compilance_report/display");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  useEffect(() => {
+
+    let url = "http://localhost:9002/api/fetchAllComplianceReports";
+
+    axios.get(url)
+      .then((res) => {
+
+        // ✅ backend returns list directly
+        let reports = res.data;
+
+        let report = reports.find((r) => r.reportId == id);
+
         if (report) {
           setScope(report.reportScope);
           setMetrics(report.reportMetrics);
           setDate(report.reportGeneratedDate);
         }
+
       })
-      .catch(err => console.error(err));
-  }, [id]);
-
-  // ✅ Update API
-  const updateHandler = () => {
-
-    const data = {
-      complianceReport: {
-        reportId: id,
-        reportScope: scope,
-        reportMetrics: metrics,
-        reportGeneratedDate: date
-      }
-    };
-
-    axios.put("http://localhost:9002/api/updateComplianceReport", data)
-      .then(() => {
-        alert("Compliance Updated ✅");
-        navigate("/compilance_report/display");
-      })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
-        alert("Update Failed ❌");
       });
-  };
+
+  }, [id]);
 
   return (
     <div>
-      <h2>Update Compliance Report</h2>
 
-      <label>ID</label>
-      <input value={id} readOnly /><br /><br />
+      <label>Report ID </label>
+      <input value={id} readOnly />
+      <br />
 
-      <label>Scope</label>
-      <input value={scope} onChange={(e) => setScope(e.target.value)} /><br /><br />
+      <label>Scope </label>
+      <input value={scope} onChange={scopeHandler} />
+      <br />
 
-      <label>Metrics</label>
-      <input value={metrics} onChange={(e) => setMetrics(e.target.value)} /><br /><br />
+      <label>Metrics </label>
+      <input value={metrics} onChange={metricsHandler} />
+      <br />
 
-      <label>Date</label>
-      <input type="date" value={date} onChange={(e) => setDate(e.target.value)} /><br /><br />
+      <label>Date </label>
+      <input type="date" value={date} onChange={dateHandler} />
+      <br />
 
-      <button onClick={updateHandler}>Update</button>
+      <button onClick={updateButtonHandler}>Update</button>
+
     </div>
   );
 }

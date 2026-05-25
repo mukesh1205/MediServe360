@@ -46,6 +46,18 @@ public class InvoiceController {
 		return ResponseEntity.status(201).body(dto);
 	}
 
+	@GetMapping("/getInvoiceById/{id}")
+	public ResponseEntity<InvoiceResponseDTO> getInvoiceById(@PathVariable int id) throws InvoiceNotFoundException {
+
+		Invoice invoice = invoiceService.getInvoiceById(id);
+
+		InvoiceResponseDTO dto = new InvoiceResponseDTO();
+		dto.setInvoice(invoice);
+		dto.setStatusCode(200);
+		dto.setMessage("Invoice record retrieved successfully");
+
+		return ResponseEntity.ok(dto);
+	}
 	@PutMapping("/updateInvoice")
 	public ResponseEntity<InvoiceResponseDTO> f2(@Valid @RequestBody InvoiceDTO invoiceDTO)
 			throws InvoiceNotFoundException, PatientNotFoundException {

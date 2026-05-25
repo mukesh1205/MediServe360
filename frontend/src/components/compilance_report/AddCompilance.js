@@ -3,50 +3,59 @@ import { useState } from "react";
 
 export default function AddComplianceReport() {
 
-  const [scope, setScope] = useState("");
-  const [metrics, setMetrics] = useState("");
-  const [date, setDate] = useState("");
+    let [scope, setScope] = useState("");
+    let [metrics, setMetrics] = useState("");
+    let [date, setDate] = useState("");
 
-  const saveHandler = () => {
-
-    const url = "http://localhost:9002/api/addComplianceReport";
-
-    const data = {
-      complianceReport: {
-        reportScope: scope,
-        reportMetrics: metrics,
-        reportGeneratedDate: date
-      }
+    let scopeHandler = (event) => {
+        setScope(event.target.value);
     };
 
-    axios.post(url, data)
-      .then((res) => {
-        alert("Compliance Report Saved ");
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Error saving report ");
-      });
-  };
+    let metricsHandler = (event) => {
+        setMetrics(event.target.value);
+    };
 
-  return (
-    <div>
-      <h2>Add Compliance Report</h2>
+    let dateHandler = (event) => {
+        setDate(event.target.value);
+    };
 
-      <label>Scope</label>
-      <input onChange={(e) => setScope(e.target.value)} />
-      <br /><br />
+    let buttonHandler = () => {
+        let url = "http://localhost:9002/api/addComplianceReport";
 
-      <label>Metrics</label>
-      <input onChange={(e) => setMetrics(e.target.value)} />
-      <br /><br />
+        let data = {
+            "complianceReport": {
+                "reportScope": scope,
+                "reportMetrics": metrics,
+                "reportGeneratedDate": date
+            }
+        };
 
-      <label>Date</label>
-      <input type="date" onChange={(e) => setDate(e.target.value)} />
-      <br /><br />
+        axios.post(url, data)
+            .then((response) => {
+                alert("Compliance Report Saved successfully " + response.data);
+            })
+            .catch((error) => {
+                console.error(error.response?.data || error);
+            });
+    };
 
-      <button onClick={saveHandler}>SAVE</button>
-    </div>
-  );
+    return (
+        <div>
+            <h3>Add Compliance Report</h3>
+
+            <label>Scope</label>
+            <input type="text" onChange={scopeHandler} required />
+            <br />
+
+            <label>Metrics</label>
+            <input type="text" onChange={metricsHandler} required />
+            <br />
+
+            <label>Date</label>
+            <input type="date" onChange={dateHandler} required />
+            <br />
+
+            <button onClick={buttonHandler}>Save</button>
+        </div>
+    );
 }

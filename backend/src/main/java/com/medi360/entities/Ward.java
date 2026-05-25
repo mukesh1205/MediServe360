@@ -3,6 +3,7 @@ package com.medi360.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,25 +16,25 @@ public class Ward {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int wardId;
+	private Integer wardId;
 	private String wardname;
 	private int wardcapacity;
 	private String wardstatus;
 	
-	@OneToMany(mappedBy="ward",cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="ward", cascade=CascadeType.ALL)
+	@JsonIgnoreProperties("ward")
 	private List<Bed> beds;
 	public List<Bed> getBeds() {
 	    return beds;
 	}
 
-	// Add this setter
 	public void setBeds(List<Bed> beds) {
 	    this.beds = beds;
 	}
-	public int getWardId() {
+	public Integer getWardId() {
 		return wardId;
 	}
-	public void setWardId(int wardId) {
+	public void setWardId(Integer wardId) {
 		this.wardId = wardId;
 	}
 	public String getWardname() {

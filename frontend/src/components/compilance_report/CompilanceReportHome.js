@@ -1,19 +1,21 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet } from "react-router-dom";
 
-export default function CompilanceReportHome() {
-    return (
+export default function ComplianceReportHome(){
+    return(
         <div>
             <nav>
                 <ul>
                     <li>
-                        <Link to="add">Add CompilanceReport</Link>
-                    </li>
-                   
-                    <li>
-                        <Link to="find">Find CompilanceReport</Link>
+                        <Link to="add">Add Compliance Report</Link>
                     </li>
                     <li>
-                        <Link to="display">Display CompilanceReport</Link>
+                        <Link to="find">Find Compliance Report</Link>
+                    </li>
+                    <li>
+                        <Link to="display">Display Compliance Reports</Link>
+                    </li>
+                    <li>
+                        <Link to="displayPaginated">Display Compliance Reports Paginated</Link>
                     </li>
                 </ul>
             </nav>

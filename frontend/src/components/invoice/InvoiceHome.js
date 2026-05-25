@@ -9,10 +9,10 @@ export default function InvoiceHome(){
                         <Link to="add">Add Invoice</Link>
                     </li>
                     <li>
-                        <Link to="update">Update Invoice</Link>
+                        <Link to="display">Display Invoices</Link>
                     </li>
                     <li>
-                        <Link to="delete">Delete Invoice</Link>
+                        <Link to="displayPaginated">Display Invoices Paginated</Link>
                     </li>
                     <li>
                         <Link to="find">Find Invoice</Link>
