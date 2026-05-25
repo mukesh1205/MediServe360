@@ -1,10 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function FindWard() {
+export default function WardOccupancyReport() {
 
     let [wardId, setWardId] = useState("");
-    let [ward, setWard] = useState(null);
+    let [report, setReport] = useState(null);
     let [error, setError] = useState("");
 
     let wardIdHandler = (e) => {
@@ -13,15 +13,15 @@ export default function FindWard() {
 
     let searchHandler = () => {
         setError("");
-        setWard(null);
+        setReport(null);
 
-        let url = `http://localhost:9002/ward/getWard/${wardId}`;
+        let url = `http://localhost:9002/ward/${wardId}/occupancy-report`;
         axios.get(url)
             .then((response) => {
-                if (response.data.ward === null) {
-                    setError("Ward not found with ID: " + wardId);
+                if (!response.data) {
+                    setError("No report found for Ward ID: " + wardId);
                 } else {
-                    setWard(response.data.ward);
+                    setReport(response.data);
                 }
             })
             .catch((error) => {
@@ -37,35 +37,21 @@ export default function FindWard() {
 
     return (
         <div>
-            <h1>Find Ward</h1>
+            <h1>Ward Occupancy Report</h1>
 
             <label>Ward ID</label>
             <input value={wardId} onChange={wardIdHandler} placeholder="Enter Ward ID" />
-            <button onClick={searchHandler}>Search</button>
+            <button onClick={searchHandler}>Get Report</button>
 
             <br /><br />
 
             {error && <p style={{ color: "red" }}>{error}</p>}
 
-            {ward && (
-                <table border="1">
-                    <thead>
-                        <tr>
-                            <th>Ward ID</th>
-                            <th>Ward Name</th>
-                            <th>Ward Capacity</th>
-                            <th>Ward Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{ward.wardId}</td>
-                            <td>{ward.wardname}</td>
-                            <td>{ward.wardcapacity}</td>
-                            <td>{ward.wardstatus}</td>
-                        </tr>
-                    </tbody>
-                </table>
+            {report && (
+                <div>
+                    <h2>Occupancy Report</h2>
+                    <p>{report}</p>
+                </div>
             )}
         </div>
     );
