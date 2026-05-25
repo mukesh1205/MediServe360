@@ -29,6 +29,12 @@ public class InsuranceClaimService {
 		return this.insuranceClaimRepository.save(insuranceClaim);
 	}
 
+	public InsuranceClaim getInsuranceClaimById(int id) throws InsuranceClaimNotFoundException {
+
+		return insuranceClaimRepository.findById(id)
+				.orElseThrow(() -> new InsuranceClaimNotFoundException("InsuranceClaim not found with id " + id));
+	}
+	
 	public InsuranceClaim updateInsuranceClaim(InsuranceClaim insuranceClaim)
 			throws InsuranceClaimNotFoundException, PatientNotFoundException {
 

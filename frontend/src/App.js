@@ -13,6 +13,7 @@ import AddPatient from './components/patient/AddPatient';
 import DeletePatient from './components/patient/DeletePatient';
 import UpdatePatient from './components/patient/UpdatePatient';
 import FindPatient from './components/patient/FindPatient';
+import DisplayPatients from './components/patient/DisplayPatients';
 
 // Invoice Imports
 import InvoiceHome from './components/invoice/InvoiceHome';
@@ -41,18 +42,22 @@ import AddKpiReport from './components/kpi_report/AddKpi';
 import DeleteKpiReport from './components/kpi_report/DeleteKpi';
 import UpdateKpiReport from './components/kpi_report/UpdateKpi';
 import FindKpiReport from './components/kpi_report/FindKpi';
+
 import UserHome from './components/user/UserHome';
 import AddUser from './components/user/AddUser';
 import DeleteUser from './components/user/DeleteUser';
+import UpdateUser from './components/user/UpdateUser';
+import FindUser from './components/user/FindUser';
+
 import AuditlogHome from './components/auditlog/AuditlogHome';
 import FindAuditlog from './components/auditlog/FindAuditlog';
+import AddAuditlog from './components/auditlog/AddAuditlog';
+
 import NotificationHome from './components/notification/NotificationHome';
 import AddNotification from './components/notification/AddNotification';
 import DeleteNotification from './components/notification/DeleteNotification';
 import FindNotification from './components/notification/FindNotification';
-import UpdateUser from './components/user/UpdateUser';
-import FindUser from './components/user/FindUser';
-import AddAuditlog from './components/auditlog/AddAuditlog';
+
 
 import BedHome from './components/bed/BedHome';
 import AddBed from './components/bed/AddBed';
@@ -70,6 +75,15 @@ import DeleteWard from './components/ward/DeleteWard';
 import FindWard from './components/ward/FindWard';
 import FindAllWard from './components/ward/FindAllWard';
 
+import UpdateNotification from './components/notification/UpdateNotification';
+
+
+import DisplayPatientsPaginated from './components/patient/DisplayPatientsPaginated';
+import DisplayInvoices from './components/invoice/DisplayInvoices';
+import DisplayInsuranceClaims from './components/insurance_claim/DisplayInsuranceClaims';
+import DisplayInsuranceClaimsPaginated from './components/insurance_claim/DisplayInsuranceClaimsPaginated';
+import DisplayInvoicesPaginated from './components/invoice/DisplayInvoicesPaginated';
+
 function App() {
   return (
     <Router>
@@ -83,26 +97,32 @@ function App() {
         </Route>
 
         <Route path="/patient" element={<PatientHome />}>
-            <Route path="add" element={<AddPatient />} />
-            <Route path="delete" element={<DeletePatient />} />
-            <Route path="update" element={<UpdatePatient />} />
-            <Route path="find" element={<FindPatient />} />
+            <Route path="add" element={<AddPatient />} ></Route>
+            <Route path="update/:pid" element={<UpdatePatient />} ></Route>
+            <Route path="find" element={<FindPatient />}></Route>
+            <Route path="display" element={<DisplayPatients/>}></Route>
+            <Route path="displayPaginated" element={<DisplayPatientsPaginated/>}></Route>
+            <Route path="delete/:pid" element={<DeletePatient/>}></Route>
         </Route>
 
         {/* Invoice Routes */}
         <Route path="/invoice" element={<InvoiceHome />}>
             <Route path="add" element={<AddInvoice />} />
-            <Route path="delete" element={<DeleteInvoice />} />
-            <Route path="update" element={<UpdateInvoice />} />
+            <Route path="delete/:iid" element={<DeleteInvoice />} />
+            <Route path="display" element={<DisplayInvoices />} />
+            <Route path="displayPaginated" element={<DisplayInvoicesPaginated />} />
+            <Route path="update/:iid" element={<UpdateInvoice />} />
             <Route path="find" element={<FindInvoice />} />
         </Route>
 
         {/* Insurance Claim Routes */}
         <Route path="/insuranceClaim" element={<InsuranceClaimHome />}>
             <Route path="add" element={<AddInsuranceClaim />} />
-            <Route path="delete" element={<DeleteInsuranceClaim />} />
-            <Route path="update" element={<UpdateInsuranceClaim />} />
+            <Route path="delete/:claimId" element={<DeleteInsuranceClaim />} />
+            <Route path="update/:claimId" element={<UpdateInsuranceClaim />} />
             <Route path="find" element={<FindInsuranceClaim />} />
+            <Route path="display" element={<DisplayInsuranceClaims />} />
+            <Route path="displayPaginated" element={<DisplayInsuranceClaimsPaginated />} />
         </Route>
 
         <Route path="/compilance_report" element={<CompilanceReportHome />}>
@@ -128,11 +148,11 @@ function App() {
 
         <Route path="/auditlog" element={<AuditlogHome />}>
             <Route path="add" element={<AddAuditlog />} />
-            <Route path="get" element={<FindAuditlog />} />
+            <Route path="find" element={<FindAuditlog />} />
         </Route>
         <Route path="/notification" element={<NotificationHome />}>
             <Route path="add" element={<AddNotification />} />
-            <Route path="get" element={<FindAuditlog />} />
+            <Route path="update" element={<UpdateNotification />} />
             <Route path="delete" element={<DeleteNotification />} />
             <Route path="find" element={<FindNotification />} />
         </Route>

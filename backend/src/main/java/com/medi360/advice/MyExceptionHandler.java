@@ -98,6 +98,23 @@ public class MyExceptionHandler {
 		return ResponseEntity.status(404).body(response);
 	}
 	
+
+	
+	@ExceptionHandler({
+        AppointmentNotFoundException.class,
+        DoctorNotFoundException.class,
+        SlotNotAvailableException.class
+    })
+	
+    public ResponseEntity<ErrorResponse> handleAppointmentExceptions(Exception e) {
+
+    ErrorResponse response = new ErrorResponse();
+    response.setHttpStatusCode(404);
+    response.setErrorMessage(e.getMessage());
+
+    return ResponseEntity.status(404).body(response);
+  }
+		
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleUserNotFound(Exception e){
 		ErrorResponse err=new ErrorResponse();
@@ -122,3 +139,9 @@ public class MyExceptionHandler {
 		return ResponseEntity.status(404).body(err);
 	}
 }
+
+
+
+
+
+

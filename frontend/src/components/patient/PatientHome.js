@@ -9,13 +9,13 @@ export default function PatientHome(){
                         <Link to="add" >Add Patient</Link>
                     </li>
                     <li>
-                        <Link to="update" >Update Patient</Link>
+                        <Link to="find" >Find Patient By Name</Link>
                     </li>
                     <li>
-                        <Link to="delete" >Delete Patient</Link>
+                        <Link to="display" >Display Patients</Link>
                     </li>
                     <li>
-                        <Link to="find" >Find Patient</Link>
+                        <Link to="displayPaginated" >Display Patients Paginated</Link>
                     </li>
                 </ul>
             </nav>
