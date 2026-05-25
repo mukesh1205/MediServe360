@@ -53,6 +53,23 @@ import FindNotification from './components/notification/FindNotification';
 import UpdateUser from './components/user/UpdateUser';
 import FindUser from './components/user/FindUser';
 import AddAuditlog from './components/auditlog/AddAuditlog';
+
+import BedHome from './components/bed/BedHome';
+import AddBed from './components/bed/AddBed';
+import DeleteBed from './components/bed/DeleteBed';
+import FindBed from './components/bed/FindBed';
+import UpdateBed from './components/bed/UpdateBed';
+import FindAllBed from './components/bed/FindAllBed';
+import AssignBed from './components/bed/AssignBed';
+import DischargeBed from './components/bed/DischargeBed';
+
+import WardHome from './components/ward/WardHome';
+import AddWard from './components/ward/AddWard';
+import UpdateWard from './components/ward/UpdateWard';
+import DeleteWard from './components/ward/DeleteWard';
+import FindWard from './components/ward/FindWard';
+import FindAllWard from './components/ward/FindAllWard';
+
 function App() {
   return (
     <Router>
@@ -119,6 +136,24 @@ function App() {
             <Route path="delete" element={<DeleteNotification />} />
             <Route path="find" element={<FindNotification />} />
         </Route>
+
+        <Route path="/bed" element={<BedHome />}>
+            <Route path="add" element={<AddBed/>}/>
+            <Route path="update/:bedId" element={<UpdateBed/>}/>
+            <Route path="delete/:bedId" element={<DeleteBed/>}/>
+            <Route path="find" element={<FindBed/>}/>
+            <Route path="findAll" element={<FindAllBed/>}/>
+            <Route path="assignBed" element={<AssignBed/>}/>
+            <Route path="dischargeBed" element={<DischargeBed/>}/>
+        </Route>
+         <Route path="/ward" element={<WardHome />}>
+            <Route path="add" element={<AddWard/>}/>
+            <Route path="update" element={<UpdateWard/>}/>
+            <Route path="delete" element={<DeleteWard/>}/>
+            <Route path="find" element={<FindWard/>}/>
+            <Route path="findAll" element={<FindAllWard/>}/>
+        </Route>
+        
 
       </Routes>
 
