@@ -1,7 +1,83 @@
+import { useState } from "react";
+import axios from "axios";
+
 export default function FindKpi(){
+
+    const [scope, setScope] = useState("");
+    const [records, setRecords] = useState([]);
+
+    const scopeHandler = (e) => {
+        setScope(e.target.value);
+    };
+
+    const buttonHandler = async () => {
+        try {
+            let url = "http://localhost:9002/api/fetchAllKPIReports";
+
+            let res = await axios.get(url);
+
+            let kpis = res.data;
+
+            // ✅ filter manually
+            if (scope.trim()) {
+                kpis = kpis.filter((e) =>
+                    e.kpiReportScope.toLowerCase().includes(scope.toLowerCase())
+                );
+            }
+
+            if (kpis.length === 0) {
+                alert("No KPI Found");
+            }
+
+            setRecords(kpis);
+
+        } catch (err) {
+            console.error(err);
+            alert("Something went wrong");
+        }
+    };
+
     return(
         <div>
             <h1>This is Find Kpi component</h1>
+
+            <label>Enter Scope</label>
+            <input type="text" onChange={scopeHandler}/>
+            <br />
+
+            <button onClick={buttonHandler}>Find</button>
+
+            {records.length > 0 && (
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>KPI ID</th>
+                            <th>Scope</th>
+                            <th>Metrics</th>
+                            <th>Date</th>
+                            <th>Compliance Report ID</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {
+                            records.map((e) => (
+                                <tr key={e.kpiId}>
+                                    <td>{e.kpiId}</td>
+                                    <td>{e.kpiReportScope}</td>
+                                    <td>{e.kpiMetrics}</td>
+                                    <td>{e.kpiGeneratedDate}</td>
+                                    <td>
+                                        {e.complianceReport
+                                            ? e.complianceReport.reportId
+                                            : "N/A"}
+                                    </td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            )}
         </div>
-    )
+    );
 }
