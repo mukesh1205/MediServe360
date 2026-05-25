@@ -80,7 +80,12 @@ public class BedController {
 		return ResponseEntity.status(200).body("Bed deleted successfully");
 	}
 	@PostMapping("/{bedId}/assign")
-	public ResponseEntity<BedResponseDTO> assignPatient(@PathVariable int bedId, @RequestBody com.medi360.entities.Patient patient) throws BedNotFoundException {
+	public ResponseEntity<BedResponseDTO> assignPatient(@PathVariable int bedId, 
+	        @RequestBody java.util.Map<String, Object> body) throws BedNotFoundException {
+	    
+	    com.medi360.entities.Patient patient = new com.medi360.entities.Patient();
+	    patient.setPatientId((Integer) body.get("patientId"));
+	    
 	    Bed bed = bedService.assignPatientToBed(bedId, patient);
 	    BedResponseDTO dto = new BedResponseDTO();
 	    dto.setBed(bed);

@@ -9,10 +9,10 @@ export default function InsuranceClaimHome() {
                         <Link to="add">Add Insurance Claim</Link>
                     </li>
                     <li>
-                        <Link to="update">Update Insurance Claim</Link>
+                        <Link to="display">Display Insurance Claim</Link>
                     </li>
                     <li>
-                        <Link to="delete">Delete Insurance Claim</Link>
+                        <Link to="displayPaginated">Display Insurance Claim Paginated</Link>
                     </li>
                     <li>
                         <Link to="find">Find Insurance Claim</Link>

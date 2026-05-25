@@ -31,6 +31,12 @@ public class InvoiceService {
 		return this.invoiceRepository.save(invoice);
 	}
 
+	public Invoice getInvoiceById(int id) throws InvoiceNotFoundException {
+
+		return invoiceRepository.findById(id)
+				.orElseThrow(() -> new InvoiceNotFoundException("Invoice not found with id " + id));
+	}
+	
 	public Invoice updateInvoice(Invoice invoice) throws InvoiceNotFoundException, PatientNotFoundException {
 
 		if (!invoiceRepository.existsById(invoice.getInvoiceId())) {
