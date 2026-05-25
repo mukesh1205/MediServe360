@@ -74,6 +74,7 @@ import UpdateWard from './components/ward/UpdateWard';
 import DeleteWard from './components/ward/DeleteWard';
 import FindWard from './components/ward/FindWard';
 import FindAllWard from './components/ward/FindAllWard';
+import WardOccupancyReport from './components/ward/WardOccupancyReport';
 
 import UpdateNotification from './components/notification/UpdateNotification';
 import FindAllNotification from './components/notification/FindAllNotification';
@@ -174,10 +175,11 @@ function App() {
         </Route>
          <Route path="/ward" element={<WardHome />}>
             <Route path="add" element={<AddWard/>}/>
-            <Route path="update" element={<UpdateWard/>}/>
-            <Route path="delete" element={<DeleteWard/>}/>
+            <Route path="update/:wardId" element={<UpdateWard/>}/>
+           <Route path="delete/:wardId" element={<DeleteWard/>}/>
             <Route path="find" element={<FindWard/>}/>
             <Route path="findAll" element={<FindAllWard/>}/>
+            <Route path="occupancy" element={<WardOccupancyReport/>}/>
         </Route>
         
 
