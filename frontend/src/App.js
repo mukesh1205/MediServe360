@@ -57,6 +57,24 @@ import NotificationHome from './components/notification/NotificationHome';
 import AddNotification from './components/notification/AddNotification';
 import DeleteNotification from './components/notification/DeleteNotification';
 import FindNotification from './components/notification/FindNotification';
+
+
+import BedHome from './components/bed/BedHome';
+import AddBed from './components/bed/AddBed';
+import DeleteBed from './components/bed/DeleteBed';
+import FindBed from './components/bed/FindBed';
+import UpdateBed from './components/bed/UpdateBed';
+import FindAllBed from './components/bed/FindAllBed';
+import AssignBed from './components/bed/AssignBed';
+import DischargeBed from './components/bed/DischargeBed';
+
+import WardHome from './components/ward/WardHome';
+import AddWard from './components/ward/AddWard';
+import UpdateWard from './components/ward/UpdateWard';
+import DeleteWard from './components/ward/DeleteWard';
+import FindWard from './components/ward/FindWard';
+import FindAllWard from './components/ward/FindAllWard';
+
 import UpdateNotification from './components/notification/UpdateNotification';
 
 
@@ -65,6 +83,7 @@ import DisplayInvoices from './components/invoice/DisplayInvoices';
 import DisplayInsuranceClaims from './components/insurance_claim/DisplayInsuranceClaims';
 import DisplayInsuranceClaimsPaginated from './components/insurance_claim/DisplayInsuranceClaimsPaginated';
 import DisplayInvoicesPaginated from './components/invoice/DisplayInvoicesPaginated';
+
 function App() {
   return (
     <Router>
@@ -137,6 +156,24 @@ function App() {
             <Route path="delete" element={<DeleteNotification />} />
             <Route path="find" element={<FindNotification />} />
         </Route>
+
+        <Route path="/bed" element={<BedHome />}>
+            <Route path="add" element={<AddBed/>}/>
+            <Route path="update/:bedId" element={<UpdateBed/>}/>
+            <Route path="delete/:bedId" element={<DeleteBed/>}/>
+            <Route path="find" element={<FindBed/>}/>
+            <Route path="findAll" element={<FindAllBed/>}/>
+            <Route path="assignBed" element={<AssignBed/>}/>
+            <Route path="dischargeBed" element={<DischargeBed/>}/>
+        </Route>
+         <Route path="/ward" element={<WardHome />}>
+            <Route path="add" element={<AddWard/>}/>
+            <Route path="update" element={<UpdateWard/>}/>
+            <Route path="delete" element={<DeleteWard/>}/>
+            <Route path="find" element={<FindWard/>}/>
+            <Route path="findAll" element={<FindAllWard/>}/>
+        </Route>
+        
 
       </Routes>
 
