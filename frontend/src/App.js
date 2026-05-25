@@ -68,7 +68,29 @@ import NotificationHome from './components/notification/NotificationHome';
 import AddNotification from './components/notification/AddNotification';
 import DeleteNotification from './components/notification/DeleteNotification';
 import FindNotification from './components/notification/FindNotification';
+
+
+import BedHome from './components/bed/BedHome';
+import AddBed from './components/bed/AddBed';
+import DeleteBed from './components/bed/DeleteBed';
+import FindBed from './components/bed/FindBed';
+import UpdateBed from './components/bed/UpdateBed';
+import FindAllBed from './components/bed/FindAllBed';
+import AssignBed from './components/bed/AssignBed';
+import DischargeBed from './components/bed/DischargeBed';
+
+import WardHome from './components/ward/WardHome';
+import AddWard from './components/ward/AddWard';
+import UpdateWard from './components/ward/UpdateWard';
+import DeleteWard from './components/ward/DeleteWard';
+import FindWard from './components/ward/FindWard';
+import FindAllWard from './components/ward/FindAllWard';
+import WardOccupancyReport from './components/ward/WardOccupancyReport';
+
 import UpdateNotification from './components/notification/UpdateNotification';
+import FindAllNotification from './components/notification/FindAllNotification';
+import FindAllUser from './components/user/FindAllUser';
+import FindAllAuditlog from './components/auditlog/FindAllAuditlog';
 
 function App() {
   return (
@@ -124,7 +146,46 @@ function App() {
           <Route path="displayPaginated" element={<DisplayCompilancePaginated />} />
         </Route>
 
-        {/* KPI */}
+        
+
+        <Route path="/user" element={<UserHome />}>
+            <Route path="add" element={<AddUser />} />
+            <Route path="delete" element={<DeleteUser />} />
+            <Route path="update" element={<UpdateUser />} />
+            <Route path="find" element={<FindUser />} />
+            <Route path="findall" element={<FindAllUser />} />
+        </Route>
+
+        <Route path="/auditlog" element={<AuditlogHome />}>
+            <Route path="add" element={<AddAuditlog />} />
+            <Route path="find" element={<FindAuditlog />} />
+            <Route path="findall" element={<FindAllAuditlog />} />
+        </Route>
+        <Route path="/notification" element={<NotificationHome />}>
+            <Route path="add" element={<AddNotification />} />
+            <Route path="update" element={<UpdateNotification />} />
+            <Route path="delete" element={<DeleteNotification />} />
+            <Route path="find" element={<FindNotification />} />
+            <Route path="findall" element={<FindAllNotification />} />
+        </Route>
+
+        <Route path="/bed" element={<BedHome />}>
+            <Route path="add" element={<AddBed/>}/>
+            <Route path="update/:bedId" element={<UpdateBed/>}/>
+            <Route path="delete/:bedId" element={<DeleteBed/>}/>
+            <Route path="find" element={<FindBed/>}/>
+            <Route path="findAll" element={<FindAllBed/>}/>
+            <Route path="assignBed" element={<AssignBed/>}/>
+            <Route path="dischargeBed" element={<DischargeBed/>}/>
+        </Route>
+         <Route path="/ward" element={<WardHome />}>
+            <Route path="add" element={<AddWard/>}/>
+            <Route path="update/:wardId" element={<UpdateWard/>}/>
+           <Route path="delete/:wardId" element={<DeleteWard/>}/>
+            <Route path="find" element={<FindWard/>}/>
+            <Route path="findAll" element={<FindAllWard/>}/>
+            <Route path="occupancy" element={<WardOccupancyReport/>}/>
+        </Route>
         
           <Route path="/kpi_report" element={<KpiReportHome />}>
           <Route path="add" element={<AddKpiReport />} />
