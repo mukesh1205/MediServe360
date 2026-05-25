@@ -14,7 +14,7 @@ export default function DeleteCompliance(){
         axios.delete(url)
         .then((res) => {
             alert("Compliance Report Deleted successfully");
-            navigate("/compliance");   // change route if needed
+            navigate("/compilance_report");   // change route if needed
         })
         .catch((err) => {
             console.error(err);

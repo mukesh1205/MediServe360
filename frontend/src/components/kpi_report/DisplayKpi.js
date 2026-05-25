@@ -2,61 +2,63 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router";
 
-export default function DisplayKPIReport() {
-    const [kpis, setKpis] = useState([]);
+export default function DisplayKPIReport(){
+
+    const [records, setRecords] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:9002/api/fetchAllKPIReports")
-            .then((res) => {
-                console.log("KPI Data:", res.data);
-                setKpis(res.data);
-            })
-            .catch((err) => console.error(err));
+
+        let url = "http://localhost:9002/api/fetchAllKPIReports";
+
+        axios.get(url)
+        .then((res) => {
+            setRecords(res.data);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+
     }, []);
 
-    return (
+    return(
         <div>
-            <h2>KPI Reports</h2>
+            <h3>This is Display KPI Report</h3>
 
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>KPI ID</th>
-                        <th>Scope</th>
-                        <th>Metrics</th>
-                        <th>Date</th>
-                        <th>Compliance Report ID</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
+            {records.length > 0 && (
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>KPI ID</th>
+                            <th>Scope</th>
+                            <th>Metrics</th>
+                            <th>Date</th>
+                            <th>Compliance Report ID</th>
+                            
+                        </tr>
+                    </thead>
 
-                <tbody>
-                    {kpis.map((k) => {
-                        return (
-                            <tr key={k.kpiId}>
-                                <td>{k.kpiId}</td>
-                                <td>{k.kpiReportScope}</td>
-                                <td>{k.kpiMetrics}</td>
-                                <td>{k.kpiGeneratedDate}</td>
-                                <td>
-                                    {k.complianceReport
-                                        ? k.complianceReport.reportId
-                                        : "N/A"}
-                                </td>
-                                <td>
-                                    <Link to={"/kpi_report/update/" + k.kpiId}>Edit</Link>
-                                </td>
-                                <td>
-                                    <Link to={"/kpi_report/delete/" + k.kpiId}>Delete</Link>
-                                </td>
-                            </tr>
-                        )
-                    }
-                    )
-                    }
-                </tbody>
-            </table>
+                    <tbody>
+                        {
+                            records.map((e) => {
+                                return(
+                                    <tr key={e.kpiId}>
+                                        <td>{e.kpiId}</td>
+                                        <td>{e.kpiReportScope}</td>
+                                        <td>{e.kpiMetrics}</td>
+                                        <td>{e.kpiGeneratedDate}</td>
+                                        <td>
+                                            {e.complianceReport
+                                                ? e.complianceReport.reportId
+                                                : "N/A"}
+                                        </td>
+                                        
+                                    </tr>
+                                );
+                            })
+                        }
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 }

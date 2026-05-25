@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function FindCompliance() {
+export default function FindCompilance() {
 
     const [scope, setScope] = useState("");
     const [records, setRecords] = useState([]);

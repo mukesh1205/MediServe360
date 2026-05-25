@@ -41,16 +41,17 @@ import AddCompilanceReport from './components/compilance_report/AddCompilance';
 import DeleteCompilanceReport from './components/compilance_report/DeleteCompilance';
 import UpdateCompilanceReport from './components/compilance_report/UpdateCompilance';
 import FindCompilanceReport from './components/compilance_report/FindCompilance';
-import DisplayComplianceReport from './components/compilance_report/DisplayCompliance';
-import DisplayCompliancePaginated from './components/compilance_report/DisplayCompliancePaginated';
+import DisplayCompilanceReport from './components/compilance_report/DisplayCompilance';
+import DisplayCompilancePaginated from './components/compilance_report/DisplayCompilancePaginated';
 
 // KPI
+
 import KpiReportHome from './components/kpi_report/KpiReportHome';
 import AddKpiReport from './components/kpi_report/AddKpi';
-import DeleteKpiReport from './components/kpi_report/DeleteKpi';
-import UpdateKpiReport from './components/kpi_report/UpdateKpi';
 import FindKpiReport from './components/kpi_report/FindKpi';
 import DisplayKPiReport from './components/kpi_report/DisplayKpi';
+import DisplayKpiPaginated from './components/kpi_report/DisplayKpiPaginated';
+
 
 // Other Modules
 import UserHome from './components/user/UserHome';
@@ -119,18 +120,22 @@ function App() {
           <Route path="update/:id" element={<UpdateCompilanceReport />} />
           <Route path="delete/:id" element={<DeleteCompilanceReport />} />
           <Route path="find" element={<FindCompilanceReport />} />
-          <Route path="display" element={<DisplayComplianceReport />} />
-          <Route path="displayPaginated" element={<DisplayCompliancePaginated />} />
+          <Route path="display" element={<DisplayCompilanceReport />} />
+          <Route path="displayPaginated" element={<DisplayCompilancePaginated />} />
         </Route>
 
         {/* KPI */}
-        <Route path="/kpi_report" element={<KpiReportHome />}>
+        
+          <Route path="/kpi_report" element={<KpiReportHome />}>
           <Route path="add" element={<AddKpiReport />} />
-          <Route path="update/:id" element={<UpdateKpiReport />} />
-          <Route path="delete/:id" element={<DeleteKpiReport />} />
           <Route path="find" element={<FindKpiReport />} />
           <Route path="display" element={<DisplayKPiReport />} />
+          
+    
+          <Route path="displayPaginated" element={<DisplayKpiPaginated />} />
+
         </Route>
+
 
         {/* User */}
         <Route path="/user" element={<UserHome />}>

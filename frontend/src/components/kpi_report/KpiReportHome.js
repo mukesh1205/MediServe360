@@ -1,19 +1,21 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet } from "react-router-dom";
 
-export default function KpiReportHome() {
-    return (
+export default function KpiReportHome(){
+    return(
         <div>
             <nav>
                 <ul>
                     <li>
-                        <Link to="add">Add KpiReport</Link>
+                        <Link to="add">Add KPI Report</Link>
                     </li>
-                   
                     <li>
-                        <Link to="find">Find KpiReport</Link>
+                        <Link to="find">Find KPI Report</Link>
                     </li>
-                     <li>
-                        <Link to="display">Display KpiReport</Link>
+                    <li>
+                        <Link to="display">Display KPI Reports</Link>
+                    </li>
+                    <li>
+                        <Link to="displayPaginated">Display KPI Reports Paginated</Link>
                     </li>
                 </ul>
             </nav>

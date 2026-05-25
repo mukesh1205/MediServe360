@@ -1,59 +1,74 @@
 import axios from "axios";
 import { useState } from "react";
 
-export default function AddKPIReport() {
+export default function AddKPIReport(){
 
-  const [scope, setScope] = useState("");
-  const [metrics, setMetrics] = useState("");
-  const [date, setDate] = useState("");
-  const [complianceId, setComplianceId] = useState("");
+    let [scope, setScope] = useState("");
+    let [metrics, setMetrics] = useState("");
+    let [date, setDate] = useState("");
+    let [complianceId, setComplianceId] = useState("");
 
-  const saveHandler = () => {
-    const url = "http://localhost:9002/api/addKPIReport";
-
-    const data = {
-      kpiReport: {
-        kpiReportScope: scope,
-        kpiMetrics: metrics,
-        kpiGeneratedDate: date,
-        complianceReport: {
-          reportId: complianceId   
-        }
-      }
+    let scopeHandler = (event) => {
+        setScope(event.target.value);
     };
 
-    axios.post(url, data)
-      .then((res) => {
-        alert("KPI Report Saved ");
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Error saving KPI ");
-      });
-  };
+    let metricsHandler = (event) => {
+        setMetrics(event.target.value);
+    };
 
-  return (
-    <div>
-      <h2>Add KPI Report</h2>
+    let dateHandler = (event) => {
+        setDate(event.target.value);
+    };
 
-      <label>Scope</label>
-      <input onChange={(e) => setScope(e.target.value)} />
-      <br /><br />
+    let complianceIdHandler = (event) => {
+        setComplianceId(event.target.value);
+    };
 
-      <label>Metrics</label>
-      <input onChange={(e) => setMetrics(e.target.value)} />
-      <br /><br />
+    let buttonHandler = () => {
 
-      <label>Date</label>
-      <input type="date" onChange={(e) => setDate(e.target.value)} />
-      <br /><br />
+        let url = "http://localhost:9002/api/addKPIReport";
 
-      <label>Compliance Report ID</label>
-      <input onChange={(e) => setComplianceId(e.target.value)} />
-      <br /><br />
+        let data = {
+            "kpiReport": {
+                "kpiReportScope": scope,
+                "kpiMetrics": metrics,
+                "kpiGeneratedDate": date,
+                "complianceReport": {
+                    "reportId": complianceId
+                }
+            }
+        };
 
-      <button onClick={saveHandler}>SAVE</button>
-    </div>
-  );
+        axios.post(url, data)
+            .then((response) => {
+                alert("KPI Report Saved successfully " + response.data);
+            })
+            .catch((error) => {
+                console.error(error.response?.data || error);
+            });
+    };
+
+    return(
+        <div>
+            <h3>Add KPI Report</h3>
+
+            <label>Scope</label>
+            <input type="text" onChange={scopeHandler} required />
+            <br />
+
+            <label>Metrics</label>
+            <input type="text" onChange={metricsHandler} required />
+            <br />
+
+            <label>Date</label>
+            <input type="date" onChange={dateHandler} required />
+            <br />
+
+            <label>Compliance Report ID</label>
+            <input type="number" onChange={complianceIdHandler} required />
+            <br />
+
+            <button onClick={buttonHandler}>Add KPI Report</button>
+        </div>
+    );
 }

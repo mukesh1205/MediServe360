@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {Link} from "react-router";
-export default function DisplayComplianceReport() {
+export default function DisplayCompilanceReport() {
 
   let [reports, setReports] = useState([]);
 

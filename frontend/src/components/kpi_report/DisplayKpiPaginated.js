@@ -1,19 +1,25 @@
 import axios from "axios";
 import { useState } from "react";
 
-export default function DisplayCompilancePaginated(){
+export default function DisplayKpiPaginated(){
 
     const [records, setRecords] = useState([]);
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(0);
-    const [sortBy, setSortBy] = useState("");
+    const [size, setSize] = useState(3);   // ✅ default fixed
+    const [sortBy, setSortBy] = useState("kpiId");
     const [asc, setAsc] = useState(true);
 
     const buttonHandler = async () => {
         try {
-            const url = "http://localhost:9002/api/compliance-reports";
 
-            const params = {
+            if (size <= 0) {
+                alert("Size must be greater than 0");
+                return;
+            }
+
+            let url = "http://localhost:9002/api/fetchAllKPIReports/paginated";
+
+            let params = {
                 params: {
                     page: page,
                     size: size,
@@ -22,16 +28,19 @@ export default function DisplayCompilancePaginated(){
                 }
             };
 
-            const res = await axios.get(url, params);
+            let res = await axios.get(url, params);
+
+            console.log(res.data);  // ✅ debug
 
             setRecords(res.data.content);
 
         } catch (err) {
             console.error(err);
+            alert("Error fetching KPI reports");
         }
     };
 
-    return (
+    return(
         <div>
 
             <label>Enter Page NO</label>
@@ -44,11 +53,10 @@ export default function DisplayCompilancePaginated(){
 
             <label>Select sorting column</label>
             <select onChange={e => setSortBy(e.target.value)}>
-                <option value="">--Select Column--</option>
-                <option value="reportId">Report Id</option>
-                <option value="reportScope">Report Scope</option>
-                <option value="reportMetrics">Report Metrics</option>
-                <option value="reportGeneratedDate">Generated Date</option>
+                <option value="kpiId">KPI ID</option>
+                <option value="kpiReportScope">Scope</option>
+                <option value="kpiMetrics">Metrics</option>
+                <option value="kpiGeneratedDate">Date</option>
             </select>
             <br />
 
@@ -57,7 +65,6 @@ export default function DisplayCompilancePaginated(){
             <input
                 type="radio"
                 name="sortOrder"
-                value="true"
                 checked={asc === true}
                 onChange={() => setAsc(true)}
             />
@@ -66,37 +73,41 @@ export default function DisplayCompilancePaginated(){
             <input
                 type="radio"
                 name="sortOrder"
-                value="false"
                 checked={asc === false}
                 onChange={() => setAsc(false)}
             />
             <label>Descending</label>
             <br />
 
-            <button onClick={buttonHandler}>Get Reports</button>
+            <button onClick={buttonHandler}>Get KPI Reports</button>
 
             {records.length > 0 && (
-                <table border={1}>
+                <table border="1">
                     <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>KPI ID</th>
                             <th>Scope</th>
                             <th>Metrics</th>
                             <th>Date</th>
+                            <th>Compliance Report ID</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         {
-                            records.map((e) => {
-                                return (
-                                    <tr key={e.reportId}>
-                                        <td>{e.reportId}</td>
-                                        <td>{e.reportScope}</td>
-                                        <td>{e.reportMetrics}</td>
-                                        <td>{e.reportGeneratedDate}</td>
-                                    </tr>
-                                );
-                            })
+                            records.map((e) => (
+                                <tr key={e.kpiId}>
+                                    <td>{e.kpiId}</td>
+                                    <td>{e.kpiReportScope}</td>
+                                    <td>{e.kpiMetrics}</td>
+                                    <td>{e.kpiGeneratedDate}</td>
+                                    <td>
+                                        {e.complianceReport
+                                            ? e.complianceReport.reportId
+                                            : "N/A"}
+                                    </td>
+                                </tr>
+                            ))
                         }
                     </tbody>
                 </table>

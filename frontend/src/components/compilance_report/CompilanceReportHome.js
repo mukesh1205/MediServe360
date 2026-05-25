@@ -6,16 +6,16 @@ export default function ComplianceReportHome(){
             <nav>
                 <ul>
                     <li>
-                        <Link to="add">Add Compliance Report</Link>
+                        <Link to="add">Add Compilance Report</Link>
                     </li>
                     <li>
-                        <Link to="find">Find Compliance Report</Link>
+                        <Link to="find">Find Compilance Report</Link>
                     </li>
                     <li>
-                        <Link to="display">Display Compliance Reports</Link>
+                        <Link to="display">Display Compilance Reports</Link>
                     </li>
                     <li>
-                        <Link to="displayPaginated">Display Compliance Reports Paginated</Link>
+                        <Link to="displayPaginated">Display Compilance Reports Paginated</Link>
                     </li>
                 </ul>
             </nav>
