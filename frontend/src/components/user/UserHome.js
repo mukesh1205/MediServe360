@@ -17,13 +17,16 @@ export default function UserHome(){
         navigate("delete")
     }
 
+    const findalluserhandler=()=>{
+        navigate("findall")
+    }
     return(
         <div>
             <button onClick={addUserHandler} >Add User</button>
             <button onClick={findUserHandler} >Find User</button>
             <button onClick={updateUserHandler} >Update User</button>
             <button onClick={deleteUserHandler} >Delete User</button>
-
+            <button onClick={findalluserhandler}>get all users</button>
             <Outlet />
         </div>
     )

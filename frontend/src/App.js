@@ -57,6 +57,9 @@ import AddNotification from './components/notification/AddNotification';
 import DeleteNotification from './components/notification/DeleteNotification';
 import FindNotification from './components/notification/FindNotification';
 import UpdateNotification from './components/notification/UpdateNotification';
+import FindAllNotification from './components/notification/FindAllNotification';
+import FindAllUser from './components/user/FindAllUser';
+import FindAllAuditlog from './components/auditlog/FindAllAuditlog';
 function App() {
   return (
     <Router>
@@ -111,17 +114,20 @@ function App() {
             <Route path="delete" element={<DeleteUser />} />
             <Route path="update" element={<UpdateUser />} />
             <Route path="find" element={<FindUser />} />
+            <Route path="findall" element={<FindAllUser />} />
         </Route>
 
         <Route path="/auditlog" element={<AuditlogHome />}>
             <Route path="add" element={<AddAuditlog />} />
             <Route path="find" element={<FindAuditlog />} />
+            <Route path="findall" element={<FindAllAuditlog />} />
         </Route>
         <Route path="/notification" element={<NotificationHome />}>
             <Route path="add" element={<AddNotification />} />
             <Route path="update" element={<UpdateNotification />} />
             <Route path="delete" element={<DeleteNotification />} />
             <Route path="find" element={<FindNotification />} />
+            <Route path="findall" element={<FindAllNotification />} />
         </Route>
 
       </Routes>
