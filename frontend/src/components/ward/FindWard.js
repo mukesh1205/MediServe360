@@ -36,20 +36,24 @@ export default function FindWard() {
     }
 
     return (
-        <div>
-            <h1>Find Ward</h1>
+        <div className="container mt-4">
+            <h2>Find Ward</h2>
 
-            <label>Ward ID</label>
-            <input value={wardId} onChange={wardIdHandler} placeholder="Enter Ward ID" />
-            <button onClick={searchHandler}>Search</button>
+            <div className="input-group mb-3">
+                <input
+                    className="form-control"
+                    value={wardId}
+                    onChange={wardIdHandler}
+                    placeholder="Enter Ward ID"
+                />
+                <button className="btn btn-primary" onClick={searchHandler}>Search</button>
+            </div>
 
-            <br /><br />
-
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <div className="alert alert-danger">{error}</div>}
 
             {ward && (
-                <table border="1">
-                    <thead>
+                <table className="table table-bordered table-striped mt-3">
+                    <thead className="table-dark">
                         <tr>
                             <th>Ward ID</th>
                             <th>Ward Name</th>
