@@ -1,7 +1,9 @@
 import {useState,useEffect} from "react";
 import axios from "axios";
+import { useNavigate } from "react-router";
 export default function FindAllAuditlog(){
     let [data,setData]=useState([]);
+    const navigate=useNavigate();
 
     async function notificationget(){
         let url="http://localhost:9002/auditlog/fetchallauditlog"
@@ -9,12 +11,13 @@ export default function FindAllAuditlog(){
             let res=await axios.get(url);
             setData(res.data);
         }catch(err){
-            console.log(err.message);
+            alert(err.message);
         }
     }
     useEffect(()=>{
         notificationget();
-    },[data])
+    },[])
+
     return(
         <div>
             
