@@ -1,48 +1,59 @@
 import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router';
+// Appointment
 import AppointmentHome from './components/appointment/AppointmentHome';
 import AddAppointment from './components/appointment/AddAppointment';
 import DeleteAppointment from './components/appointment/DeleteAppointment';
 import UpdateAppointment from './components/appointment/UpdateAppointment';
 import FindAppointment from './components/appointment/FindAppointment';
 
-// Patient Imports
+// Patient
 import PatientHome from './components/patient/PatientHome';
 import AddPatient from './components/patient/AddPatient';
 import DeletePatient from './components/patient/DeletePatient';
 import UpdatePatient from './components/patient/UpdatePatient';
 import FindPatient from './components/patient/FindPatient';
 import DisplayPatients from './components/patient/DisplayPatients';
+import DisplayPatientsPaginated from './components/patient/DisplayPatientsPaginated';
 
-// Invoice Imports
+// Invoice
 import InvoiceHome from './components/invoice/InvoiceHome';
 import AddInvoice from './components/invoice/AddInvoice';
 import DeleteInvoice from './components/invoice/DeleteInvoice';
 import UpdateInvoice from './components/invoice/UpdateInvoice';
 import FindInvoice from './components/invoice/FindInvoice';
+import DisplayInvoices from './components/invoice/DisplayInvoices';
+import DisplayInvoicesPaginated from './components/invoice/DisplayInvoicesPaginated';
 
-// Insurance Claim Imports
+// Insurance Claim
 import InsuranceClaimHome from './components/insurance_claim/InsuranceClaimHome';
 import AddInsuranceClaim from './components/insurance_claim/AddInsuranceClaim';
 import DeleteInsuranceClaim from './components/insurance_claim/DeleteInsuranceClaim';
 import UpdateInsuranceClaim from './components/insurance_claim/UpdateInsuranceClaim';
 import FindInsuranceClaim from './components/insurance_claim/FindInsuranceClaim';
+import DisplayInsuranceClaims from './components/insurance_claim/DisplayInsuranceClaims';
+import DisplayInsuranceClaimsPaginated from './components/insurance_claim/DisplayInsuranceClaimsPaginated';
 
-// Compilance Report Imports
+// Compliance
 import CompilanceReportHome from './components/compilance_report/CompilanceReportHome';
 import AddCompilanceReport from './components/compilance_report/AddCompilance';
 import DeleteCompilanceReport from './components/compilance_report/DeleteCompilance';
 import UpdateCompilanceReport from './components/compilance_report/UpdateCompilance';
 import FindCompilanceReport from './components/compilance_report/FindCompilance';
+import DisplayCompilanceReport from './components/compilance_report/DisplayCompilance';
+import DisplayCompilancePaginated from './components/compilance_report/DisplayCompilancePaginated';
 
-// KPI Report Imports
+// KPI
+
 import KpiReportHome from './components/kpi_report/KpiReportHome';
 import AddKpiReport from './components/kpi_report/AddKpi';
-import DeleteKpiReport from './components/kpi_report/DeleteKpi';
-import UpdateKpiReport from './components/kpi_report/UpdateKpi';
 import FindKpiReport from './components/kpi_report/FindKpi';
+import DisplayKPiReport from './components/kpi_report/DisplayKpi';
+import DisplayKpiPaginated from './components/kpi_report/DisplayKpiPaginated';
 
+
+// Other Modules
 import UserHome from './components/user/UserHome';
 import AddUser from './components/user/AddUser';
 import DeleteUser from './components/user/DeleteUser';
@@ -82,11 +93,11 @@ import FindAllUser from './components/user/FindAllUser';
 import FindAllAuditlog from './components/auditlog/FindAllAuditlog';
 
 
-import DisplayPatientsPaginated from './components/patient/DisplayPatientsPaginated';
-import DisplayInvoices from './components/invoice/DisplayInvoices';
-import DisplayInsuranceClaims from './components/insurance_claim/DisplayInsuranceClaims';
-import DisplayInsuranceClaimsPaginated from './components/insurance_claim/DisplayInsuranceClaimsPaginated';
-import DisplayInvoicesPaginated from './components/invoice/DisplayInvoicesPaginated';
+// import DisplayPatientsPaginated from './components/patient/DisplayPatientsPaginated';
+// import DisplayInvoices from './components/invoice/DisplayInvoices';
+// import DisplayInsuranceClaims from './components/insurance_claim/DisplayInsuranceClaims';
+// import DisplayInsuranceClaimsPaginated from './components/insurance_claim/DisplayInsuranceClaimsPaginated';
+// import DisplayInvoicesPaginated from './components/invoice/DisplayInvoicesPaginated';
 import AuditLogPage from './components/auditlog/AuditLogPage';
 import UserPage from './components/user/UserPage';
 import NotificationPage from './components/notification/NotificationPage'
@@ -95,55 +106,56 @@ function App() {
     <Router>
 
       <Routes>
-        <Route path="/appointment" element={<AppointmentHome/>}>
-            <Route path="add" element={<AddAppointment/>}></Route>
-            <Route path="delete" element={<DeleteAppointment/>}></Route>
-            <Route path="update" element={<UpdateAppointment />}></Route>
-            <Route path="find" element={<FindAppointment />}></Route>
+
+        {/* Appointment */}
+        <Route path="/appointment" element={<AppointmentHome />}>
+          <Route path="add" element={<AddAppointment />} />
+          <Route path="delete" element={<DeleteAppointment />} />
+          <Route path="update" element={<UpdateAppointment />} />
+          <Route path="find" element={<FindAppointment />} />
         </Route>
 
+        {/* Patient */}
         <Route path="/patient" element={<PatientHome />}>
-            <Route path="add" element={<AddPatient />} ></Route>
-            <Route path="update/:pid" element={<UpdatePatient />} ></Route>
-            <Route path="find" element={<FindPatient />}></Route>
-            <Route path="display" element={<DisplayPatients/>}></Route>
-            <Route path="displayPaginated" element={<DisplayPatientsPaginated/>}></Route>
-            <Route path="delete/:pid" element={<DeletePatient/>}></Route>
+          <Route path="add" element={<AddPatient />} />
+          <Route path="update/:pid" element={<UpdatePatient />} />
+          <Route path="delete/:pid" element={<DeletePatient />} />
+          <Route path="find" element={<FindPatient />} />
+          <Route path="display" element={<DisplayPatients />} />
+          <Route path="displayPaginated" element={<DisplayPatientsPaginated />} />
         </Route>
 
-        {/* Invoice Routes */}
+        {/* Invoice */}
         <Route path="/invoice" element={<InvoiceHome />}>
-            <Route path="add" element={<AddInvoice />} />
-            <Route path="delete/:iid" element={<DeleteInvoice />} />
-            <Route path="display" element={<DisplayInvoices />} />
-            <Route path="displayPaginated" element={<DisplayInvoicesPaginated />} />
-            <Route path="update/:iid" element={<UpdateInvoice />} />
-            <Route path="find" element={<FindInvoice />} />
+          <Route path="add" element={<AddInvoice />} />
+          <Route path="update/:iid" element={<UpdateInvoice />} />
+          <Route path="delete/:iid" element={<DeleteInvoice />} />
+          <Route path="find" element={<FindInvoice />} />
+          <Route path="display" element={<DisplayInvoices />} />
+          <Route path="displayPaginated" element={<DisplayInvoicesPaginated />} />
         </Route>
 
-        {/* Insurance Claim Routes */}
+        {/* Insurance */}
         <Route path="/insuranceClaim" element={<InsuranceClaimHome />}>
-            <Route path="add" element={<AddInsuranceClaim />} />
-            <Route path="delete/:claimId" element={<DeleteInsuranceClaim />} />
-            <Route path="update/:claimId" element={<UpdateInsuranceClaim />} />
-            <Route path="find" element={<FindInsuranceClaim />} />
-            <Route path="display" element={<DisplayInsuranceClaims />} />
-            <Route path="displayPaginated" element={<DisplayInsuranceClaimsPaginated />} />
+          <Route path="add" element={<AddInsuranceClaim />} />
+          <Route path="update/:claimId" element={<UpdateInsuranceClaim />} />
+          <Route path="delete/:claimId" element={<DeleteInsuranceClaim />} />
+          <Route path="find" element={<FindInsuranceClaim />} />
+          <Route path="display" element={<DisplayInsuranceClaims />} />
+          <Route path="displayPaginated" element={<DisplayInsuranceClaimsPaginated />} />
         </Route>
 
+        {/* Compliance */}
         <Route path="/compilance_report" element={<CompilanceReportHome />}>
-            <Route path="add" element={<AddCompilanceReport />} />
-            <Route path="delete" element={<DeleteCompilanceReport />} />
-            <Route path="update" element={<UpdateCompilanceReport />} />
-            <Route path="find" element={<FindCompilanceReport />} />
+          <Route path="add" element={<AddCompilanceReport />} />
+          <Route path="update/:id" element={<UpdateCompilanceReport />} />
+          <Route path="delete/:id" element={<DeleteCompilanceReport />} />
+          <Route path="find" element={<FindCompilanceReport />} />
+          <Route path="display" element={<DisplayCompilanceReport />} />
+          <Route path="displayPaginated" element={<DisplayCompilancePaginated />} />
         </Route>
 
-        <Route path="/kpi_report" element={<KpiReportHome />}>
-            <Route path="add" element={<AddKpiReport />} />
-            <Route path="delete" element={<DeleteKpiReport />} />
-            <Route path="update" element={<UpdateKpiReport />} />
-            <Route path="find" element={<FindKpiReport />} />
-        </Route>
+        
 
         <Route path="/user" element={<UserHome />}>
             <Route path="add" element={<AddUser />} />
@@ -187,6 +199,15 @@ function App() {
             <Route path="occupancy" element={<WardOccupancyReport/>}/>
         </Route>
         
+          <Route path="/kpi_report" element={<KpiReportHome />}>
+          <Route path="add" element={<AddKpiReport />} />
+          <Route path="find" element={<FindKpiReport />} />
+          <Route path="display" element={<DisplayKPiReport />} />
+          
+    
+          <Route path="displayPaginated" element={<DisplayKpiPaginated />} />
+
+        </Route>
 
       </Routes>
 
