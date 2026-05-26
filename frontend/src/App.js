@@ -8,6 +8,7 @@ import DeleteAppointment from './components/appointment/DeleteAppointment';
 import UpdateAppointment from './components/appointment/UpdateAppointment';
 import FindAppointment from './components/appointment/FindAppointment';
 import DisplayAppointments from './components/appointment/DisplayAppointments';
+import DisplayAppointmentsPaginated from './components/appointment/DisplayAppointmentsPaginated';
 
 // ✅ Doctor Imports
 import DoctorHome from './components/doctor/DoctorHome';
@@ -16,6 +17,7 @@ import DeleteDoctor from './components/doctor/DeleteDoctor';
 import UpdateDoctor from './components/doctor/UpdateDoctor';
 import FindDoctor from './components/doctor/FindDoctor';
 import DisplayDoctors from './components/doctor/DisplayDoctors';
+import DisplayDoctorsPaginated from './components/doctor/DisplayDoctorsPaginated';
 
 
 // Patient
@@ -119,6 +121,7 @@ function App() {
             <Route path="edit/:aid" element={<UpdateAppointment />}></Route>
             <Route path="find" element={<FindAppointment />}></Route>
             <Route path="display" element={<DisplayAppointments />}></Route>
+            <Route path="displayPaginated" element={<DisplayAppointmentsPaginated />} /> 
         </Route>
 
       {/* Doctor */}
@@ -128,6 +131,7 @@ function App() {
             <Route path="add" element={<AddDoctor />} />
             <Route path="find" element={<FindDoctor />} />
             <Route path="display" element={<DisplayDoctors />} />
+            <Route path="displayPaginated" element={<DisplayDoctorsPaginated />} />
      </Route>
 
      {/* Patient */}
@@ -231,3 +235,5 @@ function App() {
 }
 
 export default App;
+
+

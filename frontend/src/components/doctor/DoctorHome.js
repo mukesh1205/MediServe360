@@ -22,6 +22,10 @@ export default function DoctorHome() {
                         <Link to="display">Display Doctors</Link>
                     </li>
 
+                    <li>
+                        <Link to="displayPaginated">Display Paginated Doctors</Link>
+                    </li>
+
                 </ul>
             </nav>
 
