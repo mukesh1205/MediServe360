@@ -36,21 +36,25 @@ export default function WardOccupancyReport() {
     }
 
     return (
-        <div>
-            <h1>Ward Occupancy Report</h1>
+        <div className="container mt-4">
+            <h2>Ward Occupancy Report</h2>
 
-            <label>Ward ID</label>
-            <input value={wardId} onChange={wardIdHandler} placeholder="Enter Ward ID" />
-            <button onClick={searchHandler}>Get Report</button>
+            <div className="input-group mb-3">
+                <input
+                    className="form-control"
+                    value={wardId}
+                    onChange={wardIdHandler}
+                    placeholder="Enter Ward ID"
+                />
+                <button className="btn btn-primary" onClick={searchHandler}>Get Report</button>
+            </div>
 
-            <br /><br />
-
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <div className="alert alert-danger">{error}</div>}
 
             {report && (
-                <div>
-                    <h2>Occupancy Report</h2>
-                    <p>{report}</p>
+                <div className="alert alert-info mt-3">
+                    <h5>Occupancy Report</h5>
+                    <p className="mb-0">{report}</p>
                 </div>
             )}
         </div>

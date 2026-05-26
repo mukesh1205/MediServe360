@@ -13,15 +13,16 @@ export default function FindAllBeds() {
                 setBedArr(response.data);
             })
             .catch((error) => {
-                console.error(error);
+                alert(error.message);
             });
     }, []);
 
     return (
-        <div>
-            <h1>All Beds</h1>
-            <table border="1">
-                <thead>
+        <div className="container mt-4">
+            <h2>All Beds</h2>
+
+            <table className="table table-bordered table-striped mt-3">
+                <thead className="table-dark">
                     <tr>
                         <th>Bed ID</th>
                         <th>Bed Status</th>
@@ -39,10 +40,10 @@ export default function FindAllBeds() {
                                     <td>{bed.bedStatus}</td>
                                     <td>{bed.patient ? bed.patient.patientId : "Not Assigned"}</td>
                                     <td>
-                                        <Link to={"/bed/update/" + bed.bedId}>Update</Link>
+                                        <Link className="btn btn-warning btn-sm" to={"/bed/update/" + bed.bedId}>Update</Link>
                                     </td>
                                     <td>
-                                        <Link to={"/bed/delete/" + bed.bedId}>Delete</Link>
+                                        <Link className="btn btn-danger btn-sm" to={"/bed/delete/" + bed.bedId}>Delete</Link>
                                     </td>
                                 </tr>
                             )

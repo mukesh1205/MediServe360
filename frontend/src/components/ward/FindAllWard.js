@@ -13,15 +13,16 @@ export default function FindAllWard() {
                 setWardArr(response.data);
             })
             .catch((error) => {
-                console.error(error);
+                alert(error.message);
             });
     }, []);
 
     return (
-        <div>
-            <h1>All Wards</h1>
-            <table border="1">
-                <thead>
+        <div className="container mt-4">
+            <h2>All Wards</h2>
+
+            <table className="table table-bordered table-striped mt-3">
+                <thead className="table-dark">
                     <tr>
                         <th>Ward ID</th>
                         <th>Ward Name</th>
@@ -41,10 +42,10 @@ export default function FindAllWard() {
                                     <td>{ward.wardcapacity}</td>
                                     <td>{ward.wardstatus}</td>
                                     <td>
-                                        <Link to={"/ward/update/" + ward.wardId}>Update</Link>
+                                        <Link className="btn btn-warning btn-sm" to={"/ward/update/" + ward.wardId}>Update</Link>
                                     </td>
                                     <td>
-                                        <Link to={"/ward/delete/" + ward.wardId}>Delete</Link>
+                                        <Link className="btn btn-danger btn-sm" to={"/ward/delete/" + ward.wardId}>Delete</Link>
                                     </td>
                                 </tr>
                             )
