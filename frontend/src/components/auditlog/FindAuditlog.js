@@ -17,9 +17,8 @@ export default function FindAuditlog(){
             alert(res.data)
             setData(res.data);
             
-
         }catch(err){
-            console.log(err.message)
+            alert(err.message)
         }
     };
     if(data.auditId){
