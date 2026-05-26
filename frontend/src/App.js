@@ -6,6 +6,16 @@ import AddAppointment from './components/appointment/AddAppointment';
 import DeleteAppointment from './components/appointment/DeleteAppointment';
 import UpdateAppointment from './components/appointment/UpdateAppointment';
 import FindAppointment from './components/appointment/FindAppointment';
+import DisplayAppointments from './components/appointment/DisplayAppointments';
+
+// ✅ Doctor Imports
+import DoctorHome from './components/doctor/DoctorHome';
+import AddDoctor from './components/doctor/AddDoctor';
+import DeleteDoctor from './components/doctor/DeleteDoctor';
+import UpdateDoctor from './components/doctor/UpdateDoctor';
+import FindDoctor from './components/doctor/FindDoctor';
+import DisplayDoctors from './components/doctor/DisplayDoctors';
+
 
 // Patient Imports
 import PatientHome from './components/patient/PatientHome';
@@ -64,10 +74,20 @@ function App() {
       <Routes>
         <Route path="/appointment" element={<AppointmentHome/>}>
             <Route path="add" element={<AddAppointment/>}></Route>
-            <Route path="delete" element={<DeleteAppointment/>}></Route>
-            <Route path="update" element={<UpdateAppointment />}></Route>
+            <Route path="delete/:aid" element={<DeleteAppointment/>}></Route>
+            <Route path="edit/:aid" element={<UpdateAppointment />}></Route>
             <Route path="find" element={<FindAppointment />}></Route>
+            <Route path="display" element={<DisplayAppointments />}></Route>
         </Route>
+
+      <Route path="/doctor" element={<DoctorHome />}>
+            <Route path="delete/:id" element={<DeleteDoctor />} />
+            <Route path="update/:id" element={<UpdateDoctor />} />
+            <Route path="add" element={<AddDoctor />} />
+            <Route path="find" element={<FindDoctor />} />
+            <Route path="display" element={<DisplayDoctors />} />
+     </Route>
+
 
         <Route path="/patient" element={<PatientHome />}>
             <Route path="add" element={<AddPatient />} />
