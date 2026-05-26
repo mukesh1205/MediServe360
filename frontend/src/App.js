@@ -7,6 +7,16 @@ import AddAppointment from './components/appointment/AddAppointment';
 import DeleteAppointment from './components/appointment/DeleteAppointment';
 import UpdateAppointment from './components/appointment/UpdateAppointment';
 import FindAppointment from './components/appointment/FindAppointment';
+import DisplayAppointments from './components/appointment/DisplayAppointments';
+
+// ✅ Doctor Imports
+import DoctorHome from './components/doctor/DoctorHome';
+import AddDoctor from './components/doctor/AddDoctor';
+import DeleteDoctor from './components/doctor/DeleteDoctor';
+import UpdateDoctor from './components/doctor/UpdateDoctor';
+import FindDoctor from './components/doctor/FindDoctor';
+import DisplayDoctors from './components/doctor/DisplayDoctors';
+
 
 // Patient
 import PatientHome from './components/patient/PatientHome';
@@ -93,11 +103,6 @@ import FindAllUser from './components/user/FindAllUser';
 import FindAllAuditlog from './components/auditlog/FindAllAuditlog';
 
 
-import DisplayPatientsPaginated from './components/patient/DisplayPatientsPaginated';
-import DisplayInvoices from './components/invoice/DisplayInvoices';
-import DisplayInsuranceClaims from './components/insurance_claim/DisplayInsuranceClaims';
-import DisplayInsuranceClaimsPaginated from './components/insurance_claim/DisplayInsuranceClaimsPaginated';
-import DisplayInvoicesPaginated from './components/invoice/DisplayInvoicesPaginated';
 import AuditLogPage from './components/auditlog/AuditLogPage';
 import UserPage from './components/user/UserPage';
 import NotificationPage from './components/notification/NotificationPage'
@@ -108,14 +113,24 @@ function App() {
       <Routes>
 
         {/* Appointment */}
-        <Route path="/appointment" element={<AppointmentHome />}>
-          <Route path="add" element={<AddAppointment />} />
-          <Route path="delete" element={<DeleteAppointment />} />
-          <Route path="update" element={<UpdateAppointment />} />
-          <Route path="find" element={<FindAppointment />} />
+        <Route path="/appointment" element={<AppointmentHome/>}>
+            <Route path="add" element={<AddAppointment/>}></Route>
+            <Route path="delete/:aid" element={<DeleteAppointment/>}></Route>
+            <Route path="edit/:aid" element={<UpdateAppointment />}></Route>
+            <Route path="find" element={<FindAppointment />}></Route>
+            <Route path="display" element={<DisplayAppointments />}></Route>
         </Route>
 
-        {/* Patient */}
+      {/* Doctor */}
+      <Route path="/doctor" element={<DoctorHome />}>
+            <Route path="delete/:id" element={<DeleteDoctor />} />
+            <Route path="update/:id" element={<UpdateDoctor />} />
+            <Route path="add" element={<AddDoctor />} />
+            <Route path="find" element={<FindDoctor />} />
+            <Route path="display" element={<DisplayDoctors />} />
+     </Route>
+
+     {/* Patient */}
         <Route path="/patient" element={<PatientHome />}>
           <Route path="add" element={<AddPatient />} />
           <Route path="update/:pid" element={<UpdatePatient />} />
