@@ -39,7 +39,7 @@ export default function AddUser(){
             let res=await axios.post("http://localhost:9002/user/insertuserdata",data);
             alert(res.data.message)
         }catch(err){
-            console.log(err.message);
+            alert(err.message);
         }
     }
     return(

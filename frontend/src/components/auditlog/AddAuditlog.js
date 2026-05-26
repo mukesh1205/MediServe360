@@ -30,7 +30,7 @@ export default function AddAuditlog(){
             let res=await axios.post("http://localhost:9002/auditlog/insertauditlog",data);
             alert(res.data.message)
         }catch(err){
-            console.log(err.message);
+            alert(err.message);
         }
     }
     return(

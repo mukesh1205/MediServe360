@@ -1,40 +1,31 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState ,useEffect} from "react";
+import { useParams } from "react-router";
 export default function DeleteNotification(){
+    const {id}=useParams();
 
-    const [id,setId]=useState();
-    const idHandler=(event)=>{
-        setId(event.target.value)
-    }
-    const [data,setData]=useState({});
+    const [data,setData]=useState("");
 
-    async function submitHandler(event){
-        event.preventDefault();
+    async function submitHandler(){
         let url=`http://localhost:9002/notification/deletenotification/${id}`;
         try{
 
             let res=await axios.delete(url);
-            alert(res.data);
             setData(res.data);
             
 
         }catch(err){
-            console.log(err.message)
+            alert(err.message)
         }
     };
+
+    useEffect(()=>{
+        submitHandler();
+    },[])
     
     return(
         <div>
-            
-                <div>
-                    <form onSubmit={submitHandler}>
-                        <label>Id</label><br />
-                        <input onChange={idHandler} text="number" placeholder="Enter NotificationId" />
-                        <br></br>
-                        <button type="submit">Submit</button>
-                    </form>
-                </div>
-            
+            <p>{data}</p>
         </div>
     )
 }

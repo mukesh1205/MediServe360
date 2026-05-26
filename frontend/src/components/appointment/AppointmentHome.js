@@ -9,14 +9,13 @@ export default function AppointmentHome(){
                 <li>
                     <Link to="add">Add Appointment</Link>
                 </li>
-                <li>
-                    <Link to="delete">Delete Appointment</Link>
-                </li>
-                <li>
-                    <Link to="update">Update Appointment</Link>
-                </li>
+                
                 <li>
                     <Link to="find">Find Appointment</Link>
+                </li>
+
+                <li>
+                    <Link to="display">Display Appointments</Link>
                 </li>
 
             </ul>

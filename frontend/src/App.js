@@ -7,6 +7,16 @@ import AddAppointment from './components/appointment/AddAppointment';
 import DeleteAppointment from './components/appointment/DeleteAppointment';
 import UpdateAppointment from './components/appointment/UpdateAppointment';
 import FindAppointment from './components/appointment/FindAppointment';
+import DisplayAppointments from './components/appointment/DisplayAppointments';
+
+// ✅ Doctor Imports
+import DoctorHome from './components/doctor/DoctorHome';
+import AddDoctor from './components/doctor/AddDoctor';
+import DeleteDoctor from './components/doctor/DeleteDoctor';
+import UpdateDoctor from './components/doctor/UpdateDoctor';
+import FindDoctor from './components/doctor/FindDoctor';
+import DisplayDoctors from './components/doctor/DisplayDoctors';
+
 
 // Patient
 import PatientHome from './components/patient/PatientHome';
@@ -92,6 +102,10 @@ import FindAllNotification from './components/notification/FindAllNotification';
 import FindAllUser from './components/user/FindAllUser';
 import FindAllAuditlog from './components/auditlog/FindAllAuditlog';
 
+
+import AuditLogPage from './components/auditlog/AuditLogPage';
+import UserPage from './components/user/UserPage';
+import NotificationPage from './components/notification/NotificationPage'
 function App() {
   return (
     <Router>
@@ -99,14 +113,24 @@ function App() {
       <Routes>
 
         {/* Appointment */}
-        <Route path="/appointment" element={<AppointmentHome />}>
-          <Route path="add" element={<AddAppointment />} />
-          <Route path="delete" element={<DeleteAppointment />} />
-          <Route path="update" element={<UpdateAppointment />} />
-          <Route path="find" element={<FindAppointment />} />
+        <Route path="/appointment" element={<AppointmentHome/>}>
+            <Route path="add" element={<AddAppointment/>}></Route>
+            <Route path="delete/:aid" element={<DeleteAppointment/>}></Route>
+            <Route path="edit/:aid" element={<UpdateAppointment />}></Route>
+            <Route path="find" element={<FindAppointment />}></Route>
+            <Route path="display" element={<DisplayAppointments />}></Route>
         </Route>
 
-        {/* Patient */}
+      {/* Doctor */}
+      <Route path="/doctor" element={<DoctorHome />}>
+            <Route path="delete/:id" element={<DeleteDoctor />} />
+            <Route path="update/:id" element={<UpdateDoctor />} />
+            <Route path="add" element={<AddDoctor />} />
+            <Route path="find" element={<FindDoctor />} />
+            <Route path="display" element={<DisplayDoctors />} />
+     </Route>
+
+     {/* Patient */}
         <Route path="/patient" element={<PatientHome />}>
           <Route path="add" element={<AddPatient />} />
           <Route path="update/:pid" element={<UpdatePatient />} />
@@ -150,23 +174,26 @@ function App() {
 
         <Route path="/user" element={<UserHome />}>
             <Route path="add" element={<AddUser />} />
-            <Route path="delete" element={<DeleteUser />} />
-            <Route path="update" element={<UpdateUser />} />
+            <Route path="delete/:id" element={<DeleteUser />} />
+            <Route path="update/:id" element={<UpdateUser />} />
             <Route path="find" element={<FindUser />} />
             <Route path="findall" element={<FindAllUser />} />
+            <Route path="paginated" element={<UserPage />} />
         </Route>
 
         <Route path="/auditlog" element={<AuditlogHome />}>
             <Route path="add" element={<AddAuditlog />} />
             <Route path="find" element={<FindAuditlog />} />
             <Route path="findall" element={<FindAllAuditlog />} />
+            <Route path="paginated" element={<AuditLogPage/>} />
         </Route>
         <Route path="/notification" element={<NotificationHome />}>
             <Route path="add" element={<AddNotification />} />
-            <Route path="update" element={<UpdateNotification />} />
-            <Route path="delete" element={<DeleteNotification />} />
+            <Route path="update/:id" element={<UpdateNotification />} />
+            <Route path="delete/:id" element={<DeleteNotification />} />
             <Route path="find" element={<FindNotification />} />
             <Route path="findall" element={<FindAllNotification />} />
+            <Route path="paginated" element={<NotificationPage />} />
         </Route>
 
         <Route path="/bed" element={<BedHome />}>
@@ -195,29 +222,6 @@ function App() {
     
           <Route path="displayPaginated" element={<DisplayKpiPaginated />} />
 
-        </Route>
-
-
-        {/* User */}
-        <Route path="/user" element={<UserHome />}>
-          <Route path="add" element={<AddUser />} />
-          <Route path="update" element={<UpdateUser />} />
-          <Route path="delete" element={<DeleteUser />} />
-          <Route path="find" element={<FindUser />} />
-        </Route>
-
-        {/* Audit */}
-        <Route path="/auditlog" element={<AuditlogHome />}>
-          <Route path="add" element={<AddAuditlog />} />
-          <Route path="find" element={<FindAuditlog />} />
-        </Route>
-
-        {/* Notification */}
-        <Route path="/notification" element={<NotificationHome />}>
-          <Route path="add" element={<AddNotification />} />
-          <Route path="update" element={<UpdateNotification />} />
-          <Route path="delete" element={<DeleteNotification />} />
-          <Route path="find" element={<FindNotification />} />
         </Route>
 
       </Routes>

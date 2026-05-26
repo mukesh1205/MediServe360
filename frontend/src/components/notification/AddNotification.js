@@ -42,7 +42,7 @@ export default function AddNotification(){
             let res=await axios.post("http://localhost:9002/notification/insertnotificationdata",data);
             alert(res.data.message)
         }catch(err){
-            console.log(err.message);
+            alert(err.message);
         }
     }
     return(
