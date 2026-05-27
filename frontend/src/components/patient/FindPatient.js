@@ -27,8 +27,7 @@ export default function FindPatient(){
                 alert(err.response.data.errorMessage || "No Patient Found");
                 setRecords([]);
             } else {
-                console.error(err);
-                alert("Something went wrong");
+                alert(err.message);
             }
         }     
     }

@@ -12,13 +12,13 @@ export default function DisplayPatients(){
                 setPatient(res.data);
             })
             .catch((err)=>{
-                console.error(err);
+                alert(err.message);
             })
     },[])
     return(
         <div>
             <h3>Display all Patients</h3>
-            <table border={1}>
+            <table className="table table-bordered">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -28,7 +28,7 @@ export default function DisplayPatients(){
                         <th>Phone Number</th>
                         <th>Medical History</th>
                         <th>Status</th>
-                        <th>Edit</th>
+                        <th>Update</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
@@ -45,7 +45,7 @@ export default function DisplayPatients(){
                                     <td>{e.patientMedicalHistory}</td>
                                     <td>{e.patientStatus}</td>
                                     <td>
-                                        <Link to={"/patient/update/"+e.patientId}>Edit</Link>
+                                        <Link to={"/patient/update/"+e.patientId}>Update</Link>
                                     </td>
                                     <td>
                                         <Link to={"/patient/delete/"+e.patientId}>Delete</Link>

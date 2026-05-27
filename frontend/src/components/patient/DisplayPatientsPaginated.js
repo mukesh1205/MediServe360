@@ -24,7 +24,7 @@ export default function DisplayPatientsPaginated(){
             setRecords(res.data.content);
         }
         catch(err){
-            console.error(err);
+            alert(err.message);
         }
     }
     

@@ -16,7 +16,7 @@ export default function DeleteInvoice() {
                 navigate("/invoice");
             })
             .catch((err) => {
-                console.error(err);
+                alert(err.message);
             });
 
     }, [iid, navigate]);

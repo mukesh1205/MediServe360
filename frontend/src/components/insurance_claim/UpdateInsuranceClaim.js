@@ -34,7 +34,7 @@ export default function UpdateInsuranceClaim() {
         navigate("/insuranceClaim/display");
       })
       .catch((err) => {
-        console.error(err);
+        alert(err.message);
       });
   };
 
@@ -54,7 +54,7 @@ export default function UpdateInsuranceClaim() {
 
       })
       .catch((err) => {
-        console.error(err);
+        alert(err.message);
       });
 
   }, [claimId]);

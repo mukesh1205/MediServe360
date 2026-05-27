@@ -35,8 +35,7 @@ export default function AddInvoice() {
                 console.log(res.data);
             })
             .catch((err) => {
-                console.error(err.response?.data || err);
-                alert("Error adding invoice");
+                alert(err.message);
             });
     };
 
@@ -50,14 +49,15 @@ export default function AddInvoice() {
                 onChange={e => setPatientId(Number(e.target.value))}
             />
             <br />
-
+            <div>
             <label>Amount</label>
-            <input
+            <input className="form-control"
                 type="number"
                 step="0.01"
                 onChange={e => setAmount(e.target.value)}
             />
-            <br />
+            </div>
+
 
             <label>Invoice Date</label>
             <input

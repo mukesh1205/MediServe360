@@ -50,7 +50,7 @@ export default function AddPatient(){
                 alert("Patient Added successfully"+response.data);
             })
             .catch((error)=>{
-                console.error(error.response.data)
+                alert(error.message);
             })
     }
 

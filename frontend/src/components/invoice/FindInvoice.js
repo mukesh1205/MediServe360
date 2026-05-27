@@ -20,11 +20,10 @@ export default function FindInvoice() {
 
         } catch (err) {
             if (err.response && err.response.status === 404) {
-                alert(err.response.data.errorMessage || "Invoice not found");
+                alert.error(err.response.data.errorMessage || "Invoice not found");
                 setInvoice(null);
             } else {
-                console.error(err);
-                alert("Something went wrong");
+                alert(err.message);
             }
         }
     };

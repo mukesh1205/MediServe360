@@ -40,8 +40,7 @@ export default function AddInsuranceClaim() {
                 setStatus("");
             })
             .catch((err) => {
-                console.error(err.response?.data || err);
-                alert("Error adding insurance claim");
+                alert(err.message);
             });
     };
 

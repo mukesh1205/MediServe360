@@ -20,11 +20,10 @@ export default function FindInsuranceClaim() {
 
         } catch (err) {
             if (err.response && err.response.status === 404) {
-                alert(err.response.data.errorMessage || "Insurance Claim not found");
+                alert.error(err.response.data.errorMessage || "Insurance Claim not found");
                 setClaim(null);
             } else {
-                console.error(err);
-                alert("Something went wrong");
+                alert(err.message);
             }
         }
     };

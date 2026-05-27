@@ -14,7 +14,7 @@ export default function DisplayInsuranceClaims() {
                 setClaims(res.data);
             })
             .catch((err) => {
-                console.error(err);
+                alert(err.message);
             });
     }, []);
 
@@ -31,7 +31,7 @@ export default function DisplayInsuranceClaims() {
                         <th>Policy Number</th>
                         <th>Amount</th>
                         <th>Status</th>
-                        <th>Edit</th>
+                        <th>Update</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
@@ -50,7 +50,7 @@ export default function DisplayInsuranceClaims() {
 
                             <td>
                                 <Link to={`/insuranceClaim/update/${c.insuranceClaimId}`}>
-                                    Edit
+                                    Update
                                 </Link>
                             </td>
 

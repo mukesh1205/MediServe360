@@ -14,7 +14,7 @@ export default function DisplayInvoices() {
                 setInvoices(res.data);
             })
             .catch((err) => {
-                console.error(err);
+                alert(err.message);
             });
     }, []);
 
@@ -34,7 +34,7 @@ export default function DisplayInvoices() {
                         <th>Payment Mode</th>
                         <th>Adjustment Amount</th>
                         <th>Refund Status</th>
-                        <th>Edit</th>
+                        <th>Update</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
@@ -56,7 +56,7 @@ export default function DisplayInvoices() {
 
                             <td>
                                 <Link to={`/invoice/update/${e.invoiceId}`}>
-                                    Edit
+                                    Update
                                 </Link>
                             </td>
 

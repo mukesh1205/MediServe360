@@ -17,7 +17,7 @@ export default function DeleteInsuranceClaim() {
                 navigate("/insuranceClaim");
             })
             .catch((err) => {
-                console.error(err);
+                alert(err.message);
             });
 
     }, [claimId, navigate]); 

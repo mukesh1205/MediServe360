@@ -26,7 +26,7 @@ export default function DisplayInsuranceClaimsPaginated() {
             setRecords(res.data.content);
 
         } catch (err) {
-            console.error(err);
+            alert(err.message);
         }
     };
 

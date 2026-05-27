@@ -41,7 +41,7 @@ export default function UpdateInvoice() {
         navigate("/invoice/display");
       })
       .catch((err) => {
-        console.error(err);
+        alert(err.message);
       });
   };
 
@@ -63,7 +63,7 @@ export default function UpdateInvoice() {
         setRefundStatus(inv.refundStatus);
       })
       .catch((err) => {
-        console.error(err);
+        alert(err.message);
       });
 
   }, [iid]);

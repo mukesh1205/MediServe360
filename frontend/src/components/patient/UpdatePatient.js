@@ -59,7 +59,7 @@ export default function UpdatePatient() {
         navigate("/patient/display");
       })
       .catch((err) => {
-        console.error(err);
+        alert(err.message);
       });
   };
 
@@ -77,7 +77,7 @@ export default function UpdatePatient() {
         setPatientStatus(p.patientStatus);
       })
       .catch((err) => {
-        console.error(err);
+        alert(err.message);
       });
   }, [pid]);
 
