@@ -5,7 +5,6 @@ export default function UserPage(){
 
     const [data,setData]=useState([]);
     const [count,setCount]=useState(0);
-    const [totalElements,setTotalElements]=useState(0);
     const [totalPages,setTotalPages]=useState(0);
 
     const size=6;
@@ -34,7 +33,6 @@ export default function UserPage(){
         try{
             let res=await axios.get(url,params);
             setData(res.data.content);
-            setTotalElements(res.data.totalElements);
             setTotalPages(res.data.totalPages);
         }catch(err){
             alert(err.message);

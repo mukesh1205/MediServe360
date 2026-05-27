@@ -6,7 +6,7 @@ export default function AddUser(){
     let [role,setRole]=useState("");
     let [phone,setPhone]=useState("");
     let [email,setEmail]=useState("");
-
+    let [password,setPassword]=useState("");
     const nameHandler=(event)=>{
         setName(event.target.value)
     }
@@ -22,23 +22,33 @@ export default function AddUser(){
     const phoneHandler=(event)=>{
         setPhone(event.target.value)
     }
+    const passwordHandler=(event)=>{
+        setPassword(event.target.value);
+    }
 
     async function submitHandler(){
         let data={
                 
-                "user": {
-                    
                     "userName": name,
                     "userRole": role,
                     "userEmail": email,
-                    "userPhone": phone
-                }
+                    "phonenumber": phone,
+                    "password":password
                 
             }
-        try{
-            let res=await axios.post("http://localhost:9002/user/insertuserdata",data);
-            alert(res.data.message)
-        }catch(err){
+             try {
+            const res = await axios.post(
+                "http://localhost:9002/user/insertuserdata",
+                data,
+                {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") // ✅ JWT
+                    }
+                }
+            );
+            alert(res.data.userName);
+        }
+        catch(err){
             alert(err.message);
         }
     }
@@ -51,10 +61,10 @@ export default function AddUser(){
 
                 <label>Role</label>
                 <select onChange={roleHandler}>
-                    <option value="Patient">Patient</option>
-                    <option value="Doctor">Doctor</option>
-                    <option value="Nurse">Nurse</option>
-                    <option value="Admin">Admin</option>
+                    <option value="PATIENT">Patient</option>
+                    <option value="DOCTOR">Doctor</option>
+                    <option value="NURSE">Nurse</option>
+                    <option value="ADMIN">Admin</option>
                     
                 </select>
                 <br></br>
@@ -65,6 +75,10 @@ export default function AddUser(){
 
                 <label>Phone</label>
                 <input type="text" placeholder="Enter phone number" onChange={phoneHandler} />
+                <br></br>
+
+                <label>Password</label>
+                <input type="text" placeholder="Enter Password (min 6 Chars)" onChange={passwordHandler} />
                 <br></br>
 
                 <button type="submit">Submit</button>

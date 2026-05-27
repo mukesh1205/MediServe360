@@ -12,7 +12,6 @@ export default function DeleteNotification(){
 
             let res=await axios.delete(url);
             setData(res.data);
-            
 
         }catch(err){
             alert(err.message)

@@ -34,7 +34,7 @@ export default function AddPatient(){
     }
 
     let buttonHandler=()=>{
-        let url="http://localhost:9002/api/addPatient";
+        let url="http://localhost:9002/api/patient/addPatient";
         let data={
             "patient":{
                 "patientName": patientName,
@@ -45,7 +45,11 @@ export default function AddPatient(){
                 "patientStatus": patientStatus
             }
         };
-        axios.post(url,data)
+        axios.post(url,data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") // ✅ JWT
+                    }
+                })
             .then((response)=>{
                 alert("Patient Added successfully"+response.data);
             })
