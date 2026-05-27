@@ -45,22 +45,25 @@ export default function AddWard() {
     }
 
     return (
-        <div>
-            <h1>Add Ward</h1>
+        <div className="container mt-4">
+            <h2>Add Ward</h2>
 
-            <label>Ward Name</label>
-            <input value={wardName} onChange={wardNameHandler} placeholder="Enter Ward Name" />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Ward Name</label>
+                <input className="form-control" value={wardName} onChange={wardNameHandler} placeholder="Enter Ward Name" />
+            </div>
 
-            <label>Ward Capacity</label>
-            <input value={wardCapacity} onChange={wardCapacityHandler} placeholder="Enter Ward Capacity" />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Ward Capacity</label>
+                <input className="form-control" value={wardCapacity} onChange={wardCapacityHandler} placeholder="Enter Ward Capacity" />
+            </div>
 
-            <label>Ward Status</label>
-            <input value={wardStatus} onChange={wardStatusHandler} placeholder="e.g. active" />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Ward Status</label>
+                <input className="form-control" value={wardStatus} onChange={wardStatusHandler} placeholder="e.g. active" />
+            </div>
 
-            <button onClick={saveHandler}>Save</button>
+            <button className="btn btn-primary" onClick={saveHandler}>Save</button>
         </div>
     );
 }

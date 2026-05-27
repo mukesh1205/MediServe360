@@ -14,15 +14,22 @@ export default function AddUser() {
     const phoneHandler = (e) => setPhone(e.target.value);
 
     async function submitHandler(e) {
-        e.preventDefault(); // ✅ PREVENT FORM REFRESH
+        e.preventDefault(); // ✅ prevent reload
 
-        // ✅ CORRECT DATA FORMAT (IMPORTANT)
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            alert("❌ Please login first");
+            return;
+        }
+
+        // ✅ Correct data format
         const data = {
             userName: name,
-            userRole: role,
+            userRole: role,        // Make sure backend expects ROLE format if needed
             userEmail: email,
             userPhone: phone,
-            password: "123456" // ✅ required by backend
+            password: "123456"
         };
 
         try {
@@ -31,16 +38,23 @@ export default function AddUser() {
                 data,
                 {
                     headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token") // ✅ JWT
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
                     }
                 }
             );
 
-            alert(res.data.message);
+            alert(res.data.message || "✅ User added successfully");
+
+            // ✅ clear form after success
+            setName("");
+            setRole("");
+            setEmail("");
+            setPhone("");
 
         } catch (err) {
-            console.log(err);
-            alert("Error: " + err.response?.data?.message || err.message);
+            console.error(err);
+            alert(err.response?.data || "❌ Error adding user");
         }
     }
 
@@ -50,23 +64,27 @@ export default function AddUser() {
 
             <form onSubmit={submitHandler}>
 
-                <label>Name</label><br/>
-                <input type="text" onChange={nameHandler} required /><br/><br/>
+                <label>Name</label><br />
+                <input type="text" value={name} onChange={nameHandler} required />
+                <br /><br />
 
-                <label>Role</label><br/>
-                <select onChange={roleHandler} required>
+                <label>Role</label><br />
+                <select value={role} onChange={roleHandler} required>
                     <option value="">Select Role</option>
-                    <option value="ADMIN">Admin</option>
-                    <option value="DOCTOR">Doctor</option>
-                    <option value="NURSE">Nurse</option>
-                    <option value="RECEPTIONIST">Receptionist</option>
-                </select><br/><br/>
+                    <option value="ROLE_ADMIN">Admin</option>
+                    <option value="ROLE_DOCTOR">Doctor</option>
+                    <option value="ROLE_NURSE">Nurse</option>
+                    <option value="ROLE_RECEPTIONIST">Receptionist</option>
+                </select>
+                <br /><br />
 
-                <label>Email</label><br/>
-                <input type="email" onChange={emailHandler} required /><br/><br/>
+                <label>Email</label><br />
+                <input type="email" value={email} onChange={emailHandler} required />
+                <br /><br />
 
-                <label>Phone</label><br/>
-                <input type="text" onChange={phoneHandler} required /><br/><br/>
+                <label>Phone</label><br />
+                <input type="text" value={phone} onChange={phoneHandler} required />
+                <br /><br />
 
                 <button type="submit">Submit</button>
 

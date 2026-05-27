@@ -29,7 +29,7 @@ import com.medi360.service.InvoiceService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/invoice")
 public class InvoiceController {
 	@Autowired
 	InvoiceService invoiceService;

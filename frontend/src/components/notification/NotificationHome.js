@@ -7,27 +7,23 @@ export default function NotificationHome(){
         navigate("add")
     }
 
-    const updatenotificatoinhandler=()=>{
-        navigate("update")
-    }
-
-    const deletenotificatoinhandler=()=>{
-        navigate("delete")
-    }
     const getnotificatoinhandler=()=>{
         navigate("find")
     }
     const findallnotificationhandler=()=>{
         navigate("findall")
     }
+    const paginatedhandler=()=>{
+        navigate("paginated");
+    }
     return(
         <div>
             <button onClick={addnotificatoinhandler}>Add Notification</button>
-            <button onClick={updatenotificatoinhandler}>update Notification</button>
+           
             <button onClick={findallnotificationhandler}>Find all Notification</button>
-            <button onClick={deletenotificatoinhandler}>Delete Notification</button>
+            
             <button onClick={getnotificatoinhandler}>Get Notification</button>
-
+            <button onClick={paginatedhandler}>Notification Pages</button>
             <Outlet />
         </div>
     )

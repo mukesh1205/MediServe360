@@ -23,7 +23,6 @@ export default function UpdateWard() {
         setWardStatus(e.target.value);
     }
 
-    // Load existing ward data when page opens
     useEffect(() => {
         let url = `http://localhost:9002/ward/getWard/${wardId}`;
         axios.get(url)
@@ -33,7 +32,7 @@ export default function UpdateWard() {
                 setWardStatus(res.data.ward.wardstatus);
             })
             .catch((err) => {
-                console.error(err);
+                alert(err.message);
             });
     }, []);
 
@@ -65,26 +64,30 @@ export default function UpdateWard() {
     }
 
     return (
-        <div>
-            <h1>Update Ward {wardId}</h1>
+        <div className="container mt-4">
+            <h2>Update Ward {wardId}</h2>
 
-            <label>Ward ID</label>
-            <input value={wardId} readOnly />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Ward ID</label>
+                <input className="form-control" value={wardId} readOnly />
+            </div>
 
-            <label>Ward Name</label>
-            <input value={wardName} onChange={wardNameHandler} />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Ward Name</label>
+                <input className="form-control" value={wardName} onChange={wardNameHandler} />
+            </div>
 
-            <label>Ward Capacity</label>
-            <input value={wardCapacity} onChange={wardCapacityHandler} />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Ward Capacity</label>
+                <input className="form-control" value={wardCapacity} onChange={wardCapacityHandler} />
+            </div>
 
-            <label>Ward Status</label>
-            <input value={wardStatus} onChange={wardStatusHandler} />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Ward Status</label>
+                <input className="form-control" value={wardStatus} onChange={wardStatusHandler} />
+            </div>
 
-            <button onClick={updateButtonHandler}>Update</button>
+            <button className="btn btn-warning" onClick={updateButtonHandler}>Update</button>
         </div>
     );
 }
