@@ -55,7 +55,7 @@ public class Security {
                         .requestMatchers("/api/dashboard/**").hasRole("FINANCEOFFICER")
 //                         audit-logs — GET allowed, POST blocked
                         .requestMatchers(HttpMethod.GET, "/auditlog/**")
-                        .hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                        .hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/auditlog/**")
                         .denyAll()
 
