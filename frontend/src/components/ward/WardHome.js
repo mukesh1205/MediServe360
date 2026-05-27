@@ -9,12 +9,6 @@ export default function WardHome() {
                         <Link to="add">Add Ward</Link>
                     </li>
                     <li>
-                        <Link to="delete">Delete Ward</Link>
-                    </li>
-                    <li>
-                        <Link to="update">Update Ward</Link>
-                    </li>
-                    <li>
                         <Link to="find">Find Ward</Link>
                     </li>
                     <li>
@@ -22,6 +16,9 @@ export default function WardHome() {
                     </li>
                     <li>
                         <Link to="occupancy">Ward Occupancy Report</Link>
+                    </li>
+                    <li>
+                        <Link to="pages">Pages</Link>
                     </li>
                 </ul>
             </nav>

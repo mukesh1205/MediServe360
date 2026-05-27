@@ -36,18 +36,20 @@ export default function AssignBed() {
     }
 
     return (
-        <div>
-            <h1>Assign Patient to Bed</h1>
+        <div className="container mt-4">
+            <h2>Assign Patient to Bed</h2>
 
-            <label>Bed ID</label>
-            <input value={bedId} onChange={bedIdHandler} placeholder="Enter Bed ID" />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Bed ID</label>
+                <input className="form-control" value={bedId} onChange={bedIdHandler} placeholder="Enter Bed ID" />
+            </div>
 
-            <label>Patient ID</label>
-            <input value={patientId} onChange={patientIdHandler} placeholder="Enter Patient ID" />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Patient ID</label>
+                <input className="form-control" value={patientId} onChange={patientIdHandler} placeholder="Enter Patient ID" />
+            </div>
 
-            <button onClick={assignHandler}>Assign</button>
+            <button className="btn btn-success" onClick={assignHandler}>Assign</button>
         </div>
     );
 }

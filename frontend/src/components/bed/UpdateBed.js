@@ -18,7 +18,6 @@ export default function UpdateBed() {
         setWardId(e.target.value);
     }
 
-    // Load existing bed data when page opens
     useEffect(() => {
         let url = `http://localhost:9002/bed/getBed/${bedId}`;
         axios.get(url)
@@ -32,48 +31,50 @@ export default function UpdateBed() {
     }, []);
 
     let updateButtonHandler = () => {
-    let url = "http://localhost:9002/bed/updateBed";
-    let data = {
-        "bed": {
-            "bedId": parseInt(bedId),
-            "bedStatus": bedStatus,
-            // only include ward if wardId is actually entered
-            ...(wardId && { "ward": { "wardId": parseInt(wardId) } })
-        }
-    };
-    axios.put(url, data)
-        .then((res) => {
-            alert("Bed updated successfully");
-            navigate("/bed/all");
-        })
-        .catch((error) => {
-            if (error.response) {
-                alert("Error " + error.response.status + ": " + (error.response.data?.errorMessage || JSON.stringify(error.response.data)));
-            } else if (error.request) {
-                alert("No response from server. Make sure the backend is running on port 9002.");
-            } else {
-                alert("Error: " + error.message);
+        let url = "http://localhost:9002/bed/updateBed";
+        let data = {
+            "bed": {
+                "bedId": parseInt(bedId),
+                "bedStatus": bedStatus,
+                ...(wardId && { "ward": { "wardId": parseInt(wardId) } })
             }
-        });
-}
+        };
+        axios.put(url, data)
+            .then((res) => {
+                alert("Bed updated successfully");
+                navigate("/bed/all");
+            })
+            .catch((error) => {
+                if (error.response) {
+                    alert("Error " + error.response.status + ": " + (error.response.data?.errorMessage || JSON.stringify(error.response.data)));
+                } else if (error.request) {
+                    alert("No response from server. Make sure the backend is running on port 9002.");
+                } else {
+                    alert("Error: " + error.message);
+                }
+            });
+    }
 
     return (
-        <div>
-            <h1>Update Bed {bedId}</h1>
+        <div className="container mt-4">
+            <h2>Update Bed {bedId}</h2>
 
-            <label>Bed ID</label>
-            <input value={bedId} readOnly />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Bed ID</label>
+                <input className="form-control" value={bedId} readOnly />
+            </div>
 
-            <label>Bed Status</label>
-            <input value={bedStatus} onChange={bedStatusHandler} />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Bed Status</label>
+                <input className="form-control" value={bedStatus} onChange={bedStatusHandler} />
+            </div>
 
-            <label>Ward ID</label>
-            <input value={wardId} onChange={wardIdHandler} />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Ward ID</label>
+                <input className="form-control" value={wardId} onChange={wardIdHandler} />
+            </div>
 
-            <button onClick={updateButtonHandler}>Update</button>
+            <button className="btn btn-warning" onClick={updateButtonHandler}>Update</button>
         </div>
     );
 }
