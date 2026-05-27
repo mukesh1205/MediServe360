@@ -18,6 +18,10 @@ export default function AppointmentHome(){
                     <Link to="display">Display Appointments</Link>
                 </li>
 
+                <li>
+                    <Link to="displayPaginated">Display Paginated Appointments</Link>
+                </li>
+
             </ul>
 
         </nav>

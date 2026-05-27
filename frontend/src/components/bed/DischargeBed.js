@@ -28,14 +28,15 @@ export default function DischargeBed() {
     }
 
     return (
-        <div>
-            <h1>Discharge Patient from Bed</h1>
+        <div className="container mt-4">
+            <h2>Discharge Patient from Bed</h2>
 
-            <label>Bed ID</label>
-            <input value={bedId} onChange={bedIdHandler} placeholder="Enter Bed ID" />
-            <br /><br />
+            <div className="mb-3">
+                <label className="form-label">Bed ID</label>
+                <input className="form-control" value={bedId} onChange={bedIdHandler} placeholder="Enter Bed ID" />
+            </div>
 
-            <button onClick={dischargeHandler}>Discharge</button>
+            <button className="btn btn-danger" onClick={dischargeHandler}>Discharge</button>
         </div>
     );
 }

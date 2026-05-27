@@ -18,7 +18,11 @@ export default function FindBed() {
         let url = `http://localhost:9002/bed/getBed/${bedId}`;
         axios.get(url)
             .then((response) => {
-                setBed(response.data.bed);
+                if (response.data.bed) {
+                    setBed(response.data.bed);
+                } else {
+                    setError("Bed not found for ID: " + bedId);
+                }
             })
             .catch((error) => {
                 if (error.response) {
@@ -32,20 +36,24 @@ export default function FindBed() {
     }
 
     return (
-        <div>
-            <h1>Find Bed</h1>
+        <div className="container mt-4">
+            <h2>Find Bed</h2>
 
-            <label>Bed ID</label>
-            <input value={bedId} onChange={bedIdHandler} placeholder="Enter Bed ID" />
-            <button onClick={searchHandler}>Search</button>
+            <div className="input-group mb-3">
+                <input
+                    className="form-control"
+                    value={bedId}
+                    onChange={bedIdHandler}
+                    placeholder="Enter Bed ID"
+                />
+                <button className="btn btn-primary" onClick={searchHandler}>Search</button>
+            </div>
 
-            <br /><br />
-
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <div className="alert alert-danger">{error}</div>}
 
             {bed && (
-                <table border="1">
-                    <thead>
+                <table className="table table-bordered table-striped mt-3">
+                    <thead className="table-dark">
                         <tr>
                             <th>Bed ID</th>
                             <th>Bed Status</th>

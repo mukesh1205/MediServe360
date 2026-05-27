@@ -30,11 +30,9 @@ export default function AddBed() {
             })
             .catch((error) => {
                 if (error.response) {
-                    // Server responded with an error (4xx, 5xx)
                     alert("Error " + error.response.status + ": " + (error.response.data?.message || JSON.stringify(error.response.data)));
                 } else if (error.request) {
-                    // Request was made but no response (CORS or backend not running)
-                    alert("No response from server. Make sure the backend is running on port 8080.");
+                    alert("No response from server. Make sure the backend is running on port 9002.");
                 } else {
                     alert("Error: " + error.message);
                 }
@@ -42,16 +40,27 @@ export default function AddBed() {
     }
 
     return (
-        <div>
-            <label>Bed Status</label>
-            <input onChange={bedStatusHandler} placeholder="e.g. Available" />
-            <br />
+        <div className="container mt-4">
+            <h2>Add Bed</h2>
+            <div className="mb-3">
+                <label className="form-label">Bed Status</label>
+                <input
+                    className="form-control"
+                    onChange={bedStatusHandler}
+                    placeholder="e.g. Available"
+                />
+            </div>
 
-            <label>Ward ID</label>
-            <input onChange={wardIdHandler} placeholder="Enter Ward ID" />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Ward ID</label>
+                <input
+                    className="form-control"
+                    onChange={wardIdHandler}
+                    placeholder="Enter Ward ID"
+                />
+            </div>
 
-            <button onClick={saveHandler}>Save</button>
+            <button className="btn btn-primary" onClick={saveHandler}>Save</button>
         </div>
     )
 }

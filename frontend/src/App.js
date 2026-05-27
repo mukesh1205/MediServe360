@@ -8,6 +8,7 @@ import DeleteAppointment from './components/appointment/DeleteAppointment';
 import UpdateAppointment from './components/appointment/UpdateAppointment';
 import FindAppointment from './components/appointment/FindAppointment';
 import DisplayAppointments from './components/appointment/DisplayAppointments';
+import DisplayAppointmentsPaginated from './components/appointment/DisplayAppointmentsPaginated';
 
 // ✅ Doctor Imports
 import DoctorHome from './components/doctor/DoctorHome';
@@ -16,6 +17,7 @@ import DeleteDoctor from './components/doctor/DeleteDoctor';
 import UpdateDoctor from './components/doctor/UpdateDoctor';
 import FindDoctor from './components/doctor/FindDoctor';
 import DisplayDoctors from './components/doctor/DisplayDoctors';
+import DisplayDoctorsPaginated from './components/doctor/DisplayDoctorsPaginated';
 
 
 // Patient
@@ -88,6 +90,7 @@ import UpdateBed from './components/bed/UpdateBed';
 import FindAllBed from './components/bed/FindAllBed';
 import AssignBed from './components/bed/AssignBed';
 import DischargeBed from './components/bed/DischargeBed';
+import PaginatedBed from './components/bed/PaginatedBed';
 
 import WardHome from './components/ward/WardHome';
 import AddWard from './components/ward/AddWard';
@@ -96,6 +99,7 @@ import DeleteWard from './components/ward/DeleteWard';
 import FindWard from './components/ward/FindWard';
 import FindAllWard from './components/ward/FindAllWard';
 import WardOccupancyReport from './components/ward/WardOccupancyReport';
+import PaginatedWard from './components/ward/PaginatedWard';
 
 import UpdateNotification from './components/notification/UpdateNotification';
 import FindAllNotification from './components/notification/FindAllNotification';
@@ -119,6 +123,7 @@ function App() {
             <Route path="edit/:aid" element={<UpdateAppointment />}></Route>
             <Route path="find" element={<FindAppointment />}></Route>
             <Route path="display" element={<DisplayAppointments />}></Route>
+            <Route path="displayPaginated" element={<DisplayAppointmentsPaginated />} /> 
         </Route>
 
       {/* Doctor */}
@@ -128,6 +133,7 @@ function App() {
             <Route path="add" element={<AddDoctor />} />
             <Route path="find" element={<FindDoctor />} />
             <Route path="display" element={<DisplayDoctors />} />
+            <Route path="displayPaginated" element={<DisplayDoctorsPaginated />} />
      </Route>
 
      {/* Patient */}
@@ -204,6 +210,7 @@ function App() {
             <Route path="findAll" element={<FindAllBed/>}/>
             <Route path="assignBed" element={<AssignBed/>}/>
             <Route path="dischargeBed" element={<DischargeBed/>}/>
+            <Route path="pages" element={<PaginatedBed/>}/>
         </Route>
          <Route path="/ward" element={<WardHome />}>
             <Route path="add" element={<AddWard/>}/>
@@ -212,6 +219,8 @@ function App() {
             <Route path="find" element={<FindWard/>}/>
             <Route path="findAll" element={<FindAllWard/>}/>
             <Route path="occupancy" element={<WardOccupancyReport/>}/>
+            <Route path="pages" element={<PaginatedWard/>}/>
+
         </Route>
         
           <Route path="/kpi_report" element={<KpiReportHome />}>
@@ -231,3 +240,5 @@ function App() {
 }
 
 export default App;
+
+
