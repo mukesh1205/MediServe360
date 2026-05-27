@@ -28,7 +28,7 @@ import com.medi360.service.PatientService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/patient")
 public class PatientController {
 	@Autowired
 	PatientService patientService;

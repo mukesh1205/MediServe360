@@ -24,7 +24,7 @@ import com.medi360.exception.DoctorNotFoundException;
 import com.medi360.service.DoctorService;
 
 @RestController
-@RequestMapping("/api/doctors")
+@RequestMapping("/api/doctor")
 public class DoctorController {
 	
 	private final DoctorService doctorService;
