@@ -9,12 +9,7 @@ export default function BedHome(){
                 <li>
                     <Link to="add">Add Bed</Link>
                 </li>
-                <li>
-                    <Link to="delete">Delete Bed</Link>
-                </li>
-                <li>
-                    <Link to="update">Update Bed</Link>
-                </li>
+              
                 <li>
                     <Link to="find">Find Bed</Link>
                 </li>
@@ -26,6 +21,9 @@ export default function BedHome(){
                 </li>
                 <li>
                     <Link to="dischargeBed">Discharge Bed </Link>
+                </li>
+                <li>
+                    <Link to="pages">Pages</Link>
                 </li>
 
             </ul>
