@@ -1,54 +1,72 @@
 import axios from "axios";
 import { useState } from "react";
 
-export default function DisplayKpiPaginated(){
+export default function DisplayKpiPaginated() {
 
     const [records, setRecords] = useState([]);
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(3);   // ✅ default fixed
+    const [size, setSize] = useState(3);
     const [sortBy, setSortBy] = useState("kpiId");
     const [asc, setAsc] = useState(true);
 
     const buttonHandler = async () => {
         try {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                alert("❌ Please login first");
+                return;
+            }
 
             if (size <= 0) {
                 alert("Size must be greater than 0");
                 return;
             }
 
-            let url = "http://localhost:9002/api/fetchAllKPIReports/paginated";
+            const url = "http://localhost:9002/api/kpi_report/paginated";
 
-            let params = {
+            const res = await axios.get(url, {
                 params: {
                     page: page,
                     size: size,
                     sortBy: sortBy,
                     asc: asc
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
                 }
-            };
+            });
 
-            let res = await axios.get(url, params);
+            console.log("✅ KPI Paginated Data:", res.data);
 
-            console.log(res.data);  // ✅ debug
-
-            setRecords(res.data.content);
+            setRecords(res.data.content || []);
 
         } catch (err) {
             console.error(err);
-            alert("Error fetching KPI reports");
+            alert(err.response?.data || "Error fetching KPI reports");
         }
     };
 
-    return(
+    return (
         <div>
 
-            <label>Enter Page NO</label>
-            <input type="number" onChange={e => setPage(Number(e.target.value))}/>
+            <h2>Paginated KPI Reports</h2>
+
+            <label>Enter Page No</label>
+            <input
+                type="number"
+                defaultValue={0}
+                onChange={e => setPage(Number(e.target.value))}
+            />
             <br />
 
             <label>Enter size of Page</label>
-            <input type="number" onChange={e => setSize(Number(e.target.value))}/>
+            <input
+                type="number"
+                defaultValue={3}
+                onChange={e => setSize(Number(e.target.value))}
+            />
             <br />
 
             <label>Select sorting column</label>
@@ -81,7 +99,9 @@ export default function DisplayKpiPaginated(){
 
             <button onClick={buttonHandler}>Get KPI Reports</button>
 
-            {records.length > 0 && (
+            {records.length === 0 ? (
+                <p>No Data Found</p>
+            ) : (
                 <table border="1">
                     <thead>
                         <tr>
@@ -94,21 +114,19 @@ export default function DisplayKpiPaginated(){
                     </thead>
 
                     <tbody>
-                        {
-                            records.map((e) => (
-                                <tr key={e.kpiId}>
-                                    <td>{e.kpiId}</td>
-                                    <td>{e.kpiReportScope}</td>
-                                    <td>{e.kpiMetrics}</td>
-                                    <td>{e.kpiGeneratedDate}</td>
-                                    <td>
-                                        {e.complianceReport
-                                            ? e.complianceReport.reportId
-                                            : "N/A"}
-                                    </td>
-                                </tr>
-                            ))
-                        }
+                        {records.map((e) => (
+                            <tr key={e.kpiId}>
+                                <td>{e.kpiId}</td>
+                                <td>{e.kpiReportScope}</td>
+                                <td>{e.kpiMetrics}</td>
+                                <td>{e.kpiGeneratedDate}</td>
+                                <td>
+                                    {e.complianceReport
+                                        ? e.complianceReport.reportId
+                                        : "N/A"}
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             )}

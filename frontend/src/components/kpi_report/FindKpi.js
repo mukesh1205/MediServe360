@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function FindKpi(){
+export default function FindKpi() {
 
     const [scope, setScope] = useState("");
     const [records, setRecords] = useState([]);
@@ -12,13 +12,25 @@ export default function FindKpi(){
 
     const buttonHandler = async () => {
         try {
-            let url = "http://localhost:9002/api/fetchAllKPIReports";
+            const token = localStorage.getItem("token");
 
-            let res = await axios.get(url);
+            if (!token) {
+                alert("❌ Please login first");
+                return;
+            }
+
+            let url = "http://localhost:9002/api/kpi_report";
+
+            let res = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
 
             let kpis = res.data;
 
-            // ✅ filter manually
+            // ✅ Same filtering like compliance
             if (scope.trim()) {
                 kpis = kpis.filter((e) =>
                     e.kpiReportScope.toLowerCase().includes(scope.toLowerCase())
@@ -33,16 +45,16 @@ export default function FindKpi(){
 
         } catch (err) {
             console.error(err);
-            alert("Something went wrong");
+            alert(err.response?.data || "Something went wrong");
         }
     };
 
-    return(
+    return (
         <div>
-            <h1>This is Find Kpi component</h1>
+            <h1>This is Find KPI Component</h1>
 
             <label>Enter Scope</label>
-            <input type="text" onChange={scopeHandler}/>
+            <input type="text" onChange={scopeHandler} />
             <br />
 
             <button onClick={buttonHandler}>Find</button>
@@ -60,21 +72,19 @@ export default function FindKpi(){
                     </thead>
 
                     <tbody>
-                        {
-                            records.map((e) => (
-                                <tr key={e.kpiId}>
-                                    <td>{e.kpiId}</td>
-                                    <td>{e.kpiReportScope}</td>
-                                    <td>{e.kpiMetrics}</td>
-                                    <td>{e.kpiGeneratedDate}</td>
-                                    <td>
-                                        {e.complianceReport
-                                            ? e.complianceReport.reportId
-                                            : "N/A"}
-                                    </td>
-                                </tr>
-                            ))
-                        }
+                        {records.map((e) => (
+                            <tr key={e.kpiId}>
+                                <td>{e.kpiId}</td>
+                                <td>{e.kpiReportScope}</td>
+                                <td>{e.kpiMetrics}</td>
+                                <td>{e.kpiGeneratedDate}</td>
+                                <td>
+                                    {e.complianceReport
+                                        ? e.complianceReport.reportId
+                                        : "N/A"}
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             )}

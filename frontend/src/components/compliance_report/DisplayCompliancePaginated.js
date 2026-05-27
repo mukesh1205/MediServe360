@@ -1,50 +1,63 @@
 import axios from "axios";
 import { useState } from "react";
 
-export default function DisplayCompilancePaginated(){
+export default function DisplayCompliancePaginated(){
 
     const [records, setRecords] = useState([]);
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(0);
-    const [sortBy, setSortBy] = useState("");
+    const [size, setSize] = useState(3); // ✅ FIXED
+    const [sortBy, setSortBy] = useState("reportId"); // ✅ FIXED
     const [asc, setAsc] = useState(true);
 
     const buttonHandler = async () => {
         try {
-            const url = "http://localhost:9002/api/compliance-reports";
+            const url = "http://localhost:9002/api/compliance-reports/paginated";
 
-            const params = {
+            const res = await axios.get(url, {
                 params: {
                     page: page,
                     size: size,
                     sortBy: sortBy,
                     asc: asc
+                },
+                headers: {   // ✅ FIXED
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
-            };
+            });
 
-            const res = await axios.get(url, params);
+            console.log(res.data);
 
-            setRecords(res.data.content);
+            setRecords(res.data.content || []);
 
         } catch (err) {
-            console.error(err);
+            console.error(err.response?.data);
+            alert(err.response?.data || err.message);
         }
     };
 
     return (
         <div>
 
-            <label>Enter Page NO</label>
-            <input type="number" onChange={e => setPage(Number(e.target.value))}/>
+            <h2>Paginated Compliance Reports</h2>
+
+            <label>Enter Page No</label>
+            <input
+                type="number"
+                defaultValue={0}
+                onChange={e => setPage(Number(e.target.value))}
+            />
             <br />
 
             <label>Enter size of Page</label>
-            <input type="number" onChange={e => setSize(Number(e.target.value))}/>
+            <input
+                type="number"
+                defaultValue={3}
+                onChange={e => setSize(Number(e.target.value))}
+            />
             <br />
 
             <label>Select sorting column</label>
             <select onChange={e => setSortBy(e.target.value)}>
-                <option value="">--Select Column--</option>
                 <option value="reportId">Report Id</option>
                 <option value="reportScope">Report Scope</option>
                 <option value="reportMetrics">Report Metrics</option>
@@ -57,7 +70,6 @@ export default function DisplayCompilancePaginated(){
             <input
                 type="radio"
                 name="sortOrder"
-                value="true"
                 checked={asc === true}
                 onChange={() => setAsc(true)}
             />
@@ -66,7 +78,6 @@ export default function DisplayCompilancePaginated(){
             <input
                 type="radio"
                 name="sortOrder"
-                value="false"
                 checked={asc === false}
                 onChange={() => setAsc(false)}
             />
@@ -75,7 +86,9 @@ export default function DisplayCompilancePaginated(){
 
             <button onClick={buttonHandler}>Get Reports</button>
 
-            {records.length > 0 && (
+            {records.length === 0 ? (
+                <p>No Data Found</p>
+            ) : (
                 <table border={1}>
                     <thead>
                         <tr>
@@ -86,18 +99,14 @@ export default function DisplayCompilancePaginated(){
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                            records.map((e) => {
-                                return (
-                                    <tr key={e.reportId}>
-                                        <td>{e.reportId}</td>
-                                        <td>{e.reportScope}</td>
-                                        <td>{e.reportMetrics}</td>
-                                        <td>{e.reportGeneratedDate}</td>
-                                    </tr>
-                                );
-                            })
-                        }
+                        {records.map((e) => (
+                            <tr key={e.reportId}>
+                                <td>{e.reportId}</td>
+                                <td>{e.reportScope}</td>
+                                <td>{e.reportMetrics}</td>
+                                <td>{e.reportGeneratedDate}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             )}

@@ -1,71 +1,87 @@
 import axios from "axios";
 import { useState } from "react";
 
-export default function AddKPIReport(){
+export default function AddKpi() {
 
-    let [scope, setScope] = useState("");
-    let [metrics, setMetrics] = useState("");
-    let [date, setDate] = useState("");
-    let [complianceId, setComplianceId] = useState("");
+    const [scope, setScope] = useState("");
+    const [metrics, setMetrics] = useState("");
+    const [date, setDate] = useState("");
+    const [complianceId, setComplianceId] = useState("");
 
-    let scopeHandler = (event) => {
+    const scopeHandler = (event) => {
         setScope(event.target.value);
     };
 
-    let metricsHandler = (event) => {
+    const metricsHandler = (event) => {
         setMetrics(event.target.value);
     };
 
-    let dateHandler = (event) => {
+    const dateHandler = (event) => {
         setDate(event.target.value);
     };
 
-    let complianceIdHandler = (event) => {
+    const complianceIdHandler = (event) => {
         setComplianceId(event.target.value);
     };
 
-    let buttonHandler = () => {
+    // ✅ FIXED HANDLER
+    const buttonHandler = async () => {
 
-        let url = "http://localhost:9002/api/addKPIReport";
+        const url = "http://localhost:9002/api/kpi_report";
 
-        let data = {
-            "kpiReport": {
-                "kpiReportScope": scope,
-                "kpiMetrics": metrics,
-                "kpiGeneratedDate": date,
-                "complianceReport": {
-                    "reportId": complianceId
+        const data = {
+            kpiReport: {
+                kpiReportScope: scope,
+                kpiMetrics: metrics,
+                kpiGeneratedDate: date,
+                complianceReport: {
+                    reportId: complianceId
                 }
             }
         };
 
-        axios.post(url, data)
-            .then((response) => {
-                alert("KPI Report Saved successfully " + response.data);
-            })
-            .catch((error) => {
-                console.error(error.response?.data || error);
+        try {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                alert("No token found. Please login first.");
+                return;
+            }
+
+            const response = await axios.post(url, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
             });
+
+            console.log(response.data);
+            alert("✅ KPI Report Saved successfully");
+
+        } catch (error) {
+            console.error(error);
+            alert(error.response?.data || "❌ Error occurred");
+        }
     };
 
-    return(
+    return (
         <div>
             <h3>Add KPI Report</h3>
 
             <label>Scope</label>
-            <input type="text" onChange={scopeHandler} required />
+            <input type="text" value={scope} onChange={scopeHandler} required />
             <br />
 
             <label>Metrics</label>
-            <input type="text" onChange={metricsHandler} required />
+            <input type="text" value={metrics} onChange={metricsHandler} required />
             <br />
 
             <label>Date</label>
-            <input type="date" onChange={dateHandler} required />
+            <input type="date" value={date} onChange={dateHandler} required />
             <br />
 
             <label>Compliance Report ID</label>
-            <input type="number" onChange={complianceIdHandler} required />
+            <input type="number" value={complianceId} onChange={complianceIdHandler} required />
             <br />
 
             <button onClick={buttonHandler}>Add KPI Report</button>

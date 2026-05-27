@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function FindCompilance() {
+export default function FindCompliance() {
 
     const [scope, setScope] = useState("");
     const [records, setRecords] = useState([]);
@@ -12,12 +12,17 @@ export default function FindCompilance() {
 
     const buttonHandler = async () => {
         try {
-            const url = "http://localhost:9002/api/fetchAllComplianceReports";
-            const res = await axios.get(url);
+            const url = "http://localhost:9002/api/compliance-reports";
+
+            const res = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            });
 
             let reports = res.data;
 
-            // ✅ Filter manually on frontend
+            // ✅ Filter on frontend
             if (scope.trim()) {
                 reports = reports.filter((r) =>
                     r.reportScope.toLowerCase().includes(scope.toLowerCase())
@@ -31,17 +36,17 @@ export default function FindCompilance() {
             setRecords(reports);
 
         } catch (err) {
-            console.error(err);
-            alert("Something went wrong");
+            console.log(err.response?.data);
+            alert(err.response?.data || err.message);
         }
     };
 
-    return(
+    return (
         <div>
-            <h1>This is Find Compliance component</h1>
+            <h1>Find Compliance Report</h1>
 
             <label>Enter Scope</label>
-            <input type="text" onChange={scopeHandler}/>
+            <input type="text" onChange={scopeHandler} />
             <br />
 
             <button onClick={buttonHandler}>Find</button>
@@ -58,16 +63,14 @@ export default function FindCompilance() {
                             </tr>
                         </thead>
                         <tbody>
-                            {records.map((e) => {
-                                return(
-                                    <tr key={e.reportId}>
-                                        <td>{e.reportId}</td>
-                                        <td>{e.reportScope}</td>
-                                        <td>{e.reportMetrics}</td>
-                                        <td>{e.reportGeneratedDate}</td>
-                                    </tr>
-                                );
-                            })}
+                            {records.map((e) => (
+                                <tr key={e.reportId}>
+                                    <td>{e.reportId}</td>
+                                    <td>{e.reportScope}</td>
+                                    <td>{e.reportMetrics}</td>
+                                    <td>{e.reportGeneratedDate}</td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

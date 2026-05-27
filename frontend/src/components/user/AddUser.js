@@ -1,74 +1,76 @@
 import { useState } from "react";
 import axios from "axios";
-export default function AddUser(){
 
-    let [name,setName]=useState("");
-    let [role,setRole]=useState("");
-    let [phone,setPhone]=useState("");
-    let [email,setEmail]=useState("");
+export default function AddUser() {
 
-    const nameHandler=(event)=>{
-        setName(event.target.value)
-    }
+    const [name, setName] = useState("");
+    const [role, setRole] = useState("");
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
 
-    const roleHandler=(event)=>{
-        setRole(event.target.value)
-    }
+    const nameHandler = (e) => setName(e.target.value);
+    const roleHandler = (e) => setRole(e.target.value);
+    const emailHandler = (e) => setEmail(e.target.value);
+    const phoneHandler = (e) => setPhone(e.target.value);
 
-    const emailHandler=(event)=>{
-        setEmail(event.target.value)
-    }
+    async function submitHandler(e) {
+        e.preventDefault(); // ✅ PREVENT FORM REFRESH
 
-    const phoneHandler=(event)=>{
-        setPhone(event.target.value)
-    }
+        // ✅ CORRECT DATA FORMAT (IMPORTANT)
+        const data = {
+            userName: name,
+            userRole: role,
+            userEmail: email,
+            userPhone: phone,
+            password: "123456" // ✅ required by backend
+        };
 
-    async function submitHandler(){
-        let data={
-                
-                "user": {
-                    
-                    "userName": name,
-                    "userRole": role,
-                    "userEmail": email,
-                    "userPhone": phone
+        try {
+            const res = await axios.post(
+                "http://localhost:9002/api/users/add",
+                data,
+                {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") // ✅ JWT
+                    }
                 }
-                
-            }
-        try{
-            let res=await axios.post("http://localhost:9002/user/insertuserdata",data);
-            alert(res.data.message)
-        }catch(err){
-            console.log(err.message);
+            );
+
+            alert(res.data.message);
+
+        } catch (err) {
+            console.log(err);
+            alert("Error: " + err.response?.data?.message || err.message);
         }
     }
-    return(
+
+    return (
         <div>
+            <h2>Add User</h2>
+
             <form onSubmit={submitHandler}>
-                <label>Name</label>
-                <input type="text" placeholder="Enter name" onChange={nameHandler} />
-                <br></br>
 
-                <label>Role</label>
-                <select onChange={roleHandler}>
-                    <option value="Patient">Patient</option>
-                    <option value="Doctor">Doctor</option>
-                    <option value="Nurse">Nurse</option>
-                    <option value="Admin">Admin</option>
-                    
-                </select>
-                <br></br>
+                <label>Name</label><br/>
+                <input type="text" onChange={nameHandler} required /><br/><br/>
 
-                <label>Email</label>
-                <input type="email" placeholder="Enter email" onChange={emailHandler} />
-                <br></br>
+                <label>Role</label><br/>
+                <select onChange={roleHandler} required>
+                    <option value="">Select Role</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="DOCTOR">Doctor</option>
+                    <option value="NURSE">Nurse</option>
+                    <option value="RECEPTIONIST">Receptionist</option>
+                </select><br/><br/>
 
-                <label>Phone</label>
-                <input type="text" placeholder="Enter phone number" onChange={phoneHandler} />
-                <br></br>
+                <label>Email</label><br/>
+                <input type="email" onChange={emailHandler} required /><br/><br/>
+
+                <label>Phone</label><br/>
+                <input type="text" onChange={phoneHandler} required /><br/><br/>
 
                 <button type="submit">Submit</button>
+
             </form>
         </div>
-    )
+    );
 }

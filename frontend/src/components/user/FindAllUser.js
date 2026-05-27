@@ -18,7 +18,7 @@ export default function FindAllUser(){
     return(
         <div>
             
-            <table border={2}>
+            <table className="table">
                 <thead>
                     <tr>
                         <th>userId</th>
