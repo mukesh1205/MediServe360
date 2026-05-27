@@ -24,10 +24,9 @@ export default function AddKpi() {
         setComplianceId(event.target.value);
     };
 
-    // ✅ FIXED HANDLER
     const buttonHandler = async () => {
 
-        const url = "http://localhost:9002/api/kpi_report";
+        const url = "http://localhost:9002/api/kpi-report/addKPIReport";
 
         const data = {
             kpiReport: {
@@ -58,6 +57,12 @@ export default function AddKpi() {
             console.log(response.data);
             alert("✅ KPI Report Saved successfully");
 
+            // reset form
+            setScope("");
+            setMetrics("");
+            setDate("");
+            setComplianceId("");
+
         } catch (error) {
             console.error(error);
             alert(error.response?.data || "❌ Error occurred");
@@ -65,26 +70,59 @@ export default function AddKpi() {
     };
 
     return (
-        <div>
-            <h3>Add KPI Report</h3>
+        <div className="container mt-4">
+            <h2>Add KPI Report</h2>
 
-            <label>Scope</label>
-            <input type="text" value={scope} onChange={scopeHandler} required />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Scope</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    value={scope}
+                    onChange={scopeHandler}
+                    placeholder="Enter scope"
+                    required
+                />
+            </div>
 
-            <label>Metrics</label>
-            <input type="text" value={metrics} onChange={metricsHandler} required />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Metrics</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    value={metrics}
+                    onChange={metricsHandler}
+                    placeholder="Enter metrics"
+                    required
+                />
+            </div>
 
-            <label>Date</label>
-            <input type="date" value={date} onChange={dateHandler} required />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Date</label>
+                <input
+                    type="date"
+                    className="form-control"
+                    value={date}
+                    onChange={dateHandler}
+                    required
+                />
+            </div>
 
-            <label>Compliance Report ID</label>
-            <input type="number" value={complianceId} onChange={complianceIdHandler} required />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Compliance Report ID</label>
+                <input
+                    type="number"
+                    className="form-control"
+                    value={complianceId}
+                    onChange={complianceIdHandler}
+                    placeholder="Enter report ID"
+                    required
+                />
+            </div>
 
-            <button onClick={buttonHandler}>Add KPI Report</button>
+            <button className="btn btn-primary" onClick={buttonHandler}>
+                Add KPI Report
+            </button>
         </div>
     );
 }

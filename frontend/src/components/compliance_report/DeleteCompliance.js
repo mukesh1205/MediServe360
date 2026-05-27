@@ -12,7 +12,7 @@ export default function DeleteCompliance() {
         const deleteReport = async () => {
             try {
                 // ✅ FIXED URL
-                const url = `http://localhost:9002/api/compliance-reports/${id}`;
+                const url = `http://localhost:9002/api/compliance-reports/deleteComplianceReport/${id}`;
 
                 await axios.delete(url, {
                     headers: {
@@ -23,7 +23,7 @@ export default function DeleteCompliance() {
                 alert("✅ Compliance Report deleted successfully");
 
                 // ✅ Better navigation (go back to display page)
-                navigate("/compliance-reports/display");
+                navigate("/compliance_report/display");
 
             } catch (error) {
                 console.error(error);

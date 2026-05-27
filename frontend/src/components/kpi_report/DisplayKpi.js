@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom"; // ✅ correct import
+import { Link } from "react-router-dom";
 
 export default function DisplayKpi() {
 
@@ -18,7 +18,7 @@ export default function DisplayKpi() {
                     return;
                 }
 
-                let url = "http://localhost:9002/api/kpi_report";
+                let url = "http://localhost:9002/api/kpi-report/fetchAllKPIReports";
 
                 const res = await axios.get(url, {
                     headers: {
@@ -42,20 +42,26 @@ export default function DisplayKpi() {
 
     }, []);
 
-    // ✅ Loading state
+    // ✅ Bootstrap loading
     if (loading) {
-        return <h3>Loading...</h3>;
+        return (
+            <div className="container mt-4">
+                <h4>Loading...</h4>
+            </div>
+        );
     }
 
     return (
-        <div>
-            <h3>This is Display KPI Report</h3>
+        <div className="container mt-4">
+            <h2>KPI Reports</h2>
 
             {records.length === 0 ? (
-                <p>No Data Found</p>
+                <div className="alert alert-warning mt-3">
+                    No Data Found
+                </div>
             ) : (
-                <table border="1" cellPadding="8">
-                    <thead>
+                <table className="table table-bordered table-striped mt-3">
+                    <thead className="table-dark">
                         <tr>
                             <th>KPI ID</th>
                             <th>Scope</th>

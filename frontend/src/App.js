@@ -50,13 +50,13 @@ import DisplayInsuranceClaims from './components/insurance_claim/DisplayInsuranc
 import DisplayInsuranceClaimsPaginated from './components/insurance_claim/DisplayInsuranceClaimsPaginated';
 
 // Compliance
-import CompilanceReportHome from './components/compilance_report/CompilanceReportHome';
-import AddCompilanceReport from './components/compilance_report/AddCompilance';
-import DeleteCompilanceReport from './components/compilance_report/DeleteCompilance';
-import UpdateCompilanceReport from './components/compilance_report/UpdateCompilance';
-import FindCompilanceReport from './components/compilance_report/FindCompilance';
-import DisplayCompilanceReport from './components/compilance_report/DisplayCompilance';
-import DisplayCompilancePaginated from './components/compilance_report/DisplayCompilancePaginated';
+import ComplianceReportHome from './components/compliance_report/ComplianceReportHome';
+import AddCompliance from './components/compliance_report/AddCompliance';
+import DeleteCompliance from './components/compliance_report/DeleteCompliance';
+import UpdateCompliance from './components/compliance_report/UpdateCompliance';
+import FindCompliance from './components/compliance_report/FindCompliance';
+import DisplayCompliance from './components/compliance_report/DisplayCompliance';
+import DisplayCompliancePaginated from './components/compliance_report/DisplayCompliancePaginated';
 
 // KPI
 
@@ -108,9 +108,9 @@ import FindAllNotification from './components/notification/FindAllNotification';
 import FindAllUser from './components/user/FindAllUser';
 
 // AUDIT
-import AuditlogHome from './components/auditlog/AuditlogHome';
-import AddAuditlog from './components/auditlog/AddAuditlog';
-import FindAuditlog from './components/auditlog/FindAuditlog';
+// import AuditlogHome from './components/auditlog/AuditlogHome';
+// import AddAuditlog from './components/auditlog/AddAuditlog';
+// import FindAuditlog from './components/auditlog/FindAuditlog';
 import FindAllAuditlog from './components/auditlog/FindAllAuditlog';
 
 
@@ -126,7 +126,7 @@ function App() {
     localStorage.clear();
 
     axios.post("http://localhost:9002/api/auth/login", {
-      userEmail: "admin@gmail.com",
+      email: "raghu@gmail.com",
       password: "123456"
     })
     .then((res) => {
@@ -207,13 +207,13 @@ function App() {
         </Route>
 
         {/* Compliance */}
-        <Route path="/compilance_report" element={<CompilanceReportHome />}>
-          <Route path="add" element={<AddCompilanceReport />} />
-          <Route path="update/:id" element={<UpdateCompilanceReport />} />
-          <Route path="delete/:id" element={<DeleteCompilanceReport />} />
-          <Route path="find" element={<FindCompilanceReport />} />
-          <Route path="display" element={<DisplayCompilanceReport />} />
-          <Route path="displayPaginated" element={<DisplayCompilancePaginated />} />
+        <Route path="/compliance_report" element={<ComplianceReportHome />}>
+          <Route path="add" element={<AddCompliance />} />
+          <Route path="update/:id" element={<UpdateCompliance />} />
+          <Route path="delete/:id" element={<DeleteCompliance />} />
+          <Route path="find" element={<FindCompliance/>} />
+          <Route path="display" element={<DisplayCompliance />} />
+          <Route path="paginated" element={<DisplayCompliancePaginated />} />
         </Route>
 
         

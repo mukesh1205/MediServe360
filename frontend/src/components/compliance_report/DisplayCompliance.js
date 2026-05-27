@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-export default function DisplayComplianceReport() {
+export default function DisplayCompliance() {
 
   const [reports, setReports] = useState([]);
 
   useEffect(() => {
 
-    axios.get("http://localhost:9002/api/compliance-reports", {
+    axios.get("http://localhost:9002/api/compliance-reports/fetchAllComplianceReports", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
@@ -25,17 +25,17 @@ export default function DisplayComplianceReport() {
   }, []);
 
   return (
-    <div>
+    <div className="container mt-4">
       <h2>Compliance Reports</h2>
 
-      <table border="1">
-        <thead>
+      <table className="table table-bordered table-striped mt-3">
+        <thead className="table-dark">
           <tr>
             <th>ID</th>
             <th>Scope</th>
             <th>Metrics</th>
             <th>Date</th>
-            <th>Edit</th>
+            <th>Update</th>
             <th>Delete</th>
           </tr>
         </thead>
@@ -43,7 +43,9 @@ export default function DisplayComplianceReport() {
         <tbody>
           {reports.length === 0 ? (
             <tr>
-              <td colSpan="6">No Data Found</td>
+              <td colSpan="6" className="text-center">
+                No Data Found
+              </td>
             </tr>
           ) : (
             reports.map((r) => (
@@ -53,12 +55,18 @@ export default function DisplayComplianceReport() {
                 <td>{r.reportMetrics}</td>
                 <td>{r.reportGeneratedDate}</td>
                 <td>
-                  <Link to={`/compliance-reports/update/${r.reportId}`}>
-                    Edit
+                  <Link
+                    className="btn btn-warning btn-sm"
+                    to={`/compliance_report/update/${r.reportId}`}
+                  >
+                    Update
                   </Link>
                 </td>
                 <td>
-                  <Link to={`/compliance-reports/delete/${r.reportId}`}>
+                  <Link
+                    className="btn btn-danger btn-sm"
+                    to={`/compliance_report/delete/${r.reportId}`}
+                  >
                     Delete
                   </Link>
                 </td>

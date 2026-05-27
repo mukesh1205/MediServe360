@@ -5,14 +5,18 @@ export default function FindCompliance() {
 
     const [scope, setScope] = useState("");
     const [records, setRecords] = useState([]);
+    const [error, setError] = useState("");
 
     const scopeHandler = (e) => {
         setScope(e.target.value);
     };
 
     const buttonHandler = async () => {
+        setError("");
+        setRecords([]);
+
         try {
-            const url = "http://localhost:9002/api/compliance-reports";
+            const url = "http://localhost:9002/api/compliance-reports/fetchAllComplianceReports";
 
             const res = await axios.get(url, {
                 headers: {
@@ -22,7 +26,6 @@ export default function FindCompliance() {
 
             let reports = res.data;
 
-            // ✅ Filter on frontend
             if (scope.trim()) {
                 reports = reports.filter((r) =>
                     r.reportScope.toLowerCase().includes(scope.toLowerCase())
@@ -30,50 +33,56 @@ export default function FindCompliance() {
             }
 
             if (reports.length === 0) {
-                alert("No Report Found");
+                setError("No Report Found");
             }
 
             setRecords(reports);
 
         } catch (err) {
             console.log(err.response?.data);
-            alert(err.response?.data || err.message);
+            setError(err.response?.data || err.message);
         }
     };
 
     return (
-        <div>
-            <h1>Find Compliance Report</h1>
+        <div className="container mt-4">
+            <h2>Find Compliance Report</h2>
 
-            <label>Enter Scope</label>
-            <input type="text" onChange={scopeHandler} />
-            <br />
+            <div className="input-group mb-3">
+                <input
+                    className="form-control"
+                    placeholder="Enter Scope"
+                    value={scope}
+                    onChange={scopeHandler}
+                />
+                <button className="btn btn-primary" onClick={buttonHandler}>
+                    Search
+                </button>
+            </div>
 
-            <button onClick={buttonHandler}>Find</button>
+            {error && <div className="alert alert-danger">{error}</div>}
 
             {records.length > 0 && (
-                <div>
-                    <table border="1">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Scope</th>
-                                <th>Metrics</th>
-                                <th>Date</th>
+                <table className="table table-bordered table-striped mt-3">
+                    <thead className="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Scope</th>
+                            <th>Metrics</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {records.map((e) => (
+                            <tr key={e.reportId}>
+                                <td>{e.reportId}</td>
+                                <td>{e.reportScope}</td>
+                                <td>{e.reportMetrics}</td>
+                                <td>{e.reportGeneratedDate}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {records.map((e) => (
-                                <tr key={e.reportId}>
-                                    <td>{e.reportId}</td>
-                                    <td>{e.reportScope}</td>
-                                    <td>{e.reportMetrics}</td>
-                                    <td>{e.reportGeneratedDate}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                        ))}
+                    </tbody>
+                </table>
             )}
         </div>
     );

@@ -23,7 +23,7 @@ export default function DisplayKpiPaginated() {
                 return;
             }
 
-            const url = "http://localhost:9002/api/kpi_report/paginated";
+            const url = "http://localhost:9002/api/kpi-report/fetchAllKPIReports/paginated";
 
             const res = await axios.get(url, {
                 params: {
@@ -39,7 +39,6 @@ export default function DisplayKpiPaginated() {
             });
 
             console.log("✅ KPI Paginated Data:", res.data);
-
             setRecords(res.data.content || []);
 
         } catch (err) {
@@ -49,61 +48,85 @@ export default function DisplayKpiPaginated() {
     };
 
     return (
-        <div>
-
+        <div className="container mt-4">
             <h2>Paginated KPI Reports</h2>
 
-            <label>Enter Page No</label>
-            <input
-                type="number"
-                defaultValue={0}
-                onChange={e => setPage(Number(e.target.value))}
-            />
-            <br />
+            {/* Page No */}
+            <div className="mb-3">
+                <label className="form-label">Enter Page No</label>
+                <input
+                    type="number"
+                    className="form-control"
+                    defaultValue={0}
+                    onChange={e => setPage(Number(e.target.value))}
+                />
+            </div>
 
-            <label>Enter size of Page</label>
-            <input
-                type="number"
-                defaultValue={3}
-                onChange={e => setSize(Number(e.target.value))}
-            />
-            <br />
+            {/* Page Size */}
+            <div className="mb-3">
+                <label className="form-label">Enter Page Size</label>
+                <input
+                    type="number"
+                    className="form-control"
+                    defaultValue={3}
+                    onChange={e => setSize(Number(e.target.value))}
+                />
+            </div>
 
-            <label>Select sorting column</label>
-            <select onChange={e => setSortBy(e.target.value)}>
-                <option value="kpiId">KPI ID</option>
-                <option value="kpiReportScope">Scope</option>
-                <option value="kpiMetrics">Metrics</option>
-                <option value="kpiGeneratedDate">Date</option>
-            </select>
-            <br />
+            {/* Sorting */}
+            <div className="mb-3">
+                <label className="form-label">Select Sorting Column</label>
+                <select
+                    className="form-select"
+                    onChange={e => setSortBy(e.target.value)}
+                >
+                    <option value="kpiId">KPI ID</option>
+                    <option value="kpiReportScope">Scope</option>
+                    <option value="kpiMetrics">Metrics</option>
+                    <option value="kpiGeneratedDate">Date</option>
+                </select>
+            </div>
 
-            <label>Order</label>
+            {/* Order */}
+            <div className="mb-3">
+                <label className="form-label">Order</label>
+                <div>
+                    <div className="form-check form-check-inline">
+                        <input
+                            type="radio"
+                            className="form-check-input"
+                            name="order"
+                            checked={asc === true}
+                            onChange={() => setAsc(true)}
+                        />
+                        <label className="form-check-label">Ascending</label>
+                    </div>
 
-            <input
-                type="radio"
-                name="sortOrder"
-                checked={asc === true}
-                onChange={() => setAsc(true)}
-            />
-            <label>Ascending</label>
+                    <div className="form-check form-check-inline">
+                        <input
+                            type="radio"
+                            className="form-check-input"
+                            name="order"
+                            checked={asc === false}
+                            onChange={() => setAsc(false)}
+                        />
+                        <label className="form-check-label">Descending</label>
+                    </div>
+                </div>
+            </div>
 
-            <input
-                type="radio"
-                name="sortOrder"
-                checked={asc === false}
-                onChange={() => setAsc(false)}
-            />
-            <label>Descending</label>
-            <br />
+            <button className="btn btn-primary" onClick={buttonHandler}>
+                Get KPI Reports
+            </button>
 
-            <button onClick={buttonHandler}>Get KPI Reports</button>
-
+            {/* Table */}
             {records.length === 0 ? (
-                <p>No Data Found</p>
+                <div className="alert alert-warning mt-3">
+                    No Data Found
+                </div>
             ) : (
-                <table border="1">
-                    <thead>
+                <table className="table table-bordered table-striped mt-4">
+                    <thead className="table-dark">
                         <tr>
                             <th>KPI ID</th>
                             <th>Scope</th>
@@ -130,7 +153,6 @@ export default function DisplayKpiPaginated() {
                     </tbody>
                 </table>
             )}
-
         </div>
     );
 }

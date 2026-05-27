@@ -10,9 +10,8 @@ export default function AddComplianceReport() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const url = "http://localhost:9002/api/compliance-reports";
+        const url = "http://localhost:9002/api/compliance-reports/addComplianceReport";
 
-        // ✅ IMPORTANT FIX (wrapped object)
         const data = {
             complianceReport: {
                 reportScope: scope,
@@ -42,21 +41,47 @@ export default function AddComplianceReport() {
     };
 
     return (
-        <div>
-            <h3>Add Compliance Report</h3>
+        <div className="container mt-4">
+            <h2>Add Compliance Report</h2>
 
             <form onSubmit={handleSubmit}>
 
-                <label>Scope</label><br />
-                <input value={scope} onChange={(e) => setScope(e.target.value)} required /><br />
+                <div className="mb-3">
+                    <label className="form-label">Scope</label>
+                    <input
+                        className="form-control"
+                        value={scope}
+                        onChange={(e) => setScope(e.target.value)}
+                        placeholder="Enter scope"
+                        required
+                    />
+                </div>
 
-                <label>Metrics</label><br />
-                <input value={metrics} onChange={(e) => setMetrics(e.target.value)} required /><br />
+                <div className="mb-3">
+                    <label className="form-label">Metrics</label>
+                    <input
+                        className="form-control"
+                        value={metrics}
+                        onChange={(e) => setMetrics(e.target.value)}
+                        placeholder="Enter metrics"
+                        required
+                    />
+                </div>
 
-                <label>Report Date</label><br />
-                <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required /><br />
+                <div className="mb-3">
+                    <label className="form-label">Report Date</label>
+                    <input
+                        type="date"
+                        className="form-control"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        required
+                    />
+                </div>
 
-                <button type="submit">Save</button>
+                <button type="submit" className="btn btn-primary">
+                    Save
+                </button>
 
             </form>
         </div>
