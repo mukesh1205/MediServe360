@@ -8,9 +8,13 @@ export default function DisplayInvoices() {
     const [invoices, setInvoices] = useState([]);
 
     useEffect(() => {
-        const url = "http://localhost:9002/api/fetchAllInvoices";
+        const url = "http://localhost:9002/api/invoice/fetchAllInvoices";
 
-        axios.get(url)
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 setInvoices(res.data);
             })

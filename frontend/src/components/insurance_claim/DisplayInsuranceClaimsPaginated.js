@@ -13,8 +13,9 @@ export default function DisplayInsuranceClaimsPaginated() {
 
     const buttonHandler = async () => {
         try {
-            const url = "http://localhost:9002/api/fetchAllInsuranceClaimsPaginated";
+            const url = "http://localhost:9002/api/insurance/fetchAllInsuranceClaimsPaginated";
 
+<<<<<<< HEAD
             if (pgno === "" || size === "" || sorting === "") {
                 toast.warning("Please enter page number, size, and sorting column");
                 return;
@@ -23,13 +24,17 @@ export default function DisplayInsuranceClaimsPaginated() {
             const params = {
                 params: {
                     pgno: pgno,
+=======
+            const res = await axios.get(url, {params: {
+                pgno: pgno,
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
                     size: size,
                     sorting: sorting,
                     asc: asc
-                }
-            };
-
-            const res = await axios.get(url, params);
+            },
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }});
             setRecords(res.data.content);
             setSearched(true);
 

@@ -15,8 +15,12 @@ export default function WardOccupancyReport() {
         setError("");
         setReport(null);
 
-        let url = `http://localhost:9002/ward/${wardId}/occupancy-report`;
-        axios.get(url)
+        let url = `http://localhost:9002/api/ward/${wardId}/occupancy-report`;
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 if (!response.data) {
                     setError("No report found for Ward ID: " + wardId);

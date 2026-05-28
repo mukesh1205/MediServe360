@@ -16,11 +16,15 @@ export default function AddInsuranceClaim() {
             return;
         }
 
+<<<<<<< HEAD
         if(amount<0){
             toast.info("Amount mus be greater than 0");
             return;
         }
         const url = "http://localhost:9002/api/addInsuranceClaim";
+=======
+        const url = "http://localhost:9002/api/insurance/addInsuranceClaim";
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
 
         const data = {
             insuranceClaim: {
@@ -33,9 +37,20 @@ export default function AddInsuranceClaim() {
             }
         };
 
+<<<<<<< HEAD
         axios.post(url, data)
             .then(() => {
                 toast.success("Insurance Claim added successfully");
+=======
+        axios.post(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
+            .then((res) => {
+                alert("Insurance Claim added successfully");
+                console.log(res.data);
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
 
                 setPatientId("");
                 setPolicyNumber("");

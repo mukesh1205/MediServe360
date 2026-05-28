@@ -2,6 +2,9 @@ package com.medi360.entities;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +24,7 @@ public class AuditLog {
 	
 	@ManyToOne
 	@JoinColumn(name="user_id",nullable=true)
+	@OnDelete(action = OnDeleteAction.SET_NULL) 
 	private User user;
 
 	public AuditLog(String action, LocalDateTime timestamp, User user) {

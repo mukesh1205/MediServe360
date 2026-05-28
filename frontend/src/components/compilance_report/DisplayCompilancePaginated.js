@@ -13,16 +13,15 @@ export default function DisplayCompilancePaginated(){
         try {
             const url = "http://localhost:9002/api/compliance-reports";
 
-            const params = {
-                params: {
-                    page: page,
+            const res = await axios.get(url, {params: {
+                    pgno: page,
                     size: size,
-                    sortBy: sortBy,
+                    sorting: sortBy,
                     asc: asc
-                }
-            };
-
-            const res = await axios.get(url, params);
+            },
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }});
 
             setRecords(res.data.content);
 

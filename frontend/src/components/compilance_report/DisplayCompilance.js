@@ -6,7 +6,11 @@ export default function DisplayCompilanceReport() {
   let [reports, setReports] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:9002/api/fetchAllComplianceReports")
+    axios.get("http://localhost:9002/api/compliance-reports/fetchAllComplianceReports",{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
         setReports(res.data);
       })

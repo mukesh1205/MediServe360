@@ -7,9 +7,13 @@ export default function DisplayAppointments() {
     let [appointments, setAppointments] = useState([]);
 
     useEffect(() => {
-        let url = "http://localhost:9002/api/appointments/getAll";
+        let url = "http://localhost:9002/api/appointment/getAll";
 
-        axios.get(url)
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 setAppointments(response.data);
             })

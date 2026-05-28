@@ -16,7 +16,7 @@ import com.medi360.entities.KPIReport;
 import com.medi360.service.KPIReportService;
 
 @RestController
-@RequestMapping("/api/kpi-report")
+@RequestMapping("/api/kpi-reports")
 public class KPIReportController {
 
     @Autowired

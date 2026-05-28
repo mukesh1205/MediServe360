@@ -15,7 +15,11 @@ export default function UpdateAppointment() {
 
     // ✅ Load appointment automatically
     useEffect(() => {
-        axios.get(`http://localhost:9002/api/appointments/get/${aid}`)
+        axios.get(`http://localhost:9002/api/appointment/get/${aid}`,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 let appt = res.data.appointment;
                 setDate(appt.date);
@@ -29,7 +33,7 @@ export default function UpdateAppointment() {
     }, [aid]);
 
     let updateHandler = () => {
-        let url = "http://localhost:9002/api/appointments/update";
+        let url = "http://localhost:9002/api/appointment/update";
         let data = {
             appointment: {
                 id: parseInt(aid),
@@ -41,7 +45,11 @@ export default function UpdateAppointment() {
             }
         };
 
-        axios.put(url, data)
+        axios.put(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 alert(res.data.message);
                 navigate("/appointment/display"); // back to list

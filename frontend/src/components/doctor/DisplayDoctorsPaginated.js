@@ -10,9 +10,13 @@ export default function DisplayDoctorsPaginated() {
 
     const fetchDoctors = async () => {
         try {
-            const url = "http://localhost:9002/api/doctors/getAllPaginated";
+            const url = "http://localhost:9002/api/doctor/getAllPaginated";
             const res = await axios.get(url, {
-                params: { pgno, size, sorting, asc }
+                params: { pgno, size, sorting, asc },
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                
             });
             setRecords(res.data.content);
         } catch (err) {

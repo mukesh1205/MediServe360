@@ -14,7 +14,7 @@ export default function AddInvoice() {
 
     const buttonHandler = () => {
 
-        const url = "http://localhost:9002/api/addInvoice";
+        const url = "http://localhost:9002/api/invoice/addInvoice";
 
         
         if (!patientId || !amount || !invoiceDate || !paymentStatus || !paymentMode || 
@@ -49,7 +49,11 @@ export default function AddInvoice() {
             }
         };
 
-        axios.post(url, data)
+        axios.post(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 toast.success("Invoice added successfully");
                 setPatientId("");

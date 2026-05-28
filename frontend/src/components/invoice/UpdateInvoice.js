@@ -6,9 +6,14 @@ export default function UpdateInvoice() {
 
   const { iid } = useParams();
   const navigate = useNavigate();
+<<<<<<< HEAD
 
   const [patientId, setPatientId] = useState("");
   const [amount, setAmount] = useState("");
+=======
+  const [patientId, setPatientId] = useState(0);
+  const [amount, setAmount] = useState(0);
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
   const [invoiceDate, setInvoiceDate] = useState("");
   const [paymentStatus, setPaymentStatus] = useState("");
   const [paymentMode, setPaymentMode] = useState("");
@@ -17,6 +22,7 @@ export default function UpdateInvoice() {
 
   const updateButtonHandler = () => {
 
+<<<<<<< HEAD
     if (
       !patientId ||
       !amount ||
@@ -30,6 +36,9 @@ export default function UpdateInvoice() {
     }
 
     const url = "http://localhost:9002/api/updateInvoice";
+=======
+    const url = "http://localhost:9002/api/invoice/updateInvoice";
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
 
     const data = {
       invoice: {
@@ -46,9 +55,19 @@ export default function UpdateInvoice() {
       }
     };
 
+<<<<<<< HEAD
     axios.put(url, data)
       .then(() => {
         toast.success("Invoice updated successfully");
+=======
+    axios.put(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
+      .then((res) => {
+        alert("Invoice updated successfully");
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
         navigate("/invoice/display");
       })
       .catch((err) => {
@@ -57,9 +76,18 @@ export default function UpdateInvoice() {
   };
 
   useEffect(() => {
+<<<<<<< HEAD
     const url = "http://localhost:9002/api/getInvoiceById/" + iid;
+=======
 
-    axios.get(url)
+    const url = "http://localhost:9002/api/invoice/getInvoiceById/"+iid;
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
+
+    axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
         const inv = res.data.invoice;
 
@@ -74,7 +102,12 @@ export default function UpdateInvoice() {
       .catch((err) => {
         toast.error(err.message);
       });
+<<<<<<< HEAD
   }, [iid]);
+=======
+
+  }, []);
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
 
   return (
     <div className="container mt-4">

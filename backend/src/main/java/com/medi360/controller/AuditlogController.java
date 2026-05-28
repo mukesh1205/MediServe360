@@ -62,6 +62,7 @@ public class AuditlogController {
 	
 	@GetMapping("/fetchallauditlog")
 	public ResponseEntity<List<AuditlogResponseDTO>> getAllAuditlog(){
+		System.out.println("okk got it");
 		return ResponseEntity.ok(this.as.getAllAuditlog());
 	}
 	

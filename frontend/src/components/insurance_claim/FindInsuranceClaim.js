@@ -15,10 +15,19 @@ export default function FindInsuranceClaim() {
                 return;
             }
 
+<<<<<<< HEAD
             setClaim(null);
             setSearched(false);
             const url = "http://localhost:9002/api/getInsuranceClaimById/" + claimId;
             const res = await axios.get(url);
+=======
+            const url = "http://localhost:9002/api/insurance/getInsuranceClaimById/" + claimId;
+            const res = await axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                });
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
 
             setClaim(res.data.insuranceClaim);
             

@@ -24,8 +24,12 @@ export default function UpdateWard() {
     }
 
     useEffect(() => {
-        let url = `http://localhost:9002/ward/getWard/${wardId}`;
-        axios.get(url)
+        let url = `http://localhost:9002/api/ward/getWard/${wardId}`;
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 setWardName(res.data.ward.wardname);
                 setWardCapacity(res.data.ward.wardcapacity);

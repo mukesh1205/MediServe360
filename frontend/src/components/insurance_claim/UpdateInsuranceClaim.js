@@ -15,6 +15,7 @@ export default function UpdateInsuranceClaim() {
 
   const updateButtonHandler = () => {
 
+<<<<<<< HEAD
     if (!patientId || !policyNumber || !amount || !status) {
       toast.warning("Please fill all fields");
       return;
@@ -25,6 +26,9 @@ export default function UpdateInsuranceClaim() {
       return;
     }
     const url = "http://localhost:9002/api/updateInsuranceClaim";
+=======
+    const url = "http://localhost:9002/api/insurance/updateInsuranceClaim";
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
 
     const data = {
       insuranceClaim: {
@@ -38,9 +42,19 @@ export default function UpdateInsuranceClaim() {
       }
     };
 
+<<<<<<< HEAD
     axios.put(url, data)
       .then(() => {
         toast.success("Insurance Claim updated successfully");
+=======
+    axios.put(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
+      .then((res) => {
+        alert("Insurance Claim updated successfully");
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
         navigate("/insuranceClaim/display");
       })
       .catch((err) => {
@@ -49,9 +63,18 @@ export default function UpdateInsuranceClaim() {
   };
 
   useEffect(() => {
+<<<<<<< HEAD
     const url = "http://localhost:9002/api/getInsuranceClaimById/" + claimId;
+=======
 
-    axios.get(url)
+    const url = "http://localhost:9002/api/insurance/getInsuranceClaimById/" + claimId;
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
+
+    axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
         const c = res.data.insuranceClaim;
 

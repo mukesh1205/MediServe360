@@ -25,7 +25,7 @@ export default function UpdateComplianceReport() {
 
   let updateButtonHandler = () => {
 
-    let url = "http://localhost:9002/api/updateComplianceReport";
+    let url = "http://localhost:9002/api/compliance-reports/updateComplianceReport";
 
     let data = {
       "complianceReport": {
@@ -36,7 +36,11 @@ export default function UpdateComplianceReport() {
       }
     };
 
-    axios.put(url, data)
+    axios.put(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
         alert("Updated successfully");
         navigate("/compilance_report/display");
@@ -48,9 +52,13 @@ export default function UpdateComplianceReport() {
 
   useEffect(() => {
 
-    let url = "http://localhost:9002/api/fetchAllComplianceReports";
+    let url = "http://localhost:9002/api/compliance-reports/fetchAllComplianceReports";
 
-    axios.get(url)
+    axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
 
         // ✅ backend returns list directly

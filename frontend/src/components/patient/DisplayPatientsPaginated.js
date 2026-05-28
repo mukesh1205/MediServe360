@@ -14,6 +14,7 @@ export default function DisplayPatientsPaginated() {
         try {
             const url = "http://localhost:9002/api/fetchAllPatientsPaginated";
 
+<<<<<<< HEAD
             if (pgno === "" || size === "" || sorting === "") {
                 toast.warning("Please enter page number, size, and sorting column");
                 return;
@@ -29,6 +30,23 @@ export default function DisplayPatientsPaginated() {
             };
 
             const res = await axios.get(url, params);
+=======
+    const buttonHandler=async()=>{
+        try{
+            const url="http://localhost:9002/api/patient/fetchAllPatientsPaginated";
+            
+            const res=await axios.get(url,{
+            params: {
+                    pgno:pgno,
+                    size:size,
+                    sorting:sorting,
+                    asc:asc
+            },
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }
+                });
+>>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
             setRecords(res.data.content);
             setSearched(true);
         } catch (err) {
