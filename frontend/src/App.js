@@ -1,5 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route ,Navigate} from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Appointment
 import AppointmentHome from './components/appointment/AppointmentHome';
@@ -112,6 +113,7 @@ import UserPage from './components/user/UserPage';
 import NotificationPage from './components/notification/NotificationPage'
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import { ToastContainer } from 'react-toastify';
 function App() {
   // const [loading, setLoading] = useState(true);
  
@@ -179,7 +181,7 @@ function Unauthorized() {
   return (
 
     <Router>
-
+        <ToastContainer />
       <Routes>
 
         {/* Appointment */}

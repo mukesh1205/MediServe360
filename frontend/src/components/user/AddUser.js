@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+
 export default function AddUser(){
 
     let [name,setName]=useState("");
@@ -46,7 +47,7 @@ export default function AddUser(){
                     }
                 }
             );
-            alert(res.data.userName);
+            alert("Successfully added");
         }
         catch(err){
             alert(err.message);

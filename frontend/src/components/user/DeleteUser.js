@@ -18,13 +18,14 @@ export default function DeleteUser(){
                     }
                 });
             setData(res.data);
+            alert("Successfully deleted")
         }catch(err){
-            alert(err.message)
+            console.log(err.message)
         }
     }
     useEffect(()=>{
         submitHandler();
-        navigate("/user")
+        navigate("/user/findall")
     },[])
     return(
         <div>
