@@ -1,5 +1,6 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route ,Navigate} from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Appointment
 import AppointmentHome from './components/appointment/AppointmentHome';
@@ -110,13 +111,94 @@ import FindAllAuditlog from './components/auditlog/FindAllAuditlog';
 import AuditLogPage from './components/auditlog/AuditLogPage';
 import UserPage from './components/user/UserPage';
 import NotificationPage from './components/notification/NotificationPage'
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import { ToastContainer } from 'react-toastify';
 function App() {
-  return (
-    <Router>
+  // const [loading, setLoading] = useState(true);
+ 
+  // useEffect(() => {
+ 
+  //   localStorage.clear();
+ 
+  //   axios.post("http://localhost:9002/api/auth/login", {
+  //     email: "admin@gmail.com",
+  //     password: "123456"
+  //   })
+  //   .then((res) => {
+  //     console.log(res.data.token);
+  //     localStorage.setItem("token", res.data.token);
+  //     localStorage.setItem("role", res.data.role);
+  //     localStorage.setItem("userName", res.data.userName);
+ 
+  //     console.log("✅ Auto logged in as Admin");
+ 
+  //     setLoading(false);
+ 
+  //   })
+  //   .catch((err) => {
+  //     console.log("❌ Login failed:", err.response?.data || err.message);
+  //     setLoading(false);
+  //   });
+ 
+  // }, []);
+ 
+  // if (loading) {
+  //   return <div>Logging in...</div>;
+  // }
+const ALL_ROLES        = ["ADMIN","DOCTOR","PATIENT","FINANCEOFFICER","COMPLIANCE_OFFICER","NURSE"];
+const ADMIN_ONLY       = ["ADMIN"];
+const ADMIN_DP  = ["ADMIN","DOCTOR","PATIENT"];
+const ADMIN_NURSE    = ["ADMIN","NURSE"];
+const ADMIN_COMPLIANCE = ["ADMIN","COMPLIANCE_OFFICER"];
+const ADMIN_FINANCE    = ["ADMIN","FINANCEOFFICER"];
+const ADMIN_PATIENT      = ["ADMIN","PATIENT"];
+const ADMIN_DOCTOR      = ["ADMIN","DOCTOR"];
+const FINANCE=["ADMIN","FINANCEOFFICER"];
 
+ 
+ 
+function ProtectedRoute({ children, allowedRoles }) {
+    const token = localStorage.getItem("token");
+    const role  = localStorage.getItem("role");
+ 
+    if (!token) return <Navigate to="/login" replace />;
+    if (allowedRoles && !allowedRoles.includes(role)) return <Navigate to="/unauthorized" replace />;
+    return children;
+}
+ 
+ 
+function Unauthorized() {
+    return (
+        <div className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: "60vh" }}>
+            <h3 className="text-danger">Access Denied</h3>
+            <p className="text-muted">You don't have permission to view this page.</p>
+            <button className="btn btn-primary mt-3" onClick={() => window.history.back()}>Go Back</button>
+        </div>
+    );
+}
+ 
+  return (
+
+    <Router>
+        <ToastContainer />
       <Routes>
 
         {/* Appointment */}
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/appointment" element={<ProtectedRoute allowedRoles={ADMIN_DP}><AppointmentHome /></ProtectedRoute>}>
+          <Route path="add" element={<AddAppointment />} />
+          <Route path="delete" element={<DeleteAppointment />} />
+          <Route path="update" element={<UpdateAppointment />} />
+          <Route path="find" element={<FindAppointment />} />
+        </Route>
+
+        {/* Patient */}
+        
         <Route path="/appointment" element={<AppointmentHome/>}>
             <Route path="add" element={<AddAppointment/>}></Route>
             <Route path="delete/:aid" element={<DeleteAppointment/>}></Route>
@@ -127,7 +209,7 @@ function App() {
         </Route>
 
       {/* Doctor */}
-      <Route path="/doctor" element={<DoctorHome />}>
+      <Route path="/doctor" element={<ProtectedRoute allowedRoles={ADMIN_DOCTOR}><DoctorHome /></ProtectedRoute>}>
             <Route path="delete/:id" element={<DeleteDoctor />} />
             <Route path="update/:id" element={<UpdateDoctor />} />
             <Route path="add" element={<AddDoctor />} />
@@ -137,7 +219,7 @@ function App() {
      </Route>
 
      {/* Patient */}
-        <Route path="/patient" element={<PatientHome />}>
+        <Route path="/patient" element={<ProtectedRoute allowedRoles={ADMIN_PATIENT}><PatientHome /></ProtectedRoute>}>
           <Route path="add" element={<AddPatient />} />
           <Route path="update/:pid" element={<UpdatePatient />} />
           <Route path="delete/:pid" element={<DeletePatient />} />
@@ -147,7 +229,7 @@ function App() {
         </Route>
 
         {/* Invoice */}
-        <Route path="/invoice" element={<InvoiceHome />}>
+        <Route path="/invoice" element={<ProtectedRoute allowedRoles={ADMIN_FINANCE}><InvoiceHome /></ProtectedRoute>}>
           <Route path="add" element={<AddInvoice />} />
           <Route path="update/:iid" element={<UpdateInvoice />} />
           <Route path="delete/:iid" element={<DeleteInvoice />} />
@@ -157,7 +239,7 @@ function App() {
         </Route>
 
         {/* Insurance */}
-        <Route path="/insuranceClaim" element={<InsuranceClaimHome />}>
+        <Route path="/insuranceClaim" element={<ProtectedRoute allowedRoles={FINANCE}><InsuranceClaimHome /></ProtectedRoute>}>
           <Route path="add" element={<AddInsuranceClaim />} />
           <Route path="update/:claimId" element={<UpdateInsuranceClaim />} />
           <Route path="delete/:claimId" element={<DeleteInsuranceClaim />} />
@@ -167,7 +249,7 @@ function App() {
         </Route>
 
         {/* Compliance */}
-        <Route path="/compilance_report" element={<CompilanceReportHome />}>
+        <Route path="/compilance_report" element={<ProtectedRoute allowedRoles={ADMIN_COMPLIANCE}><CompilanceReportHome /></ProtectedRoute>}>
           <Route path="add" element={<AddCompilanceReport />} />
           <Route path="update/:id" element={<UpdateCompilanceReport />} />
           <Route path="delete/:id" element={<DeleteCompilanceReport />} />
@@ -178,7 +260,7 @@ function App() {
 
         
 
-        <Route path="/user" element={<UserHome />}>
+        <Route path="/user" element={<ProtectedRoute allowedRoles={ADMIN_ONLY}><UserHome /></ProtectedRoute>}>
             <Route path="add" element={<AddUser />} />
             <Route path="delete/:id" element={<DeleteUser />} />
             <Route path="update/:id" element={<UpdateUser />} />
@@ -187,13 +269,13 @@ function App() {
             <Route path="paginated" element={<UserPage />} />
         </Route>
 
-        <Route path="/auditlog" element={<AuditlogHome />}>
+        <Route path="/auditlog" element={<ProtectedRoute allowedRoles={ADMIN_ONLY}><AuditlogHome /></ProtectedRoute>}>
             <Route path="add" element={<AddAuditlog />} />
             <Route path="find" element={<FindAuditlog />} />
             <Route path="findall" element={<FindAllAuditlog />} />
             <Route path="paginated" element={<AuditLogPage/>} />
         </Route>
-        <Route path="/notification" element={<NotificationHome />}>
+        <Route path="/notification" element={<ProtectedRoute allowedRoles={ALL_ROLES}><NotificationHome /></ProtectedRoute>}>
             <Route path="add" element={<AddNotification />} />
             <Route path="update/:id" element={<UpdateNotification />} />
             <Route path="delete/:id" element={<DeleteNotification />} />
@@ -202,7 +284,7 @@ function App() {
             <Route path="paginated" element={<NotificationPage />} />
         </Route>
 
-        <Route path="/bed" element={<BedHome />}>
+        <Route path="/bed" element={<ProtectedRoute allowedRoles={ADMIN_NURSE}><BedHome /></ProtectedRoute>}>
             <Route path="add" element={<AddBed/>}/>
             <Route path="update/:bedId" element={<UpdateBed/>}/>
             <Route path="delete/:bedId" element={<DeleteBed/>}/>
@@ -212,7 +294,7 @@ function App() {
             <Route path="dischargeBed" element={<DischargeBed/>}/>
             <Route path="pages" element={<PaginatedBed/>}/>
         </Route>
-         <Route path="/ward" element={<WardHome />}>
+         <Route path="/ward" element={<ProtectedRoute allowedRoles={ADMIN_NURSE}><WardHome /></ProtectedRoute>}>
             <Route path="add" element={<AddWard/>}/>
             <Route path="update/:wardId" element={<UpdateWard/>}/>
            <Route path="delete/:wardId" element={<DeleteWard/>}/>
@@ -223,7 +305,7 @@ function App() {
 
         </Route>
         
-          <Route path="/kpi_report" element={<KpiReportHome />}>
+          <Route path="/kpi_report" element={<ProtectedRoute allowedRoles={ADMIN_FINANCE}><KpiReportHome /></ProtectedRoute>}>
           <Route path="add" element={<AddKpiReport />} />
           <Route path="find" element={<FindKpiReport />} />
           <Route path="display" element={<DisplayKPiReport />} />

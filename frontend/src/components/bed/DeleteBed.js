@@ -6,9 +6,13 @@ export default function DeleteBed() {
     let { bedId } = useParams();
 
     useEffect(() => {
-        let url = `http://localhost:9002/bed/delete/${bedId}`;
+        let url = `http://localhost:9002/api/beds/delete/${bedId}`;
 
-        axios.delete(url)
+        axios.delete(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 alert(response.data);
             })

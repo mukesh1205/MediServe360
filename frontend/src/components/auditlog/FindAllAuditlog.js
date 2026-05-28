@@ -8,7 +8,11 @@ export default function FindAllAuditlog(){
     async function notificationget(){
         let url="http://localhost:9002/auditlog/fetchallauditlog"
         try{
-            let res=await axios.get(url);
+            let res=await axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                });
             setData(res.data);
         }catch(err){
             alert(err.message);
@@ -19,10 +23,10 @@ export default function FindAllAuditlog(){
     },[])
 
     return(
-        <div>
+        <div className="container mt-4">
             
-            <table border={2}>
-                <thead>
+            <table className="table table-bordered table-striped mt-3">
+                <thead className="table-dark">
                     <tr>
                         <th>auditId</th>
                         <th>Audit Action</th>
@@ -37,7 +41,7 @@ export default function FindAllAuditlog(){
                                 <tr>
                                     <td>{m.auditId}</td>
                                     <td>{m.action}</td>
-                                    <td>{m.user.userId}</td>
+                                    <td>{m.userId}</td>
                                     
                                 </tr>
                             )

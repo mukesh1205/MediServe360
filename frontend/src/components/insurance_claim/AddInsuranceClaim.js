@@ -15,7 +15,7 @@ export default function AddInsuranceClaim() {
             return;
         }
 
-        const url = "http://localhost:9002/api/addInsuranceClaim";
+        const url = "http://localhost:9002/api/insurance/addInsuranceClaim";
 
         const data = {
             insuranceClaim: {
@@ -28,7 +28,11 @@ export default function AddInsuranceClaim() {
             }
         };
 
-        axios.post(url, data)
+        axios.post(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 alert("Insurance Claim added successfully");
                 console.log(res.data);

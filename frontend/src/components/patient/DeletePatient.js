@@ -8,8 +8,12 @@ export default function DeletePatient(){
     let navigate=useNavigate();
     useEffect(()=>{
         
-        let url="http://localhost:9002/api/deletePatient/"+pid;
-        axios.delete(url)
+        let url="http://localhost:9002/api/patient/deletePatient/"+pid;
+        axios.delete(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                })
         .then((res)=>{
             alert("Deleted successfully");
             navigate("/patient");

@@ -7,8 +7,12 @@ export default function FindAllWard() {
     let [wardArr, setWardArr] = useState([]);
 
     useEffect(() => {
-        let url = "http://localhost:9002/ward/getAllWards";
-        axios.get(url)
+        let url = "http://localhost:9002/api/ward/getAllWards";
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 setWardArr(response.data);
             })

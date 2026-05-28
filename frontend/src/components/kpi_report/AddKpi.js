@@ -26,7 +26,7 @@ export default function AddKPIReport(){
 
     let buttonHandler = () => {
 
-        let url = "http://localhost:9002/api/addKPIReport";
+        let url = "http://localhost:9002/api/kpi-reports/addKPIReport";
 
         let data = {
             "kpiReport": {
@@ -39,7 +39,11 @@ export default function AddKPIReport(){
             }
         };
 
-        axios.post(url, data)
+        axios.post(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 alert("KPI Report Saved successfully " + response.data);
             })

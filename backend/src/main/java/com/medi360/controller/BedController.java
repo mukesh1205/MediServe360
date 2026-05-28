@@ -33,8 +33,8 @@ public class BedController {
 	private BedService bedService;
 
 	@PostMapping("/create")
-
 	public ResponseEntity<BedResponseDTO> createBed(@RequestBody BedDTO bedDTO) {
+		System.out.println("Okkk");
 		Bed bed = bedService.createBed(bedDTO.getBed());
 		BedResponseDTO response = new BedResponseDTO();
 

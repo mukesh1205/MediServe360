@@ -5,7 +5,6 @@ export default function AuditLogPage(){
 
     const [data,setData]=useState([]);
     const [count,setCount]=useState(0);
-    const [totalElements,setTotalElements]=useState(0);
     const [totalPages,setTotalPages]=useState(0);
 
     const size=6;
@@ -23,18 +22,20 @@ export default function AuditLogPage(){
 
     async function fetchfunction(){
         let url=`http://localhost:9002/auditlog/fetchAllAuditlogsPaginated`;
-        const params={
-                params:{
-                    pgno:count,
-                    size:size,
-                    sorting:"auditId",
-                    asc:true
-                }
-            }
+        
         try{
-            let res=await axios.get(url,params);
+            let res=await axios.get(url,
+                {params: {
+                pgno: count,
+                size: size,
+                sorting: "auditId",
+                asc: true
+            },
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }
+                });
             setData(res.data.content);
-            setTotalElements(res.data.totalElements);
             setTotalPages(res.data.totalPages);
         }catch(err){
             alert(err.message);
@@ -44,9 +45,9 @@ export default function AuditLogPage(){
         fetchfunction();
     },[count])
     return(
-        <div>
-            <table border={1}>
-                <thead>
+        <div className="container mt-4">
+            <table className="table table-bordered table-striped mt-3">
+                <thead className="table-dark">
                     <tr>
                         <th>auditId</th>
                         <th>audit Action</th>

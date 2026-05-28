@@ -8,7 +8,6 @@ export default function AddPatient(){
     let [patientPN,setPatientPN]=useState("");
     let [patientMH,setPatientMH]=useState("");
     let [patientStatus,setPatientStatus]=useState("");
-
     let patientNameHandler=(event)=>{
         setPatientName(event.target.value);
     }
@@ -34,7 +33,7 @@ export default function AddPatient(){
     }
 
     let buttonHandler=()=>{
-        let url="http://localhost:9002/api/addPatient";
+        let url="http://localhost:9002/api/patient/addPatient";
         let data={
             "patient":{
                 "patientName": patientName,
@@ -45,7 +44,11 @@ export default function AddPatient(){
                 "patientStatus": patientStatus
             }
         };
-        axios.post(url,data)
+        axios.post(url,data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                })
             .then((response)=>{
                 alert("Patient Added successfully"+response.data);
             })

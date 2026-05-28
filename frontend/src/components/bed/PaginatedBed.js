@@ -11,16 +11,17 @@ export default function PaginatedBed() {
 
     const buttonHandler = async () => {
         try {
-            const url = "http://localhost:9002/bed/getAllPatientsPaginated";
-            const params = {
-                params: {
-                    pgno: pgno,
+            const url = "http://localhost:9002/api/beds/getAllPatientsPaginated";
+
+            const res = await axios.get(url, {params: {
+                pgno: pgno,
                     size: size,
                     sorting: sorting,
                     asc: asc
-                }
-            }
-            const res = await axios.get(url, params);
+            },
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }});
             setRecords(res.data.content);
         }
         catch (err) {

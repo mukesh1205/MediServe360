@@ -13,7 +13,11 @@ export default function FindAuditlog(){
         let url=`http://localhost:9002/auditlog/findauditlogbyid/${id}`;
         try{
 
-            let res=await axios.get(url);
+            let res=await axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                });
             alert(res.data)
             setData(res.data);
             

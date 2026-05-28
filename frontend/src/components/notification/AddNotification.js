@@ -1,67 +1,83 @@
 import { useState } from "react";
 import axios from "axios";
-export default function AddNotification(){
 
-    let [message,setMessage]=useState("");
-    let [category,setCategory]=useState("");
-    let [status,setStatus]=useState("");
-    
+export default function AddNotification() {
+    let [message, setMessage] = useState("");
+    let [category, setCategory] = useState("");
+    let [status, setStatus] = useState("");
+    let [userId, setUserId] = useState("");
 
-    const messageHandler=(event)=>{
-        setMessage(event.target.value)
-    }
+    async function submitHandler() {
+        let data = {
+            "userID": parseInt(userId),
+            "message": message,
+            "category": category,
+            "status": status
+        };
 
-    const categoryHandler=(event)=>{
-        setCategory(event.target.value)
-    }
-
-    const statusHandler=(event)=>{
-        setStatus(event.target.value)
-    }
-
-    async function submitHandler(){
-        let date=new Date();
-        let data={
-                
-                "notification": {
-                    "message": message,
-                    "category": category,
-                    "status": status,
-                    "createdDate": date,
-                        "user": {
-                        "userId": 5,
-                        "userName": "Raghu Vardhan",
-                        "userRole": "Patient",
-                        "userEmail": "r@gmail.com",
-                        "userPhone": "123456"
-                        }
-  }
-                
-            }
-        try{
-            let res=await axios.post("http://localhost:9002/notification/insertnotificationdata",data);
-            alert(res.data.message)
-        }catch(err){
-            alert(err.message);
+        try {
+            let res = await axios.post(
+                "http://localhost:9002/notification/insertnotificationdata",
+                data,
+                {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                }
+            );
+            alert("Notification added: " + res.data.message);
+        } catch (err) {
+            alert(err.response?.data?.errorMessage || err.message);
         }
     }
-    return(
-        <div>
-            <form onSubmit={submitHandler}>
-                <label>Message</label>
-                <input type="text" placeholder="Enter message" onChange={messageHandler} />
-                <br></br>
 
-                <label>Category</label>
-                <input type="test" placeholder="Enter category" onChange={categoryHandler} />
-                <br></br>
+    return (
+        <div className="container mt-4">
+            <div className="mb-3">
+                <label className="form-label">User ID</label>
+                <input
+                    className="form-control"
+                    type="number"
+                    placeholder="Enter user ID"
+                    onChange={(e) => setUserId(e.target.value)}
+                />
+            </div>
+            <div className="mb-3">
+                <label className="form-label">Message</label>
+                <input
+                    className="form-control"
+                    type="text"
+                    placeholder="Enter message"
+                    onChange={(e) => setMessage(e.target.value)}
+                />
+            </div>
+            <div className="mb-3">
+                <label className="form-label">Category</label>
+                <input
+                    className="form-control"
+                    type="text"
+                    placeholder="Enter category"
+                    onChange={(e) => setCategory(e.target.value)}
+                />
+            </div>
+            <div className="mb-3">
+                <label className="form-label">Status</label>
+                <input
+                    className="form-control"
+                    type="text"
+                    placeholder="Enter status"
+                    onChange={(e) => setStatus(e.target.value)}
+                />
+            </div>
 
-                <label>Status</label>
-                <input type="text" placeholder="Enter status" onChange={statusHandler} />
-                <br></br>
-
-                <button type="submit">Submit</button>
-            </form>
+            {/* Fix: was onSubmit on a button, should be onClick */}
+            <button
+                className="btn btn-secondary btn-sm"
+                onClick={submitHandler}
+                type="button"
+            >
+                Submit
+            </button>
         </div>
-    )
+    );
 }

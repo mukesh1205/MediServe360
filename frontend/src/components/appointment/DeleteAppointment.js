@@ -6,7 +6,11 @@ export default function DeleteAppointment() {
     const navigate = useNavigate();
 
     let deleteHandler = () => {
-        axios.delete(`http://localhost:9002/api/appointments/delete/${aid}`)
+        axios.delete(`http://localhost:9002/api/appointment/delete/${aid}`,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 alert(res.data); // "Appointment deleted successfully"
                 navigate("/appointment/display"); // back to list

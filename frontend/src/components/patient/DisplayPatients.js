@@ -6,8 +6,12 @@ export default function DisplayPatients(){
     let [patient,setPatient]=useState([]);
 
     useEffect(()=>{
-        let url="http://localhost:9002/api/fetchAllPatients";
-        axios.get(url)
+        let url="http://localhost:9002/api/patient/fetchAllPatients";
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                })
             .then((res)=>{
                 setPatient(res.data);
             })

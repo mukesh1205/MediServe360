@@ -6,7 +6,6 @@ export default function UpdateInvoice() {
 
   const { iid } = useParams();   
   const navigate = useNavigate();
-
   const [patientId, setPatientId] = useState(0);
   const [amount, setAmount] = useState(0);
   const [invoiceDate, setInvoiceDate] = useState("");
@@ -18,7 +17,7 @@ export default function UpdateInvoice() {
   
   const updateButtonHandler = () => {
 
-    const url = "http://localhost:9002/api/updateInvoice";
+    const url = "http://localhost:9002/api/invoice/updateInvoice";
 
     const data = {
       invoice: {
@@ -35,7 +34,11 @@ export default function UpdateInvoice() {
       }
     };
 
-    axios.put(url, data)
+    axios.put(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
         alert("Invoice updated successfully");
         navigate("/invoice/display");
@@ -47,9 +50,13 @@ export default function UpdateInvoice() {
 
   useEffect(() => {
 
-    const url = "http://localhost:9002/api/getInvoiceById/" + iid;
+    const url = "http://localhost:9002/api/invoice/getInvoiceById/"+iid;
 
-    axios.get(url)
+    axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
 
         let inv = res.data.invoice;
@@ -66,7 +73,7 @@ export default function UpdateInvoice() {
         console.error(err);
       });
 
-  }, [iid]);
+  }, []);
 
   return (
     <div>

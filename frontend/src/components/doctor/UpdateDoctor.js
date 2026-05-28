@@ -12,7 +12,11 @@ export default function UpdateDoctor() {
 
     // Load doctor details automatically
     useEffect(() => {
-        axios.get(`http://localhost:9002/api/doctors/get/${id}`)
+        axios.get(`http://localhost:9002/api/doctor/get/${id}`,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 let doc = res.data;
                 setName(doc.name);
@@ -23,7 +27,7 @@ export default function UpdateDoctor() {
     }, [id]);
 
     let updateHandler = () => {
-        let url = "http://localhost:9002/api/doctors/update";
+        let url = "http://localhost:9002/api/doctor/update";
 
         // ✅ backend expects DoctorDTO with "doctor" wrapper
         let data = {
@@ -35,7 +39,11 @@ export default function UpdateDoctor() {
             }
         };
 
-        axios.put(url, data)
+        axios.put(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 alert(res.data.message); // "Doctor updated successfully"
                 navigate("/doctor/display"); // back to list

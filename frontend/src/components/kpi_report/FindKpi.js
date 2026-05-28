@@ -12,9 +12,13 @@ export default function FindKpi(){
 
     const buttonHandler = async () => {
         try {
-            let url = "http://localhost:9002/api/fetchAllKPIReports";
+            let url = "http://localhost:9002/api/kpi-reports/fetchAllKPIReports";
 
-            let res = await axios.get(url);
+            let res = await axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                });
 
             let kpis = res.data;
 

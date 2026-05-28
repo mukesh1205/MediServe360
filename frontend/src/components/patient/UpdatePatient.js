@@ -39,7 +39,8 @@ export default function UpdatePatient() {
   };
 
   let updateButtonHandler = (e) => {
-    let url = "http://localhost:9002/api/updatePatient";
+    let url = "http://localhost:9002/api/patient/updatePatient";
+    alert(pid);
     let data={
         "patient":{
             "patientId":pid,
@@ -53,7 +54,11 @@ export default function UpdatePatient() {
     };
 
     axios
-      .put(url, data)
+      .put(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
         alert("Updated successfully");
         navigate("/patient/display");
@@ -64,9 +69,13 @@ export default function UpdatePatient() {
   };
 
   useEffect(() => {
-    let url = "http://localhost:9002/api/getPatientById/" + pid;
+    let url = "http://localhost:9002/api/patient/getPatientById/" + pid;
     axios
-      .get(url)
+      .get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
         let p = res.data.patient;
         setPatientName(p.patientName);

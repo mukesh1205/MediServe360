@@ -7,9 +7,13 @@ export default function DisplayInsuranceClaims() {
     const [claims, setClaims] = useState([]);
 
     useEffect(() => {
-        const url = "http://localhost:9002/api/fetchAllInsuranceClaims";
+        const url = "http://localhost:9002/api/insurance/fetchAllInsuranceClaims";
 
-        axios.get(url)
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 setClaims(res.data);
             })
