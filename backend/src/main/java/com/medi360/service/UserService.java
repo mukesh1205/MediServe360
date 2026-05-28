@@ -32,6 +32,8 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordencoder;
 	
+	@Autowired
+	private AuditlogRepository auditlogrepository;
 //	public void addUserAuditLog(AuditLog au) {
 //		this.auditrepo.save(au);
 //	}
@@ -113,23 +115,21 @@ public class UserService {
 		
 	}
 	
-	public String deleteUser(int id) throws UserNotFoundException{
-		User user = userrepo.findById(id)
-		        .orElseThrow(() -> new ResourceNotFoundException(
-		                "User not found with ID: " + id));
-		try {
-		    userrepo.deleteById(id);
-		    auditservice.log("User.DELETE_SUCCESS | UserID: " + id
-		            + " | Name: " + user.getUserName()
-		            + " | Email: " + user.getUserEmail()
-		            + " | Role: " + user.getUserRole());
-		    return "Successfully Deleted";
-		} catch (Exception ex) {
-		    auditservice.logFailure("User.DELETE", ex.getMessage());
-		    throw ex;
-		}
-		
-		
+	public String deleteUser(int id) throws UserNotFoundException {
+	    User user = userrepo.findById(id)
+	            .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
+	    try {
+	    		auditlogrepository.deleteByUserUserId(id); 
+	        userrepo.deleteById(id);
+	        auditservice.log("User.DELETE_SUCCESS | UserID: " + id
+	                + " | Name: " + user.getUserName()
+	                + " | Email: " + user.getUserEmail()
+	                + " | Role: " + user.getUserRole());
+	        return "Successfully Deleted";
+	    } catch (Exception ex) {
+	        auditservice.logFailure("User.DELETE", ex.getMessage());
+	        throw ex;
+	    }
 	}
 	
 	public List<UserResponseDTO> getAllUser(){

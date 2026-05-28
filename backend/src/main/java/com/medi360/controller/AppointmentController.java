@@ -36,7 +36,7 @@ public class AppointmentController {
                DoctorNotFoundException,
                SlotNotAvailableException 
 {
-
+    		System.out.println("okk");
         Appointment appointment =
                 appointmentService.addAppointment(appointmentDTO.getAppointment());
 
