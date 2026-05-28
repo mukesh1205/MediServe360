@@ -9,15 +9,13 @@ export default function DeleteInvoice() {
     const navigate = useNavigate();
 
     useEffect(() => {
-<<<<<<< HEAD
-        if (!window.confirm("Are you sure you want to delete this invoice?")) {
+
+if (!window.confirm("Are you sure you want to delete this invoice?")) {
                 navigate("/invoice");
                 return;
         }
-        const url = "http://localhost:9002/api/deleteInvoice/" + iid;
-=======
         const url = "http://localhost:9002/api/invoice/deleteInvoice/" + iid;
->>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
+
 
         axios.delete(url,{
                     headers: {
@@ -26,7 +24,7 @@ export default function DeleteInvoice() {
                 })
             .then((res) => {
                 toast.success("Invoice deleted successfully");
-                navigate("/invoice");
+                navigate("/invoice/display");
             })
             .catch((err) => {
                 toast.error(err.message);

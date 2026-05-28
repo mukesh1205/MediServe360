@@ -15,20 +15,19 @@ export default function FindInvoice() {
                 return;
             }
 
-<<<<<<< HEAD
+
             setInvoice(null);
             setSearched(false);
 
-            const url = "http://localhost:9002/api/getInvoiceById/" + invoiceId;
-            const res = await axios.get(url);
-=======
+            
+
             const url = "http://localhost:9002/api/invoice/getInvoiceById/" + invoiceId;
             const res = await axios.get(url,{
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("token") 
                     }
                 });
->>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
+
 
             setInvoice(res.data.invoice);
 

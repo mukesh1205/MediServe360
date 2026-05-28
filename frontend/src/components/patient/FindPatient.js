@@ -16,19 +16,15 @@ export default function FindPatient(){
                 toast.warning("Please enter a name");
                 return;
             }
-<<<<<<< HEAD
             setRecords([]);
             setSearched(false);
-            const url="http://localhost:9002/api/getPatientByName/"+name;
-            const res=await axios.get(url);
-=======
             const url="http://localhost:9002/api/patient/getPatientByName/"+name;
             const res=await axios.get(url,{
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("token") 
                     }
                 });
->>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
+
             
             const patients = res.data.patients;
             setRecords(patients);

@@ -15,19 +15,13 @@ export default function DisplayInvoicesPaginated() {
         try {
             const url = "http://localhost:9002/api/invoice/fetchAllInvoicesPaginated";
 
-<<<<<<< HEAD
             if (pgno === "" || size === "" || sorting === "") {
                 toast.warning("Please enter page number, size, and sorting column");
                 return;
             }
-
-            const params = {
-                params: {
-                    pgno: pgno,
-=======
             const res = await axios.get(url, {params: {
                 pgno: pgno,
->>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
+
                     size: size,
                     sorting: sorting,
                     asc: asc

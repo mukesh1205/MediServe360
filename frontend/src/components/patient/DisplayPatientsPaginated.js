@@ -10,30 +10,14 @@ export default function DisplayPatientsPaginated() {
     const [asc, setAsc] = useState(true);
     const [searched, setSearched] = useState(false);
 
-    const buttonHandler = async () => {
-        try {
-            const url = "http://localhost:9002/api/fetchAllPatientsPaginated";
-
-<<<<<<< HEAD
+    const buttonHandler=async()=>{
+        try{
+            const url="http://localhost:9002/api/patient/fetchAllPatientsPaginated";
             if (pgno === "" || size === "" || sorting === "") {
                 toast.warning("Please enter page number, size, and sorting column");
                 return;
             }
 
-            const params = {
-                params: {
-                    pgno: pgno,
-                    size: size,
-                    sorting: sorting,
-                    asc: asc
-                }
-            };
-
-            const res = await axios.get(url, params);
-=======
-    const buttonHandler=async()=>{
-        try{
-            const url="http://localhost:9002/api/patient/fetchAllPatientsPaginated";
             
             const res=await axios.get(url,{
             params: {
@@ -46,7 +30,6 @@ export default function DisplayPatientsPaginated() {
                 Authorization: "Bearer " + localStorage.getItem("token")
             }
                 });
->>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
             setRecords(res.data.content);
             setSearched(true);
         } catch (err) {

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { toast } from "react-toastify";
 
 export default function AddPatient(){
-<<<<<<< HEAD
+
     const [patientName,setPatientName]=useState("");
     const [patientDOB,setPatientDOB]=useState("");
     const [patientGender,setPatientGender]=useState("");
@@ -12,15 +12,6 @@ export default function AddPatient(){
     const [patientStatus,setPatientStatus]=useState("");
 
     const patientNameHandler=(event)=>{
-=======
-    let [patientName,setPatientName]=useState("");
-    let [patientDOB,setPatientDOB]=useState("");
-    let [patientGender,setPatientGender]=useState("");
-    let [patientPN,setPatientPN]=useState("");
-    let [patientMH,setPatientMH]=useState("");
-    let [patientStatus,setPatientStatus]=useState("");
-    let patientNameHandler=(event)=>{
->>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
         setPatientName(event.target.value);
     }
 
@@ -44,19 +35,13 @@ export default function AddPatient(){
         setPatientStatus(event.target.value);
     }
 
-<<<<<<< HEAD
     const buttonHandler=()=>{
-        let url="http://localhost:9002/api/addPatient";
+        let url="http://localhost:9002/api/patient/addPatient";
 
         if (!patientName || !patientDOB || !patientGender || !patientPN || !patientMH || !patientStatus) {
             toast.warning("Please fill all fields");
             return;
         }
-
-=======
-    let buttonHandler=()=>{
-        let url="http://localhost:9002/api/patient/addPatient";
->>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
         let data={
             "patient":{
                 "patientName": patientName,
@@ -67,16 +52,12 @@ export default function AddPatient(){
                 "patientStatus": patientStatus
             }
         };
-<<<<<<< HEAD
 
-        axios.post(url,data)
-=======
         axios.post(url,data,{
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("token")
                     }
                 })
->>>>>>> 0757f92c8fbce6f86f6ca66c9a6abae730f3f4db
             .then((response)=>{
                 toast.success("Patient Added successfully");
                 setPatientName("");
