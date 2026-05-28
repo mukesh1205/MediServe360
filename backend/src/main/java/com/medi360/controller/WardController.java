@@ -28,7 +28,7 @@ import com.medi360.exception.WardNotFoundException;
 import com.medi360.service.WardService;
 
 @RestController
-@RequestMapping("/ward")
+@RequestMapping("/api/ward")
 public class WardController {
 
 	@Autowired
