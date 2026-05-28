@@ -9,9 +9,13 @@ export default function DeleteInsuranceClaim() {
 
     useEffect(() => {
 
-        const url = "http://localhost:9002/api/deleteInsuranceClaim/" + claimId;
+        const url = "http://localhost:9002/api/insurance/deleteInsuranceClaim/" + claimId;
 
-        axios.delete(url)
+        axios.delete(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 alert("Insurance Claim deleted successfully");
                 navigate("/insuranceClaim");

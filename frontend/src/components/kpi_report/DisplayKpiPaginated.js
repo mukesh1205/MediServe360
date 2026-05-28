@@ -17,18 +17,19 @@ export default function DisplayKpiPaginated(){
                 return;
             }
 
-            let url = "http://localhost:9002/api/fetchAllKPIReports/paginated";
+            let url = "http://localhost:9002/api/kpi-reports/fetchAllKPIReports/paginated";
 
-            let params = {
+            let res = await axios.get(url, {
                 params: {
                     page: page,
                     size: size,
                     sortBy: sortBy,
                     asc: asc
-                }
-            };
-
-            let res = await axios.get(url, params);
+            },
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }});
+            
 
             console.log(res.data);  // ✅ debug
 

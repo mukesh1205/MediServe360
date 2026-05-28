@@ -11,16 +11,19 @@ export default function DisplayPatientsPaginated(){
 
     const buttonHandler=async()=>{
         try{
-            const url="http://localhost:9002/api/fetchAllPatientsPaginated";
-            const params={
-                params:{
+            const url="http://localhost:9002/api/patient/fetchAllPatientsPaginated";
+            
+            const res=await axios.get(url,{
+            params: {
                     pgno:pgno,
                     size:size,
                     sorting:sorting,
                     asc:asc
-                }
+            },
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
             }
-            const res=await axios.get(url,params);
+                });
             setRecords(res.data.content);
         }
         catch(err){

@@ -14,7 +14,7 @@ export default function UpdateInsuranceClaim() {
 
   const updateButtonHandler = () => {
 
-    const url = "http://localhost:9002/api/updateInsuranceClaim";
+    const url = "http://localhost:9002/api/insurance/updateInsuranceClaim";
 
     const data = {
       insuranceClaim: {
@@ -28,7 +28,11 @@ export default function UpdateInsuranceClaim() {
       }
     };
 
-    axios.put(url, data)
+    axios.put(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
         alert("Insurance Claim updated successfully");
         navigate("/insuranceClaim/display");
@@ -40,9 +44,13 @@ export default function UpdateInsuranceClaim() {
 
   useEffect(() => {
 
-    const url = "http://localhost:9002/api/getInsuranceClaimById/" + claimId;
+    const url = "http://localhost:9002/api/insurance/getInsuranceClaimById/" + claimId;
 
-    axios.get(url)
+    axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
 
         const c = res.data.insuranceClaim;

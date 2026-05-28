@@ -22,16 +22,19 @@ export default function AuditLogPage(){
 
     async function fetchfunction(){
         let url=`http://localhost:9002/notification/fetchAllNotificationsPaginated`;
-        const params={
-                params:{
-                    pgno:count,
-                    size:size,
-                    sorting:"notificationId",
-                    asc:true
-                }
-            }
+        
         try{
-            let res=await axios.get(url,params);
+            let res=await axios.get(url,
+                {params: {
+                pgno: count,
+                size: size,
+                sorting: "notificationId",
+                asc: true
+            },
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }
+                });
             setData(res.data.content);
             setTotalPages(res.data.totalPages);
         }catch(err){

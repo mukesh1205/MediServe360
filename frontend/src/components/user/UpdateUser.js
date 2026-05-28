@@ -8,7 +8,8 @@ export default function UpdateUser(){
     let [name,setName]=useState("");
     let [role,setRole]=useState("");
     let [phone,setPhone]=useState("");
-    let [email,setEmail]=useState("");
+    // let [email,setEmail]=useState("");
+    let [password,setPassword]=useState("");
     // let [id,setId]=useState();
     const nameHandler=(event)=>{
         setName(event.target.value)
@@ -18,12 +19,16 @@ export default function UpdateUser(){
         setRole(event.target.value)
     }
 
-    const emailHandler=(event)=>{
-        setEmail(event.target.value)
-    }
+    // const emailHandler=(event)=>{
+    //     setEmail(event.target.value)
+    // }
 
     const phoneHandler=(event)=>{
         setPhone(event.target.value)
+    }
+
+    const passwordHandler=(event)=>{
+        setPassword(event.target.value);
     }
 
     // const idHandler=(event)=>{
@@ -35,11 +40,16 @@ export default function UpdateUser(){
         let url=`http://localhost:9002/user/findbyid/${id}`;
         try{
 
-            let res=await axios.get(url);
-            setName(res.data.user.userName);
-            setEmail(res.data.user.userEmail);
-            setRole(res.data.user.userRole);
-            setPhone(res.data.user.userPhone);
+            let res = await axios.get(url, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }
+        });
+            setName(res.data.userName);
+            // setEmail(res.data.email);
+            setRole(res.data.role);
+            setPhone(res.data.phoneNumber);
+            setPassword("");
 
         }catch(err){
             alert(err.message)
@@ -49,21 +59,23 @@ export default function UpdateUser(){
     useEffect(()=>{
         findById()
     },[])
-    async function submitHandler(){
+    async function submitHandler(event){
+        event.preventDefault();
         let data={
-                
-                "user": {
-                    "userId":id,
-                    "userName": name,
-                    "userRole": role,
-                    "userEmail": email,
-                    "userPhone": phone
-                }
-                
+                "userName": name,
+                "userRole": role,
+                // "userEmail": email,
+                "phonenumber": phone,
+                "password":password
             }
         try{
-            let res=await axios.put("http://localhost:9002/user/updateuser",data);
-            alert(res.data.message)
+            
+            let res=await axios.put(`http://localhost:9002/user/updateuser/${id}`,data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                });
+            alert("okk");
         }catch(err){
             alert(err.message);
         }
@@ -81,20 +93,26 @@ export default function UpdateUser(){
 
                 <label>Role</label>
                 <select onChange={roleHandler} value={role}>
-                    <option value="Patient">Patient</option>
-                    <option value="Doctor">Doctor</option>
-                    <option value="Nurse">Nurse</option>
-                    <option value="Admin">Admin</option>
+                    <option value="PATIENT">Patient</option>
+                    <option value="DOCTOR">Doctor</option>
+                    <option value="NURSE">Nurse</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="FINANCEOFFICER">Finance Officer</option>
+                    <option value="COMPLIANCE_OFFICER">Compilance officer</option>
                     
                 </select>
                 <br></br>
 
-                <label>Email</label>
+                {/* <label>Email</label>
                 <input type="email" value={email} placeholder="Enter email" onChange={emailHandler} />
-                <br></br>
+                <br></br> */}
 
                 <label>Phone</label>
                 <input type="text" value={phone} placeholder="Enter phone number" onChange={phoneHandler} />
+                <br></br>
+
+                <label>Password</label>
+                <input type="text" value={password} placeholder="Leave blank to keep current password" onChange={passwordHandler} />
                 <br></br>
 
                 <button type="submit">Submit</button>

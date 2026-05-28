@@ -9,9 +9,13 @@ export default function DeleteCompliance(){
 
     useEffect(() => {
 
-        let url = "http://localhost:9002/api/deleteComplianceReport/" + id;
+        let url = "http://localhost:9002/api/compliance-reports/deleteComplianceReport/" + id;
 
-        axios.delete(url)
+        axios.delete(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
         .then((res) => {
             alert("Compliance Report Deleted successfully");
             navigate("/compilance_report");   // change route if needed

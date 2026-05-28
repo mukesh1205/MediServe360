@@ -10,7 +10,11 @@ export default function DeleteNotification(){
         let url=`http://localhost:9002/notification/deletenotification/${id}`;
         try{
 
-            let res=await axios.delete(url);
+            let res=await axios.delete(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                });
             setData(res.data);
 
         }catch(err){

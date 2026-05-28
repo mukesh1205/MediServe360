@@ -15,8 +15,12 @@ export default function FindBed() {
         setError("");
         setBed(null);
 
-        let url = `http://localhost:9002/bed/getBed/${bedId}`;
-        axios.get(url)
+        let url = `http://localhost:9002/api/beds/getBed/${bedId}`;
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 if (response.data.bed) {
                     setBed(response.data.bed);

@@ -8,13 +8,16 @@ export default function DeleteUser(){
     // const idHandler=(event)=>{
     //     setId(event.target.value)
     // }
-    const [data,setData]=useState("");
+    const [data,setData]=useState(" ");
     async function submitHandler(){
         let url=`http://localhost:9002/user/deleteuser/${id}`;
         try{
-            let res=await axios.delete(url);
+            let res=await axios.delete(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                });
             setData(res.data);
-
         }catch(err){
             alert(err.message)
         }

@@ -11,18 +11,17 @@ export default function DisplayInvoicesPaginated() {
 
     const buttonHandler = async () => {
         try {
-            const url = "http://localhost:9002/api/fetchAllInvoicesPaginated";
+            const url = "http://localhost:9002/api/invoice/fetchAllInvoicesPaginated";
 
-            const params = {
-                params: {
-                    pgno: pgno,
+            const res = await axios.get(url, {params: {
+                pgno: pgno,
                     size: size,
                     sorting: sorting,
                     asc: asc
-                }
-            };
-
-            const res = await axios.get(url, params);
+            },
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }});
             setRecords(res.data.content);
 
         } catch (err) {

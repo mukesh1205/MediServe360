@@ -13,8 +13,12 @@ export default function FindInvoice() {
                 return;
             }
 
-            const url = "http://localhost:9002/api/getInvoiceById/" + invoiceId;
-            const res = await axios.get(url);
+            const url = "http://localhost:9002/api/invoice/getInvoiceById/" + invoiceId;
+            const res = await axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                });
 
             setInvoice(res.data.invoice);
 

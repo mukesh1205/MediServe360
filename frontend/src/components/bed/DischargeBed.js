@@ -10,9 +10,13 @@ export default function DischargeBed() {
     }
 
     let dischargeHandler = () => {
-        let url = `http://localhost:9002/bed/${bedId}/discharge`;
+        let url = `http://localhost:9002/api/beds/${bedId}/discharge`;
 
-        axios.put(url)
+        axios.put(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 alert("Bed " + bedId + " discharged successfully! Bed is now Available.");
             })

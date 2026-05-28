@@ -8,9 +8,13 @@ export default function DeleteInvoice() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const url = "http://localhost:9002/api/deleteInvoice/" + iid;
+        const url = "http://localhost:9002/api/invoice/deleteInvoice/" + iid;
 
-        axios.delete(url)
+        axios.delete(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 alert("Invoice deleted successfully");
                 navigate("/invoice");

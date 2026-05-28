@@ -8,7 +8,11 @@ export default function FindAllNotification(){
     async function notificationget(){
         let url="http://localhost:9002/notification/fetchallnotifications"
         try{
-            let res=await axios.get(url);
+            let res=await axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                });
             setData(res.data);
         }catch(err){
             alert(err.message);
@@ -22,14 +26,14 @@ export default function FindAllNotification(){
         navigate(`/notification/delete/${event.target.value}`)
     }
 
-    function updatehandler(event){
-        navigate(`/notification/update/${event.target.value}`)
-    }
+    // function updatehandler(event){
+    //     navigate(`/notification/update/${event.target.value}`)
+    // }
     return(
-        <div>
+        <div className="container mt-4">
             
-            <table border={2}>
-                <thead>
+            <table className="table table-bordered table-striped mt-3">
+                <thead className="table-dark">
                     <tr>
                         <th>NotificationId</th>
                         <th>Notification Category</th>
@@ -42,12 +46,12 @@ export default function FindAllNotification(){
                         data.map((m)=>{
                             return(
                                 <tr>
-                                    <td>{m.notificationId}</td>
+                                    <td>{m.notificationID}</td>
                                     <td>{m.category}</td>
                                     <td>{m.message}</td>
                                     <td>{m.status}</td>
-                                    <button value={m.notificationId} onClick={deletehandler}>Delete</button>
-                                    <button value={m.notificationId} onClick={updatehandler}>Edit</button>
+                                    <button value={m.notificationID} onClick={deletehandler}>Delete</button>
+                                    {/* <button value={m.notificationID} onClick={updatehandler}>Edit</button> */}
                                 </tr>
                             )
                         })

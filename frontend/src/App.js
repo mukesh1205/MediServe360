@@ -152,7 +152,7 @@ const ADMIN_COMPLIANCE = ["ADMIN","COMPLIANCE_OFFICER"];
 const ADMIN_FINANCE    = ["ADMIN","FINANCEOFFICER"];
 const ADMIN_PATIENT      = ["ADMIN","PATIENT"];
 const ADMIN_DOCTOR      = ["ADMIN","DOCTOR"];
-const FINANCE=["FINANCEOFFICER"];
+const FINANCE=["ADMIN","FINANCEOFFICER"];
 
  
  
@@ -186,6 +186,7 @@ function Unauthorized() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/login" element={<Login />} />
 
         <Route path="/appointment" element={<ProtectedRoute allowedRoles={ADMIN_DP}><AppointmentHome /></ProtectedRoute>}>
           <Route path="add" element={<AddAppointment />} />

@@ -8,7 +8,6 @@ export default function AddPatient(){
     let [patientPN,setPatientPN]=useState("");
     let [patientMH,setPatientMH]=useState("");
     let [patientStatus,setPatientStatus]=useState("");
-
     let patientNameHandler=(event)=>{
         setPatientName(event.target.value);
     }
@@ -47,7 +46,7 @@ export default function AddPatient(){
         };
         axios.post(url,data,{
                     headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token") // ✅ JWT
+                        Authorization: "Bearer " + localStorage.getItem("token")
                     }
                 })
             .then((response)=>{

@@ -12,8 +12,12 @@ export default function FindCompilance() {
 
     const buttonHandler = async () => {
         try {
-            const url = "http://localhost:9002/api/fetchAllComplianceReports";
-            const res = await axios.get(url);
+            const url = "http://localhost:9002/api/compliance-reports/fetchAllComplianceReports";
+            const res = await axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                });
 
             let reports = res.data;
 

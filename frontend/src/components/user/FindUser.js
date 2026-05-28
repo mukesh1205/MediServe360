@@ -12,9 +12,13 @@ export default function FindUser(){
         event.preventDefault();
         let url=`http://localhost:9002/user/findbyid/${id}`;
         try{
-
-            let res=await axios.get(url);
-            alert(res.data)
+            console.log(id);
+            let res=await axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                });
+            // alert(res.data)
             setData(res.data);
             
 
@@ -22,11 +26,14 @@ export default function FindUser(){
             alert(err.message)
         }
     };
-    if(data.statusCode){
+    if(data.userId){
         return(
             <div>
-                <p>{data.user.userName}</p>
-                <p>{data.user.userRole}</p>
+                
+                <p>{data.userName}</p>
+                <p>{data.role}</p>
+                <p>{data.phoneNumber}</p>
+                <p>{data.email}</p>
             </div>
         )
     }

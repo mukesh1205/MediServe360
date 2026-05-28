@@ -15,7 +15,7 @@ export default function AddDoctor() {
             return;
         }
 
-        let url = "http://localhost:9002/api/doctors/add";
+        let url = "http://localhost:9002/api/doctor/add";
 
         let data = {
             "doctor": {
@@ -25,7 +25,11 @@ export default function AddDoctor() {
             }
         };
 
-        axios.post(url, data)
+        axios.post(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
 
                 alert(response.data.message); // ✅ "Doctor added successfully"

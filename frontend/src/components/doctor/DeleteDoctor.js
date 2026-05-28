@@ -6,7 +6,11 @@ export default function DeleteDoctor() {
     const navigate = useNavigate();
 
     let deleteHandler = () => {
-        axios.delete(`http://localhost:9002/api/doctors/delete/${id}`)
+        axios.delete(`http://localhost:9002/api/doctor/delete/${id}`,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 alert(res.data); // "Doctor deleted successfully"
                 navigate("/doctor/display"); // back to list

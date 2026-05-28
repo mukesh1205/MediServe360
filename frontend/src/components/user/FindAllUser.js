@@ -8,7 +8,11 @@ export default function FindAllUser(){
     async function notificationget(){
         let url="http://localhost:9002/user/fetchallusers"
         try{
-            let res=await axios.get(url);
+            let res=await axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                });
             setData(res.data);
         }catch(err){
             alert(err.message);
@@ -26,10 +30,10 @@ export default function FindAllUser(){
         navigate(`/user/update/${event.target.value}`)
     }
     return(
-        <div>
-            
-            <table border={2}>
-                <thead>
+        <div className="container mt-4">
+            <h2>All Users</h2>
+            <table className="table table-bordered table-striped mt-3">
+                <thead className="table-dark">
                     <tr>
                         <th>userId</th>
                         <th>User Name</th>
@@ -45,9 +49,9 @@ export default function FindAllUser(){
                                 <tr>
                                     <td>{m.userId}</td>
                                     <td>{m.userName}</td>
-                                    <td>{m.userRole}</td>
-                                    <td>{m.userEmail}</td>
-                                    <td>{m.userPhone}</td>
+                                    <td>{m.role}</td>
+                                    <td>{m.email}</td>
+                                    <td>{m.phoneNumber}</td>
                                     <button value={m.userId} onClick={deletehandler}>Delete</button>
                                     <button value={m.userId} onClick={edithandler}>Edit</button>
                                 </tr>
