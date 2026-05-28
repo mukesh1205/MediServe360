@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import {toast} from 'react-toastify';
 
 export default function DeleteInsuranceClaim() {
 
@@ -9,15 +10,20 @@ export default function DeleteInsuranceClaim() {
 
     useEffect(() => {
 
+        if (!window.confirm("Are you sure you want to delete this insurance claim?")) {
+                navigate("/insuranceClaim");
+                return;
+        }
+
         const url = "http://localhost:9002/api/deleteInsuranceClaim/" + claimId;
 
         axios.delete(url)
             .then((res) => {
-                alert("Insurance Claim deleted successfully");
-                navigate("/insuranceClaim");
+                toast.success("Insurance Claim deleted successfully");
+                navigate("/insuranceClaim/display");
             })
             .catch((err) => {
-                alert(err.message);
+                toast.error(err.message);
             });
 
     }, [claimId, navigate]); 

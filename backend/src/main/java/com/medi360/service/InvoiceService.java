@@ -15,6 +15,8 @@ import com.medi360.entities.Patient;
 import com.medi360.exception.InvoiceNotFoundException;
 import com.medi360.exception.PatientNotFoundException;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class InvoiceService {
 
@@ -37,17 +39,45 @@ public class InvoiceService {
 				.orElseThrow(() -> new InvoiceNotFoundException("Invoice not found with id " + id));
 	}
 	
-	public Invoice updateInvoice(Invoice invoice) throws InvoiceNotFoundException, PatientNotFoundException {
+//	public Invoice updateInvoice(Invoice invoice) throws InvoiceNotFoundException, PatientNotFoundException {
+//
+//		if (!invoiceRepository.existsById(invoice.getInvoiceId())) {
+//			throw new InvoiceNotFoundException("Invoice not found with id " + invoice.getInvoiceId());
+//		}
+//
+//		int patientId = invoice.getPatient().getPatientId();
+//		Patient patient = patientRepository.findById(patientId)
+//				.orElseThrow(() -> new PatientNotFoundException("Patient not found with id " + patientId));
+//		invoice.setPatient(patient);
+//		return this.invoiceRepository.save(invoice);
+//	}
+	
+	@Transactional
+	public Invoice updateInvoice(Invoice incoming)
+	        throws InvoiceNotFoundException, PatientNotFoundException {
 
-		if (!invoiceRepository.existsById(invoice.getInvoiceId())) {
-			throw new InvoiceNotFoundException("Invoice not found with id " + invoice.getInvoiceId());
-		}
+	    Invoice existing = invoiceRepository.findById(incoming.getInvoiceId())
+	        .orElseThrow(() ->
+	            new InvoiceNotFoundException(
+	                "Invoice not found with id " + incoming.getInvoiceId()
+	            )
+	        );
 
-		int patientId = invoice.getPatient().getPatientId();
-		Patient patient = patientRepository.findById(patientId)
-				.orElseThrow(() -> new PatientNotFoundException("Patient not found with id " + patientId));
-		invoice.setPatient(patient);
-		return this.invoiceRepository.save(invoice);
+	    int patientId = incoming.getPatient().getPatientId();
+	    Patient patient = patientRepository.findById(patientId)
+	        .orElseThrow(() ->
+	            new PatientNotFoundException("Patient not found with id " + patientId)
+	        );
+
+	    existing.setPatient(patient);
+	    existing.setAmount(incoming.getAmount());
+	    existing.setInvoiceDate(incoming.getInvoiceDate());
+	    existing.setPaymentStatus(incoming.getPaymentStatus());
+	    existing.setPaymentMode(incoming.getPaymentMode());
+	    existing.setAdjustmentAmount(incoming.getAdjustmentAmount());
+	    existing.setRefundStatus(incoming.getRefundStatus());
+
+	    return invoiceRepository.save(existing);
 	}
 
 	public Invoice updatePaymentStatus(int invoiceId, String paymentStatus, String paymentMode)

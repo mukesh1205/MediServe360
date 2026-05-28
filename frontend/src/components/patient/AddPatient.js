@@ -1,40 +1,47 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { toast } from "react-toastify";
 
 export default function AddPatient(){
-    let [patientName,setPatientName]=useState("");
-    let [patientDOB,setPatientDOB]=useState("");
-    let [patientGender,setPatientGender]=useState("");
-    let [patientPN,setPatientPN]=useState("");
-    let [patientMH,setPatientMH]=useState("");
-    let [patientStatus,setPatientStatus]=useState("");
+    const [patientName,setPatientName]=useState("");
+    const [patientDOB,setPatientDOB]=useState("");
+    const [patientGender,setPatientGender]=useState("");
+    const [patientPN,setPatientPN]=useState("");
+    const [patientMH,setPatientMH]=useState("");
+    const [patientStatus,setPatientStatus]=useState("");
 
-    let patientNameHandler=(event)=>{
+    const patientNameHandler=(event)=>{
         setPatientName(event.target.value);
     }
 
-    let patientDOBHandler=(event)=>{
+    const patientDOBHandler=(event)=>{
         setPatientDOB(event.target.value);
     }
 
-    let patientGenderHandler=(event)=>{
+    const patientGenderHandler=(event)=>{
         setPatientGender(event.target.value);
     }
 
-    let patientPNHandler=(event)=>{
+    const patientPNHandler=(event)=>{
         setPatientPN(event.target.value);
     }
 
-    let patientMHHandler=(event)=>{
+    const patientMHHandler=(event)=>{
         setPatientMH(event.target.value);
     }
 
-    let patientStatusHandler=(event)=>{
+    const patientStatusHandler=(event)=>{
         setPatientStatus(event.target.value);
     }
 
-    let buttonHandler=()=>{
+    const buttonHandler=()=>{
         let url="http://localhost:9002/api/addPatient";
+
+        if (!patientName || !patientDOB || !patientGender || !patientPN || !patientMH || !patientStatus) {
+            toast.warning("Please fill all fields");
+            return;
+        }
+
         let data={
             "patient":{
                 "patientName": patientName,
@@ -45,43 +52,128 @@ export default function AddPatient(){
                 "patientStatus": patientStatus
             }
         };
+
         axios.post(url,data)
             .then((response)=>{
-                alert("Patient Added successfully"+response.data);
+                toast.success("Patient Added successfully");
+                setPatientName("");
+                setPatientDOB("");
+                setPatientGender("");
+                setPatientPN("");
+                setPatientMH("");
+                setPatientStatus("");
+
             })
             .catch((error)=>{
-                alert(error.message);
+                toast.error(error.message);
             })
     }
 
     return(
-        <div>
-            <h3>Add Patient component</h3>
-            <label>Patient Name</label>
-            <input type='text' onChange={patientNameHandler} required/>
-            <br />
+        <div className='container mt-4'>
 
-            <label>Patient DOB</label>
-            <input type='date' onChange={patientDOBHandler} required/>
-            <br />
+            <h3 className="mb-4">Add Patient component</h3>
 
-            <label>Patient Gender</label>
-            <input type="text" onChange={patientGenderHandler} required/>
-            <br />
+            <div className='mb-3'>
+                <label className='form-label'>Patient Name</label>
+                <input 
+                    className='form-control' 
+                    type='text'
+                    value={patientName}
+                    placeholder="Enter patient name" 
+                    onChange={patientNameHandler} required
+                />
+            </div>
 
-            <label>Patient PhoneNumber</label>
-            <input type='text' onChange={patientPNHandler} required/>
-            <br />
+            <div className='mb-3'>
+                <label className='form-label'>Patient DOB</label>
+                <input 
+                    className='form-control' 
+                    type='date'
+                    value={patientDOB} 
+                    onChange={patientDOBHandler} required
+                />
+            </div>
 
-            <label>Patient MedicalHistory</label>
-            <textarea onChange={patientMHHandler} required></textarea>
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Patient Gender</label>
 
-            <label>Patient Status</label>
-            <textarea onChange={patientStatusHandler} required></textarea>
-            <br />
+                <div className="form-check">
+                    <input
+                        className="form-check-input"
+                        type="radio"
+                        name="gender"
+                        value="Male"
+                        checked={patientGender === "Male"}
+                        onChange={patientGenderHandler}
+                    />
+                    <label className="form-check-label">Male</label>
+                </div>
 
-            <button onClick={buttonHandler} >Add Patient</button>
+                <div className="form-check">
+                    <input
+                        className="form-check-input"
+                        type="radio"
+                        name="gender"
+                        value="Female"
+                        checked={patientGender === "Female"}
+                        onChange={patientGenderHandler}
+                    />
+                    <label className="form-check-label">Female</label>
+                </div>
+
+                <div className="form-check">
+                    <input
+                        className="form-check-input"
+                        type="radio"
+                        name="gender"
+                        value="Other"
+                        checked={patientGender === "Other"}
+                        onChange={patientGenderHandler}
+                    />
+                    <label className="form-check-label">Other</label>
+                </div>
+            </div>
+
+            <div className='mb-3'>
+                <label className='form-label'>Patient PhoneNumber</label>
+                <input 
+                    className='form-control' 
+                    type='tel'
+                    value={patientPN}
+                    placeholder="Enter patient phone number" 
+                    onChange={patientPNHandler} required/>
+            </div>
+
+            <div className='mb-3'>
+                <label className='form-label'>Patient MedicalHistory</label>
+                <textarea 
+                    className='form-control'
+                    value={patientMH}
+                    placeholder="Enter patient medical history" 
+                    onChange={patientMHHandler} 
+                    required 
+                />
+            </div>
+
+            <div className='mb-3'>
+                <label className='form-label'>Patient Status</label>
+
+                <select
+                    className='form-select'
+                    value={patientStatus}
+                    onChange={patientStatusHandler}
+                >
+                    <option value="">--Select Status--</option>
+                    <option value="Admitted">Admitted</option>
+                    <option value="Discharged">Discharged</option>
+                    <option value="Under Treatment">Under Treatment</option>
+                    <option value="Recovered">Recovered</option>
+                </select>
+            </div>
+
+
+            <button className='btn btn-primary w-100' onClick={buttonHandler} >Add Patient</button>
         </div>
     )
 } 

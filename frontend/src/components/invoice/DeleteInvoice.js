@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import {toast} from 'react-toastify';
 
 export default function DeleteInvoice() {
 
@@ -8,15 +9,19 @@ export default function DeleteInvoice() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (!window.confirm("Are you sure you want to delete this invoice?")) {
+                navigate("/invoice");
+                return;
+        }
         const url = "http://localhost:9002/api/deleteInvoice/" + iid;
 
         axios.delete(url)
             .then((res) => {
-                alert("Invoice deleted successfully");
+                toast.success("Invoice deleted successfully");
                 navigate("/invoice");
             })
             .catch((err) => {
-                alert(err.message);
+                toast.error(err.message);
             });
 
     }, [iid, navigate]);

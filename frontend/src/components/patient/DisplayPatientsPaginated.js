@@ -1,106 +1,151 @@
 import axios from "axios";
 import { useState } from "react";
+import {toast} from 'react-toastify';
+export default function DisplayPatientsPaginated() {
 
-export default function DisplayPatientsPaginated(){
+    const [records, setRecords] = useState([]);
+    const [pgno, setPgno] = useState("");
+    const [size, setSize] = useState("");
+    const [sorting, setSorting] = useState("");
+    const [asc, setAsc] = useState(true);
+    const [searched, setSearched] = useState(false);
 
-    const [records,setRecords]=useState([]);
-    const [pgno,setPgno] =useState(0);
-    const [size,setSize]=useState(0);
-    const [sorting,setSorting]=useState("");
-    const [asc,setAsc]=useState(true);
+    const buttonHandler = async () => {
+        try {
+            const url = "http://localhost:9002/api/fetchAllPatientsPaginated";
 
-    const buttonHandler=async()=>{
-        try{
-            const url="http://localhost:9002/api/fetchAllPatientsPaginated";
-            const params={
-                params:{
-                    pgno:pgno,
-                    size:size,
-                    sorting:sorting,
-                    asc:asc
-                }
+            if (pgno === "" || size === "" || sorting === "") {
+                toast.warning("Please enter page number, size, and sorting column");
+                return;
             }
-            const res=await axios.get(url,params);
+
+            const params = {
+                params: {
+                    pgno: pgno,
+                    size: size,
+                    sorting: sorting,
+                    asc: asc
+                }
+            };
+
+            const res = await axios.get(url, params);
             setRecords(res.data.content);
+            setSearched(true);
+        } catch (err) {
+            toast.error(err.message);
         }
-        catch(err){
-            alert(err.message);
-        }
-    }
-    
-    return(
-        <div>
-            <label>Enter Page NO</label>
-            <input type="number" onChange={e=>setPgno(Number(e.target.value))}/>
-            <br />
-            
-            <label>Enter size of Page</label>
-            <input type="number" onChange={e=>setSize(Number(e.target.value))}/>
-            <br />
-            
-            <label>Select sorting column</label>
-            <select onChange={e=>setSorting(e.target.value)}>
-                <option value="">--Select Column--</option>
-                <option value="patientId">Patient Id</option>
-                <option value="patientName" >Patient Name</option>
-                <option value="patientGender">Patient Gender</option>
-                <option value="patientDOB" >Patient DOB</option>
-            </select>
-            <br />
-            
-            <label>Order</label>
+    };
 
-            <input
-                type="radio"
-                name="sortOrder"
-                value="true"
-                checked={asc === true}
-                onChange={() => setAsc(true)}
-            />
-            <label>Ascending</label>
+    return (
+        <div className="container mt-4">
 
-            <input
-                type="radio"
-                name="sortOrder"
-                value="false"
-                checked={asc === false}
-                onChange={() => setAsc(false)}
-            />
-            <label>Descending</label>
-            <br />
-            <button onClick={buttonHandler}>Get Patients</button>
-            {records.length>0 &&(
-            <table border={1}>
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>DOB</th>
-                        <th>Gender</th>
-                        <th>Phone Number</th>
-                        <th>Medical History</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        records.map((e)=>{
-                            return(
+            <h3 className="mb-4">Display Patients Paginated</h3>
+
+            <div className="mb-3">
+                <label className="form-label">Page NO</label>
+                <input
+                    className="form-control"
+                    type="number"
+                    value={pgno}
+                    placeholder="Enter page number"
+                    onChange={e => setPgno(e.target.value === "" ? "" : Number(e.target.value))}
+                />
+            </div>
+
+            <div className="mb-3">
+                <label className="form-label">Page Size</label>
+                <input
+                    className="form-control"
+                    type="number"
+                    value={size}
+                    placeholder="Enter page size"
+                    onChange={e => setSize(e.target.value === "" ? "" : Number(e.target.value))}
+                />
+            </div>
+
+            <div className="mb-3">
+                <label className="form-label">Sorting column</label>
+                <select
+                    className="form-select"
+                    value={sorting}
+                    onChange={e => setSorting(e.target.value)}
+                >
+                    <option value="">--Select Column--</option>
+                    <option value="patientId">Patient Id</option>
+                    <option value="patientName">Patient Name</option>
+                    <option value="patientGender">Patient Gender</option>
+                    <option value="patientDOB">Patient DOB</option>
+                </select>
+            </div>
+
+            <div className="mb-3">
+                <label className="form-label">Order</label>
+
+                <div className="form-check">
+                    <input
+                        className="form-check-input"
+                        type="radio"
+                        name="sortOrder"
+                        checked={asc === true}
+                        onChange={() => setAsc(true)}
+                    />
+                    <label className="form-check-label">Ascending</label>
+                </div>
+
+                <div className="form-check">
+                    <input
+                        className="form-check-input"
+                        type="radio"
+                        name="sortOrder"
+                        checked={asc === false}
+                        onChange={() => setAsc(false)}
+                    />
+                    <label className="form-check-label">Descending</label>
+                </div>
+            </div>
+
+            <button
+                className="btn btn-primary w-100"
+                onClick={buttonHandler}
+                disabled={pgno === "" || size === "" || sorting === ""}
+            >
+                Get Patients
+            </button>
+
+            {searched && records.length === 0 && pgno !== "" && size !== "" && sorting !== "" && (
+                <p className="mt-3">No patients found</p>
+            )}
+
+            {records.length > 0 && (
+                <div className="table-responsive mt-4">
+                    <table className="table table-bordered table-striped table-hover mt-3">
+                        <thead className="table-dark">
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>DOB</th>
+                                <th>Gender</th>
+                                <th>Phone Number</th>
+                                <th>Medical History</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {records.map((e) => (
                                 <tr key={e.patientId}>
                                     <td>{e.patientId}</td>
                                     <td>{e.patientName}</td>
-                                    <td>{e.patientDOB}</td>
+                                    <td>{new Date(e.patientDOB).toLocaleDateString()}</td>
                                     <td>{e.patientGender}</td>
                                     <td>{e.patientPhoneNumber}</td>
                                     <td>{e.patientMedicalHistory}</td>
                                     <td>{e.patientStatus}</td>
                                 </tr>
-                            )
-                        })
-                    }
-                </tbody>
-            </table>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             )}
         </div>
-    )
+    );
 }

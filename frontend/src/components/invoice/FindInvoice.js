@@ -1,17 +1,22 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function FindInvoice() {
 
     const [invoiceId, setInvoiceId] = useState("");
     const [invoice, setInvoice] = useState(null);
+    const [searched,setSearched]=useState(false);
 
     const buttonHandler = async () => {
         try {
             if (!invoiceId) {
-                alert("Please enter Invoice ID");
+                toast.warning("Please enter Invoice ID");
                 return;
             }
+
+            setInvoice(null);
+            setSearched(false);
 
             const url = "http://localhost:9002/api/getInvoiceById/" + invoiceId;
             const res = await axios.get(url);
@@ -20,31 +25,49 @@ export default function FindInvoice() {
 
         } catch (err) {
             if (err.response && err.response.status === 404) {
-                alert.error(err.response.data.errorMessage || "Invoice not found");
                 setInvoice(null);
             } else {
-                alert(err.message);
+                toast.error(err.message);
             }
         }
+        setSearched(true);
     };
 
     return (
-        <div>
-            <h1>Find Invoice</h1>
+        <div className="container mt-4">
+            <h3 className="mb-4">Find Invoice by ID</h3>
 
-            <label>Enter Invoice ID</label>
-            <input
-                type="number"
-                onChange={(e) => setInvoiceId(e.target.value)}
-            />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Enter Invoice ID</label>
+                <input
+                    className="form-control"
+                    type="number"
+                    value={invoiceId}
+                    onChange={(e) => setInvoiceId(e.target.value)}
+                    onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                buttonHandler();
+                            }
+                    }}
+                />
+            </div>
 
-            <button onClick={buttonHandler}>Find</button>
+            <button
+                className="btn btn-primary w-100"
+                onClick={buttonHandler}
+                disabled={!invoiceId}
+            >
+                Find
+            </button>
+
+            {searched && !invoice && invoiceId && (
+                <p className="mt-3 text-danger">No records found</p>
+            )}
 
             {invoice && (
-                <div>
-                    <table border="1">
-                        <thead>
+                <div className="table-responsive">
+                    <table className="table table-bordered table-hover table-striped mt-3">
+                        <thead className="table-dark">
                             <tr>
                                 <th>Invoice Id</th>
                                 <th>Patient Id</th>
@@ -57,14 +80,13 @@ export default function FindInvoice() {
                                 <th>Refund Status</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             <tr>
                                 <td>{invoice.invoiceId}</td>
                                 <td>{invoice.patient?.patientId}</td>
                                 <td>{invoice.patient?.patientName}</td>
-                                <td>{invoice.amount}</td>
-                                <td>{invoice.invoiceDate}</td>
+                                <td>₹ {Number(invoice.amount).toFixed(2)}</td>
+                                <td>{new Date(invoice.invoiceDate).toLocaleDateString()}</td>
                                 <td>{invoice.paymentStatus}</td>
                                 <td>{invoice.paymentMode}</td>
                                 <td>{invoice.adjustmentAmount}</td>

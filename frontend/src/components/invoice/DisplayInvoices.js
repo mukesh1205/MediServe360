@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function DisplayInvoices() {
 
@@ -14,16 +15,20 @@ export default function DisplayInvoices() {
                 setInvoices(res.data);
             })
             .catch((err) => {
-                alert(err.message);
+                toast.error(err.message);
             });
     }, []);
 
     return (
-        <div>
-            <h3>Display All Invoices</h3>
+        <div className="container mt-4">
+            
+            <h3 className="mb-4">Display All Invoices</h3>
 
-            <table border={1}>
-                <thead>
+            {invoices.length === 0 ? (<p>No invoices found</p>):
+
+            (<div className="table-responsive">
+            <table className="table table-bordered table-striped table-hover mt-3">
+                <thead className="table-dark">
                     <tr>
                         <th>Invoice Id</th>
                         <th>Patient Id</th>
@@ -47,21 +52,21 @@ export default function DisplayInvoices() {
                             <td>{e.patient?.patientId}</td>
                             <td>{e.patient?.patientName}</td>
 
-                            <td>{e.amount}</td>
-                            <td>{e.invoiceDate}</td>
+                            <td>₹ {Number(e.amount).toFixed(2)}</td>
+                            <td>{new Date(e.invoiceDate).toLocaleDateString()}</td>
                             <td>{e.paymentStatus}</td>
                             <td>{e.paymentMode}</td>
-                            <td>{e.adjustmentAmount}</td>
+                            <td>₹ {Number(e.adjustmentAmount).toFixed(2)}</td>
                             <td>{e.refundStatus}</td>
 
-                            <td>
-                                <Link to={`/invoice/update/${e.invoiceId}`}>
+                            <td className="text-center">
+                                <Link className="btn btn-warning btn-sm" to={`/invoice/update/${e.invoiceId}`}>
                                     Update
                                 </Link>
                             </td>
 
-                            <td>
-                                <Link to={`/invoice/delete/${e.invoiceId}`}>
+                            <td className="text-center">
+                                <Link className="btn btn-danger btn-sm" to={`/invoice/delete/${e.invoiceId}`}>
                                     Delete
                                 </Link>
                             </td>
@@ -70,6 +75,7 @@ export default function DisplayInvoices() {
                 </tbody>
 
             </table>
+        </div>)}
         </div>
     );
 }

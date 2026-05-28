@@ -1,20 +1,25 @@
 import axios from "axios";
 import { useState } from "react";
+import {toast} from 'react-toastify';
 
 export default function AddInsuranceClaim() {
 
-    const [patientId, setPatientId] = useState(0);
+    const [patientId, setPatientId] = useState("");
     const [policyNumber, setPolicyNumber] = useState("");
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState("");
     const [status, setStatus] = useState("");
 
     const buttonHandler = () => {
 
         if (!patientId || !policyNumber || !amount || !status) {
-            alert("Please fill all fields");
+            toast.warning("Please fill all fields");
             return;
         }
 
+        if(amount<0){
+            toast.info("Amount mus be greater than 0");
+            return;
+        }
         const url = "http://localhost:9002/api/addInsuranceClaim";
 
         const data = {
@@ -29,62 +34,75 @@ export default function AddInsuranceClaim() {
         };
 
         axios.post(url, data)
-            .then((res) => {
-                alert("Insurance Claim added successfully");
-                console.log(res.data);
+            .then(() => {
+                toast.success("Insurance Claim added successfully");
 
-                // ✅ optional: clear form
-                setPatientId(0);
+                setPatientId("");
                 setPolicyNumber("");
-                setAmount(0);
+                setAmount("");
                 setStatus("");
             })
             .catch((err) => {
-                alert(err.message);
+                toast.error(err.message);
             });
     };
 
     return (
-        <div>
-            <h3>Add Insurance Claim</h3>
+        <div className="container mt-4">
+            <h3 className="mb-4">Add Insurance Claim</h3>
 
-            <label>Patient ID</label>
-            <input
-                type="number"
-                value={patientId}
-                onChange={(e) => setPatientId(Number(e.target.value))}
-            />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Patient ID</label>
+                <input
+                    type="number"
+                    className="form-control"
+                    placeholder="Enter patient ID"
+                    value={patientId}
+                    onChange={(e) => setPatientId(e.target.value === "" ? "" : Number(e.target.value))}
+                />
+            </div>
 
-            <label>Policy Number</label>
-            <input
-                type="text"
-                value={policyNumber}
-                onChange={(e) => setPolicyNumber(e.target.value)}
-            />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Policy Number</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter policy number"
+                    value={policyNumber}
+                    onChange={(e) => setPolicyNumber(e.target.value)}
+                />
+            </div>
 
-            <label>Claim Amount</label>
-            <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-            />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Claim Amount</label>
+                <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    className="form-control"
+                    placeholder="Enter claim amount"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value === "" ? "" : Number(e.target.value))}
+                />
+            </div>
 
-            <label>Status</label>
-            <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-            >
-                <option value="">--Select--</option>
-                <option value="SUBMITTED">SUBMITTED</option>
-                <option value="APPROVED">APPROVED</option>
-                <option value="REJECTED">REJECTED</option>
-            </select>
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Status</label>
+                <select
+                    className="form-select"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                >
+                    <option value="">--Select--</option>
+                    <option value="SUBMITTED">SUBMITTED</option>
+                    <option value="APPROVED">APPROVED</option>
+                    <option value="REJECTED">REJECTED</option>
+                </select>
+            </div>
 
-            <button onClick={buttonHandler}>Add Insurance Claim</button>
+            <button className="btn btn-primary w-100" onClick={buttonHandler}>
+                Add Insurance Claim
+            </button>
         </div>
     );
 }

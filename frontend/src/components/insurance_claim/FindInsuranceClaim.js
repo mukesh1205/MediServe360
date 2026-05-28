@@ -1,50 +1,73 @@
 import { useState } from "react";
 import axios from "axios";
+import {toast} from 'react-toastify';
 
 export default function FindInsuranceClaim() {
 
     const [claimId, setClaimId] = useState("");
     const [claim, setClaim] = useState(null);
+    const [searched,setSearched]=useState(false);
 
     const buttonHandler = async () => {
         try {
             if (!claimId) {
-                alert("Please enter Insurance Claim ID");
+                toast.warning("Please enter Insurance Claim ID");
                 return;
             }
 
+            setClaim(null);
+            setSearched(false);
             const url = "http://localhost:9002/api/getInsuranceClaimById/" + claimId;
             const res = await axios.get(url);
 
             setClaim(res.data.insuranceClaim);
+            
 
         } catch (err) {
             if (err.response && err.response.status === 404) {
-                alert.error(err.response.data.errorMessage || "Insurance Claim not found");
                 setClaim(null);
             } else {
-                alert(err.message);
+                toast.error(err.message);
             }
         }
+        setSearched(true);
     };
 
     return (
-        <div>
-            <h1>Find Insurance Claim</h1>
+        <div className="container mt-4">
+            <h3 className="mb-4">Find Insurance Claim</h3>
 
-            <label>Enter Insurance Claim ID</label>
-            <input
-                type="number"
-                onChange={(e) => setClaimId(e.target.value)}
-            />
-            <br />
+            <div className="mb-3">
+                <label className="form-label">Enter Insurance Claim ID</label>
+                <input
+                    className="form-control"
+                    type="number"
+                    value={claimId}
+                    onChange={(e) => setClaimId(e.target.value)}
+                    onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                buttonHandler();
+                            }
+                    }}
+                />
+            </div>
 
-            <button onClick={buttonHandler}>Find</button>
+            <button
+                className="btn btn-primary w-100"
+                onClick={buttonHandler}
+                disabled={!claimId}
+            >
+                Find
+            </button>
+
+            {searched && !claim && claimId && (
+                <p className="mt-3 text-danger">No records found</p>
+            )}
 
             {claim && (
-                <div>
-                    <table border="1">
-                        <thead>
+                <div className="table-responsive">
+                    <table className="table table-bordered table-hover table-striped mt-3">
+                        <thead className="table-dark">
                             <tr>
                                 <th>Claim Id</th>
                                 <th>Patient Id</th>
@@ -61,7 +84,7 @@ export default function FindInsuranceClaim() {
                                 <td>{claim.patient?.patientId}</td>
                                 <td>{claim.patient?.patientName}</td>
                                 <td>{claim.policyNumber}</td>
-                                <td>{claim.amount}</td>
+                                <td>₹ {Number(claim.amount).toFixed(2)}</td>
                                 <td>{claim.status}</td>
                             </tr>
                         </tbody>

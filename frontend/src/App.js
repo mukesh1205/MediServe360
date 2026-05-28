@@ -1,6 +1,10 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // Appointment
 import AppointmentHome from './components/appointment/AppointmentHome';
 import AddAppointment from './components/appointment/AddAppointment';
@@ -113,9 +117,9 @@ import NotificationPage from './components/notification/NotificationPage'
 function App() {
   return (
     <Router>
-
+        <ToastContainer />
       <Routes>
-
+        
         {/* Appointment */}
         <Route path="/appointment" element={<AppointmentHome/>}>
             <Route path="add" element={<AddAppointment/>}></Route>
