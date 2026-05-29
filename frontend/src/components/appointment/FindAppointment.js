@@ -13,9 +13,13 @@ export default function FindAppointment() {
             return;
         }
 
-        let url = `http://localhost:9002/api/appointments/get/${id}`;
+        let url = `http://localhost:9002/api/appointment/get/${id}`;
 
-        axios.get(url)
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 // ✅ Backend returns AppointmentResponseDTO with "appointment" field
                 setAppointment(res.data.appointment);

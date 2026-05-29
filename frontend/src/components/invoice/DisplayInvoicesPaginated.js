@@ -1,117 +1,148 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function DisplayInvoicesPaginated() {
 
     const [records, setRecords] = useState([]);
     const [pgno, setPgno] = useState(0);
-    const [size, setSize] = useState(0);
-    const [sorting, setSorting] = useState("");
+    const [totalPages, setTotalPages] = useState(0);
+    const size = 10;
+
+    const [sorting, setSorting] = useState("invoiceId");
     const [asc, setAsc] = useState(true);
+    const [loading, setLoading] = useState(false);
 
-    const buttonHandler = async () => {
+    const fetchInvoices = async (page = pgno, sortCol = sorting, order = asc) => {
         try {
-            const url = "http://localhost:9002/api/fetchAllInvoicesPaginated";
+            setLoading(true);
 
-            const params = {
+            const url = "http://localhost:9002/api/invoice/fetchAllInvoicesPaginated";
+
+            const res = await axios.get(url, {
                 params: {
-                    pgno: pgno,
+                    pgno: page,
                     size: size,
-                    sorting: sorting,
-                    asc: asc
+                    sorting: sortCol,
+                    asc: order
+                },
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
                 }
-            };
+            });
 
-            const res = await axios.get(url, params);
-            setRecords(res.data.content);
+            setRecords(res.data.content || []);
+            setPgno(res.data.number);
+            setTotalPages(res.data.totalPages);
 
         } catch (err) {
-            console.error(err);
+            toast.error(err.response?.data || err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
+    useEffect(() => {
+        fetchInvoices(0);
+    }, []);
+
+    const handleSort = (column) => {
+        if (sorting === column) {
+            const newAsc = !asc;
+            setAsc(newAsc);
+            fetchInvoices(pgno, column, newAsc);
+        } else {
+            setSorting(column);
+            setAsc(true);
+            fetchInvoices(pgno, column, true);
+        }
+    };
+
+    const sortArrow = (column) => {
+        if (sorting !== column) return "";
+        return asc ? " ↑" : " ↓";
+    };
+
     return (
-        <div>
-            <h3>Display Invoices (Paginated)</h3>
+        <div className="container mt-4">
+            <h3 className="mb-4">Display Invoices (Paginated)</h3>
 
-            <label>Enter Page No</label>
-            <input
-                type="number"
-                onChange={(e) => setPgno(Number(e.target.value))}
-            />
-            <br />
+            {loading && <p>Loading...</p>}
 
-            <label>Enter Page Size</label>
-            <input
-                type="number"
-                onChange={(e) => setSize(Number(e.target.value))}
-            />
-            <br />
-
-            <label>Select Sorting Column</label>
-            <select onChange={(e) => setSorting(e.target.value)}>
-                <option value="">--Select Column--</option>
-                <option value="invoiceId">Invoice Id</option>
-                <option value="amount">Amount</option>
-                <option value="invoiceDate">Invoice Date</option>
-                <option value="paymentStatus">Payment Status</option>
-                <option value="paymentMode">Payment Mode</option>
-            </select>
-            <br />
-
-            <label>Order</label>
-
-            <input
-                type="radio"
-                name="sortOrder"
-                checked={asc === true}
-                onChange={() => setAsc(true)}
-            />
-            <label>Ascending</label>
-
-            <input
-                type="radio"
-                name="sortOrder"
-                checked={asc === false}
-                onChange={() => setAsc(false)}
-            />
-            <label>Descending</label>
-
-            <br />
-            <button onClick={buttonHandler}>Get Invoices</button>
+            {!loading && records.length === 0 && (
+                <p className="text-danger">No invoices found</p>
+            )}
 
             {records.length > 0 && (
-                <table border={1}>
-                    <thead>
-                        <tr>
-                            <th>Invoice Id</th>
-                            <th>Patient Id</th>
-                            <th>Patient Name</th>
-                            <th>Amount</th>
-                            <th>Invoice Date</th>
-                            <th>Payment Status</th>
-                            <th>Payment Mode</th>
-                            <th>Adjustment Amount</th>
-                            <th>Refund Status</th>
-                        </tr>
-                    </thead>
+                <>
+                    <div className="table-responsive">
+                        <table className="table table-bordered table-hover table-striped">
+                            <thead className="table-dark">
+                                <tr>
+                                    <th onClick={() => handleSort("invoiceId")} style={{ cursor: "pointer" }}>
+                                        Invoice Id{sortArrow("invoiceId")}
+                                    </th>
+                                    <th onClick={() => handleSort("amount")} style={{ cursor: "pointer" }}>
+                                        Amount{sortArrow("amount")}
+                                    </th>
+                                    <th onClick={() => handleSort("invoiceDate")} style={{ cursor: "pointer" }}>
+                                        Invoice Date{sortArrow("invoiceDate")}
+                                    </th>
+                                    <th onClick={() => handleSort("paymentStatus")} style={{ cursor: "pointer" }}>
+                                        Payment Status{sortArrow("paymentStatus")}
+                                    </th>
+                                    <th onClick={() => handleSort("paymentMode")} style={{ cursor: "pointer" }}>
+                                        Payment Mode{sortArrow("paymentMode")}
+                                    </th>
+                                    <th onClick={() => handleSort("refundStatus")} style={{ cursor: "pointer" }}>
+                                        Refund Status{sortArrow("refundStatus")}
+                                    </th>
+                                    <th>Patient Id</th>
+                                    <th>Patient Name</th>
+                                    <th>Adjustment</th>
+                                </tr>
+                            </thead>
 
-                    <tbody>
-                        {records.map((e) => (
-                            <tr key={e.invoiceId}>
-                                <td>{e.invoiceId}</td>
-                                <td>{e.patient?.patientId}</td>
-                                <td>{e.patient?.patientName}</td>
-                                <td>{e.amount}</td>
-                                <td>{e.invoiceDate}</td>
-                                <td>{e.paymentStatus}</td>
-                                <td>{e.paymentMode}</td>
-                                <td>{e.adjustmentAmount}</td>
-                                <td>{e.refundStatus}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                            <tbody>
+                                {records.map((e) => (
+                                    <tr key={e.invoiceId}>
+                                        <td>{e.invoiceId}</td>
+                                        <td>₹ {Number(e.amount).toFixed(2)}</td>
+                                        <td>{new Date(e.invoiceDate).toLocaleDateString()}</td>
+                                        <td>{e.paymentStatus}</td>
+                                        <td>{e.paymentMode}</td>
+                                        <td>{e.refundStatus}</td>
+                                        <td>{e.patient?.patientId}</td>
+                                        <td>{e.patient?.patientName}</td>
+                                        <td>{e.adjustmentAmount}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="d-flex justify-content-between mt-3">
+                        <button
+                            className="btn btn-secondary"
+                            disabled={pgno === 0 || loading}
+                            onClick={() => fetchInvoices(pgno - 1)}
+                        >
+                            Prev
+                        </button>
+
+                        <span className="align-self-center">
+                            Page {pgno + 1} of {totalPages}
+                        </span>
+
+                        <button
+                            className="btn btn-secondary"
+                            disabled={pgno >= totalPages - 1 || loading}
+                            onClick={() => fetchInvoices(pgno + 1)}
+                        >
+                            Next
+                        </button>
+                    </div>
+                </>
             )}
         </div>
     );

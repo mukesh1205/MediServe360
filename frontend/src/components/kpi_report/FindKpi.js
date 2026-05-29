@@ -1,10 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function FindKpi(){
+export default function FindKpi() {
 
     const [scope, setScope] = useState("");
     const [records, setRecords] = useState([]);
+    const [error, setError] = useState("");
 
     const scopeHandler = (e) => {
         setScope(e.target.value);
@@ -12,13 +13,16 @@ export default function FindKpi(){
 
     const buttonHandler = async () => {
         try {
-            let url = "http://localhost:9002/api/fetchAllKPIReports";
+            let url = "http://localhost:9002/api/kpi-report/fetchAllKPIReports";
 
-            let res = await axios.get(url);
+            let res = await axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                });
 
             let kpis = res.data;
 
-            // ✅ filter manually
             if (scope.trim()) {
                 kpis = kpis.filter((e) =>
                     e.kpiReportScope.toLowerCase().includes(scope.toLowerCase())
@@ -26,30 +30,38 @@ export default function FindKpi(){
             }
 
             if (kpis.length === 0) {
-                alert("No KPI Found");
+                setError("No KPI Found");
             }
 
             setRecords(kpis);
 
         } catch (err) {
             console.error(err);
-            alert("Something went wrong");
+            setError(err.response?.data || "Something went wrong");
         }
     };
 
-    return(
-        <div>
-            <h1>This is Find Kpi component</h1>
+    return (
+        <div className="container mt-4">
+            <h2>Find KPI Report</h2>
 
-            <label>Enter Scope</label>
-            <input type="text" onChange={scopeHandler}/>
-            <br />
+            <div className="input-group mb-3">
+                <input
+                    className="form-control"
+                    placeholder="Enter Scope"
+                    value={scope}
+                    onChange={scopeHandler}
+                />
+                <button className="btn btn-primary" onClick={buttonHandler}>
+                    Search
+                </button>
+            </div>
 
-            <button onClick={buttonHandler}>Find</button>
+            {error && <div className="alert alert-danger">{error}</div>}
 
             {records.length > 0 && (
-                <table border="1">
-                    <thead>
+                <table className="table table-bordered table-striped mt-3">
+                    <thead className="table-dark">
                         <tr>
                             <th>KPI ID</th>
                             <th>Scope</th>
@@ -60,21 +72,19 @@ export default function FindKpi(){
                     </thead>
 
                     <tbody>
-                        {
-                            records.map((e) => (
-                                <tr key={e.kpiId}>
-                                    <td>{e.kpiId}</td>
-                                    <td>{e.kpiReportScope}</td>
-                                    <td>{e.kpiMetrics}</td>
-                                    <td>{e.kpiGeneratedDate}</td>
-                                    <td>
-                                        {e.complianceReport
-                                            ? e.complianceReport.reportId
-                                            : "N/A"}
-                                    </td>
-                                </tr>
-                            ))
-                        }
+                        {records.map((e) => (
+                            <tr key={e.kpiId}>
+                                <td>{e.kpiId}</td>
+                                <td>{e.kpiReportScope}</td>
+                                <td>{e.kpiMetrics}</td>
+                                <td>{e.kpiGeneratedDate}</td>
+                                <td>
+                                    {e.complianceReport
+                                        ? e.complianceReport.reportId
+                                        : "N/A"}
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             )}

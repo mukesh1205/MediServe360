@@ -5,7 +5,6 @@ export default function UserPage(){
 
     const [data,setData]=useState([]);
     const [count,setCount]=useState(0);
-    const [totalElements,setTotalElements]=useState(0);
     const [totalPages,setTotalPages]=useState(0);
 
     const size=6;
@@ -21,32 +20,35 @@ export default function UserPage(){
         }
     }
 
-    async function fetchfunction(){
-        let url=`http://localhost:9002/user/fetchAllUsersPaginated`;
-        const params={
-                params:{
-                    pgno:count,
-                    size:size,
-                    sorting:"userId",
-                    asc:true
-                }
+    async function fetchfunction() {
+    let url = `http://localhost:9002/user/fetchAllUsersPaginated`;
+    
+    try {
+        let res = await axios.get(url, {
+            params: {
+                pgno: count,
+                size: size,
+                sorting: "userId",
+                asc: true
+            },
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
             }
-        try{
-            let res=await axios.get(url,params);
-            setData(res.data.content);
-            setTotalElements(res.data.totalElements);
-            setTotalPages(res.data.totalPages);
-        }catch(err){
-            alert(err.message);
-        }
+        });
+        
+        setData(res.data.content);
+        setTotalPages(res.data.totalPages);
+    } catch (err) {
+        alert(err.message);
     }
+}
     useEffect(()=>{
         fetchfunction();
     },[count])
     return(
-        <div>
-            <table border={1}>
-                <thead>
+        <div className="container mt-4 table-responsive">
+            <table className="table table-bordered table-striped mt-3">
+                <thead className="table-dark">
                     <tr>
                         <th>userId</th>
                         <th>user Name</th>

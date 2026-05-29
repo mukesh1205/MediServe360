@@ -28,7 +28,7 @@ import com.medi360.service.InsuranceClaimService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/insurance")
 public class InsuranceClaimController {
 	@Autowired
 	InsuranceClaimService insuranceClaimService;

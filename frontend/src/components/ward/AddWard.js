@@ -20,7 +20,7 @@ export default function AddWard() {
     }
 
     let saveHandler = () => {
-        let url = "http://localhost:9002/ward/create";
+        let url = "http://localhost:9002/api/ward/create";
         let data = {
             "ward": {
                 "wardname": wardName,
@@ -29,7 +29,11 @@ export default function AddWard() {
             }
         };
 
-        axios.post(url, data)
+        axios.post(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 alert("Ward created successfully! Ward ID: " + response.data.ward.wardId);
             })

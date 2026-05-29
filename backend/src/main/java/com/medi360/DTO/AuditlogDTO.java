@@ -1,17 +1,27 @@
 package com.medi360.DTO;
 
-import com.medi360.entities.AuditLog;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class AuditlogDTO {
 	
-	private AuditLog auditLog;
-
-	public AuditLog getAuditLog() {
-		return auditLog;
+	@NotNull(message="User ID is required")
+	private int userId;
+	@NotBlank(message="Action is required")
+	private String action;
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+	public String getAction() {
+		return action;
+	}
+	public void setAction(String action) {
+		this.action = action;
 	}
 
-	public void setAuditLog(AuditLog auditLog) {
-		this.auditLog = auditLog;
-	}
+	
 	
 }

@@ -19,8 +19,12 @@ export default function UpdateBed() {
     }
 
     useEffect(() => {
-        let url = `http://localhost:9002/bed/getBed/${bedId}`;
-        axios.get(url)
+        let url = `http://localhost:9002/api/beds/getBed/${bedId}`;
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 setBedStatus(res.data.bed.bedStatus);
                 setWardId(res.data.bed.ward?.wardId || "");
@@ -31,7 +35,7 @@ export default function UpdateBed() {
     }, []);
 
     let updateButtonHandler = () => {
-        let url = "http://localhost:9002/bed/updateBed";
+        let url = "http://localhost:9002/api/beds/updateBed";
         let data = {
             "bed": {
                 "bedId": parseInt(bedId),
@@ -39,7 +43,11 @@ export default function UpdateBed() {
                 ...(wardId && { "ward": { "wardId": parseInt(wardId) } })
             }
         };
-        axios.put(url, data)
+        axios.put(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 alert("Bed updated successfully");
                 navigate("/bed/all");

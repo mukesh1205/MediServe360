@@ -20,7 +20,7 @@ import com.medi360.DTO.AppointmentResponseDTO;
 import com.medi360.service.AppointmentService;
 
 @RestController
-@RequestMapping("/api/appointments")
+@RequestMapping("/api/appointment")
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
@@ -36,7 +36,7 @@ public class AppointmentController {
                DoctorNotFoundException,
                SlotNotAvailableException 
 {
-
+    		System.out.println("okk");
         Appointment appointment =
                 appointmentService.addAppointment(appointmentDTO.getAppointment());
 

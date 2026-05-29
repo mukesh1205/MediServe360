@@ -1,25 +1,36 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+import {toast} from 'react-toastify';
 
 export default function DisplayPatients(){
-    let [patient,setPatient]=useState([]);
+    const [patients,setPatients]=useState([]);
 
     useEffect(()=>{
-        let url="http://localhost:9002/api/fetchAllPatients";
-        axios.get(url)
+        let url="http://localhost:9002/api/patient/fetchAllPatients";
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                })
             .then((res)=>{
-                setPatient(res.data);
+                setPatients(res.data);
             })
             .catch((err)=>{
-                console.error(err);
+                toast.error(err.message);
             })
     },[])
     return(
-        <div>
-            <h3>Display all Patients</h3>
-            <table border={1}>
-                <thead>
+        <div className="container mt-4">
+            
+            <h3 className="mb-4">Display all Patients</h3>
+            
+            {patients.length === 0 ? (
+            <p>No patients found</p>
+            ) :
+            (<div className="table-responsive">
+            <table className="table table-bordered table-hover table-striped mt-3">
+                <thead className="table-dark">
                     <tr>
                         <th>Id</th>
                         <th>Name</th>
@@ -28,27 +39,27 @@ export default function DisplayPatients(){
                         <th>Phone Number</th>
                         <th>Medical History</th>
                         <th>Status</th>
-                        <th>Edit</th>
+                        <th>Update</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        patient.map((e)=>{
+                        patients.map((e)=>{
                             return(
                                 <tr key={e.patientId}>
                                     <td>{e.patientId}</td>
                                     <td>{e.patientName}</td>
-                                    <td>{e.patientDOB}</td>
+                                    <td>{new Date(e.patientDOB).toLocaleDateString()}</td>
                                     <td>{e.patientGender}</td>
                                     <td>{e.patientPhoneNumber}</td>
                                     <td>{e.patientMedicalHistory}</td>
                                     <td>{e.patientStatus}</td>
-                                    <td>
-                                        <Link to={"/patient/update/"+e.patientId}>Edit</Link>
+                                    <td className="text-center">
+                                        <Link className="btn btn-warning btn-sm" to={"/patient/update/"+e.patientId}>Update</Link>
                                     </td>
-                                    <td>
-                                        <Link to={"/patient/delete/"+e.patientId}>Delete</Link>
+                                    <td className="text-center">
+                                        <Link className="btn btn-danger btn-sm" to={"/patient/delete/"+e.patientId}>Delete</Link>
                                     </td>
                                 </tr>
                             )
@@ -56,6 +67,7 @@ export default function DisplayPatients(){
                     }
                 </tbody>
             </table>
+        </div>)}
         </div>
     )
 }

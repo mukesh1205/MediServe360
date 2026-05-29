@@ -34,40 +34,25 @@ public class UserController {
 	
 	@PostMapping("/insertuserdata")
 	public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserDTO userDto) {
-		
-		
-		User u=this.us.addUser(userDto.getUser());
-		UserResponseDTO urd=new UserResponseDTO();
-		
-		urd.setUser(u);
-		urd.setStatusCode(201);
-		urd.setMessage("Successfully added");
-		
-		return ResponseEntity.status(201).body(urd);
+		System.out.println(userDto.getPassword());
+		return ResponseEntity.ok(us.addUser(userDto));
 	}
 	
-	@PutMapping("/updateuser")
-	public ResponseEntity<UserResponseDTO> updateUser(@RequestBody UserDTO userDto) throws UserNotFoundException{
-		
-		User u=this.us.updateUser(userDto.getUser());
-		UserResponseDTO urd=new UserResponseDTO();
-		
-		urd.setUser(u);
-		urd.setMessage("Successfully updated user");
-		urd.setStatusCode(200);
-		
-		return ResponseEntity.status(200).body(urd);
+	@PutMapping("/updateuser/{id}")
+	public ResponseEntity<UserResponseDTO> updateUser(@PathVariable int id,@RequestBody UserDTO userDto) {
+		System.out.println(id);
+		return ResponseEntity.ok(us.updateUser(id, userDto));
 	}
 	
-	@DeleteMapping("/deleteuser/{uid}")
-	public String deleteUser(@PathVariable int uid) throws UserNotFoundException{
-		
-		return this.us.deleteUser(uid);
+	@DeleteMapping("/deleteuser/{id}")
+	public String deleteUser(@PathVariable int id) throws UserNotFoundException{
+		System.out.println(id);
+		return this.us.deleteUser(id);
 	}
 	
 	@GetMapping("/fetchallusers")
-	public List<User> getAllUser(){
-		return this.us.getAllUser();
+	public ResponseEntity<List<UserResponseDTO>> getAllUser(){
+		return ResponseEntity.ok(us.getAllUser());
 	}
 	
 	@GetMapping("/fetchAllUsersPaginated")
@@ -83,16 +68,22 @@ public class UserController {
 	
 	@GetMapping("/findbyid/{id}")
 	public ResponseEntity<UserResponseDTO> findById(@PathVariable int id) throws UserNotFoundException{
-		User u=this.us.findById(id);
-		UserResponseDTO dto=new UserResponseDTO();
 		
-		dto.setUser(u);
-		dto.setStatusCode(200);
-		dto.setMessage("Successfully retreived data by userid");
-		
-		return ResponseEntity.status(200).body(dto);
+		return ResponseEntity.ok(us.findById(id));
 	}
 	
+	public UserResponseDTO userresponse(User u) {
+		UserResponseDTO udto=new UserResponseDTO();
+		udto.setEmail(u.getUserEmail());
+		udto.setPhoneNumber(u.getUserPhone());
+		udto.setRole(u.getUserRole());
+		udto.setUserId(u.getUserId());
+		udto.setUserName(u.getUserName());
+		
+		return udto;
+		
+		
+	}
 	
 	
 }

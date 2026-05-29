@@ -1,30 +1,49 @@
 package com.medi360.DTO;
 
-import com.medi360.entities.AuditLog;
+import java.time.LocalDateTime;
+
 
 public class AuditlogResponseDTO {
 	
-	private AuditLog auditlog;
-	private int statusCode;
-	private String message;
-	public AuditLog getAuditlog() {
-		return auditlog;
+	private String action;
+	private int auditId;
+	private int userId;
+	
+	private LocalDateTime timestamp;
+
+	public String getAction() {
+		return action;
 	}
-	public void setAuditlog(AuditLog auditlog) {
-		this.auditlog = auditlog;
+
+	public void setAction(String action) {
+		this.action = action;
 	}
-	public int getStatusCode() {
-		return statusCode;
+
+	public int getAuditId() {
+		return auditId;
 	}
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
+
+	public void setAuditId(int auditId) {
+		this.auditId = auditId;
 	}
-	public String getMessage() {
-		return message;
+
+	public int getUserId() {
+		return userId;
 	}
-	public void setMessage(String message) {
-		this.message = message;
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
+
+	public LocalDateTime getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(LocalDateTime timestamp) {
+		this.timestamp = timestamp;
+	}
+	
+	
 	
 	
 }

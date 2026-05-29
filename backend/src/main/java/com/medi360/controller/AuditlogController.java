@@ -10,13 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.medi360.DTO.AuditlogDTO;
 import com.medi360.DTO.AuditlogResponseDTO;
 import com.medi360.entities.AuditLog;
 import com.medi360.exception.AuditNotFoundException;
@@ -29,18 +26,18 @@ public class AuditlogController {
 	@Autowired
 	private AuditlogService as;
 	
-	@PostMapping("/insertauditlog")
-	public ResponseEntity<AuditlogResponseDTO> addAuditlog(@RequestBody AuditlogDTO ald){
-		AuditLog a=this.as.addAuditlog(ald.getAuditLog());
-		
-		AuditlogResponseDTO dto=new AuditlogResponseDTO();
-		
-		dto.setAuditlog(a);
-		dto.setMessage("Successfully added auditlog");
-		dto.setStatusCode(201);
-		
-		return ResponseEntity.status(201).body(dto);
-	}
+//	@PostMapping("/insertauditlog")
+//	public ResponseEntity<AuditlogResponseDTO> addAuditlog(@RequestBody AuditlogDTO ald){
+//		AuditLog a=this.as.addAuditlog(ald);
+//		
+//		AuditlogResponseDTO dto=new AuditlogResponseDTO();
+//		
+//		dto.setAuditlog(a);
+//		dto.setMessage("Successfully added auditlog");
+//		dto.setStatusCode(201);
+//		
+//		return ResponseEntity.status(201).body(dto);
+//	}
 	
 //	@PutMapping("/updateauditlog")
 //	public ResponseEntity<AuditlogResponseDTO> updateAuditlog(@RequestBody AuditlogDTO ald){
@@ -61,8 +58,9 @@ public class AuditlogController {
 //	}
 	
 	@GetMapping("/fetchallauditlog")
-	public List<AuditLog> getAllAuditlog(){
-		return this.as.getAllAuditlog();
+	public ResponseEntity<List<AuditlogResponseDTO>> getAllAuditlog(){
+		System.out.println("okk got it");
+		return ResponseEntity.ok(this.as.getAllAuditlog());
 	}
 	
 	@GetMapping("/fetchAllAuditlogsPaginated")
@@ -77,8 +75,8 @@ public class AuditlogController {
 	}
 	
 	@GetMapping("/findauditlogbyid/{id}")
-	public AuditLog findById(@PathVariable int id) throws AuditNotFoundException{
-		return this.as.findById(id);
+	public ResponseEntity<AuditlogResponseDTO> findById(@PathVariable int id) throws AuditNotFoundException{
+		return ResponseEntity.ok(this.as.findById(id));
 	}
 	
 	@GetMapping("/findAllAuditsOfUser/{id}")

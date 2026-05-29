@@ -27,14 +27,14 @@ import com.medi360.exception.BedNotFoundException;
 import com.medi360.service.BedService;
 
 @RestController
-@RequestMapping("/bed")
+@RequestMapping("/api/beds")
 public class BedController {
 	@Autowired
 	private BedService bedService;
 
 	@PostMapping("/create")
-
 	public ResponseEntity<BedResponseDTO> createBed(@RequestBody BedDTO bedDTO) {
+		System.out.println("Okkk");
 		Bed bed = bedService.createBed(bedDTO.getBed());
 		BedResponseDTO response = new BedResponseDTO();
 

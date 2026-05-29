@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,27 +32,22 @@ public class NotificationController {
 	
 	@PostMapping("/insertnotificationdata")
 	public ResponseEntity<NotificationResponseDTO> addNotification(@RequestBody NotificationDTO notificationDto) {
-		Notification u=this.ns.addNotification(notificationDto.getNotification());
-		NotificationResponseDTO urd=new NotificationResponseDTO();
 		
-		urd.setNotification(u);
-		urd.setStatusCode(201);
-		urd.setMessage("Successfully added");
 		
-		return ResponseEntity.status(201).body(urd);
+		return ResponseEntity.ok(this.ns.addNotification(notificationDto));
 	}
 	
-	@PutMapping("/updatenotification")
-	public ResponseEntity<NotificationResponseDTO> updateUser(@RequestBody NotificationDTO notificationDto) throws NotificationNotfoundException{
-		Notification u=this.ns.updateNotification(notificationDto.getNotification());
-		NotificationResponseDTO urd=new NotificationResponseDTO();
-		
-		urd.setNotification(u);
-		urd.setMessage("Successfully updated notification");
-		urd.setStatusCode(200);
-		
-		return ResponseEntity.status(200).body(urd);
-	}
+//	@PutMapping("/updatenotification")
+//	public ResponseEntity<NotificationResponseDTO> updateUser(@RequestBody NotificationDTO notificationDto) throws NotificationNotfoundException{
+//		Notification u=this.ns.updateNotification(notificationDto.getNotification());
+//		NotificationResponseDTO urd=new NotificationResponseDTO();
+//		
+//		urd.setNotification(u);
+//		urd.setMessage("Successfully updated notification");
+//		urd.setStatusCode(200);
+//		
+//		return ResponseEntity.status(200).body(urd);
+//	}
 	
 	@DeleteMapping("/deletenotification/{nid}")
 	public String deleteNotification(@PathVariable int nid) throws NotificationNotfoundException{
@@ -61,8 +55,8 @@ public class NotificationController {
 	}
 	
 	@GetMapping("/fetchallnotifications")
-	public List<Notification> getAllNotification(){
-		return this.ns.getAllNotification();
+	public ResponseEntity<List<NotificationResponseDTO>> getAllNotification(){
+		return ResponseEntity.ok(ns.getAllNotification());
 	}
 	
 	@GetMapping("/fetchAllNotificationsPaginated")

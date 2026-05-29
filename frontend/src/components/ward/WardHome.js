@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-
+import Signout from '../Auth/Signout';
 export default function WardHome() {
     return (
         <div>
@@ -47,6 +47,11 @@ export default function WardHome() {
                     </div>
 
                 </div>
+                <ul className="navbar-nav ms-auto">
+                                        <li className="nav-item">
+                                        <Signout />
+                                        </li>
+                                    </ul>
             </nav>
 
             <Outlet />

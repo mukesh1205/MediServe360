@@ -27,7 +27,6 @@ public class BedService {
 		this.bedRepository = bedRepository;
 	}
 	public Bed createBed(Bed bed) {
-
 		if (bed.getWard() == null || bed.getWard().getWardId() == 0) {
 			throw new IllegalArgumentException("Ward ID is required to create a bed.");
 		}

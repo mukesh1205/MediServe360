@@ -1,91 +1,148 @@
 import axios from "axios";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function AddInsuranceClaim() {
 
-    const [patientId, setPatientId] = useState(0);
+    const [patientId, setPatientId] = useState("");
     const [policyNumber, setPolicyNumber] = useState("");
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState("");
     const [status, setStatus] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const buttonHandler = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
-        if (!patientId || !policyNumber || !amount || !status) {
-            alert("Please fill all fields");
+        if (loading) return;
+        setLoading(true);
+
+        const url = "http://localhost:9002/api/insurance/addInsuranceClaim";
+
+        // ✅ Extra validation
+        if (amount <= 0) {
+            toast.warning("Amount must be greater than 0");
+            setLoading(false);
             return;
         }
-
-        const url = "http://localhost:9002/api/addInsuranceClaim";
 
         const data = {
             insuranceClaim: {
                 patient: {
                     patientId: patientId
                 },
-                policyNumber: policyNumber,
+                policyNumber: policyNumber.trim(),
                 amount: Number(amount),
                 status: status
             }
         };
 
-        axios.post(url, data)
-            .then((res) => {
-                alert("Insurance Claim added successfully");
-                console.log(res.data);
+        axios.post(url, data, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }
+        })
+        .then(() => {
+            toast.success("Insurance Claim added successfully");
 
-                // ✅ optional: clear form
-                setPatientId(0);
-                setPolicyNumber("");
-                setAmount(0);
-                setStatus("");
-            })
-            .catch((err) => {
-                console.error(err.response?.data || err);
-                alert("Error adding insurance claim");
-            });
+            setPatientId("");
+            setPolicyNumber("");
+            setAmount("");
+            setStatus("");
+            setLoading(false);
+        })
+        .catch((err) => {
+            toast.error(err.response?.data || err.message);
+            setLoading(false);
+        });
     };
 
     return (
-        <div>
-            <h3>Add Insurance Claim</h3>
+        <div className="container mt-4">
+            <h3 className="mb-4">Add Insurance Claim</h3>
 
-            <label>Patient ID</label>
-            <input
-                type="number"
-                value={patientId}
-                onChange={(e) => setPatientId(Number(e.target.value))}
-            />
-            <br />
+            <form onSubmit={handleSubmit}>
 
-            <label>Policy Number</label>
-            <input
-                type="text"
-                value={policyNumber}
-                onChange={(e) => setPolicyNumber(e.target.value)}
-            />
-            <br />
+                <div className="mb-3">
+                    <label className="form-label">
+                        Patient ID <span className="text-danger">*</span>
+                    </label>
+                    <input
+                        className="form-control"
+                        type="number"
+                        value={patientId}
+                        placeholder="Enter patient ID"
+                        onChange={(e) =>
+                            setPatientId(e.target.value === "" ? "" : Number(e.target.value))
+                        }
+                        required
+                    />
+                </div>
 
-            <label>Claim Amount</label>
-            <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-            />
-            <br />
+                <div className="mb-3">
+                    <label className="form-label">
+                        Policy Number <span className="text-danger">*</span>
+                    </label>
+                    <input
+                        className="form-control"
+                        type="text"
+                        value={policyNumber}
+                        placeholder="Enter policy number"
+                        onChange={(e) => setPolicyNumber(e.target.value)}
+                        required
+                    />
+                </div>
 
-            <label>Status</label>
-            <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-            >
-                <option value="">--Select--</option>
-                <option value="SUBMITTED">SUBMITTED</option>
-                <option value="APPROVED">APPROVED</option>
-                <option value="REJECTED">REJECTED</option>
-            </select>
-            <br />
+                <div className="mb-3">
+                    <label className="form-label">
+                        Claim Amount <span className="text-danger">*</span>
+                    </label>
+                    <input
+                        className="form-control"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={amount}
+                        placeholder="Enter claim amount"
+                        onChange={(e) =>
+                            setAmount(e.target.value === "" ? "" : Number(e.target.value))
+                        }
+                        required
+                    />
+                </div>
 
-            <button onClick={buttonHandler}>Add Insurance Claim</button>
+                <div className="mb-3">
+                    <label className="form-label">
+                        Status <span className="text-danger"> *</span>
+                    </label>
+                    <select
+                        className="form-select"
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                        required
+                    >
+                        <option value="">--Select--</option>
+                        <option value="SUBMITTED">SUBMITTED</option>
+                        <option value="APPROVED">APPROVED</option>
+                        <option value="REJECTED">REJECTED</option>
+                    </select>
+                </div>
+
+                <button
+                    className="btn btn-primary w-100"
+                    type="submit"
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2"></span>
+                            Submitting...
+                        </>
+                    ) : (
+                        "Add Insurance Claim"
+                    )}
+                </button>
+
+            </form>
         </div>
     );
 }

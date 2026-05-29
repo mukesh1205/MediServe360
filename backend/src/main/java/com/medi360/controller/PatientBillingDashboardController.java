@@ -16,7 +16,7 @@ import com.medi360.service.InvoiceService;
 import com.medi360.service.PatientBillingDashboardService;
 
 @RestController
-@RequestMapping("/api/dashboard")
+@RequestMapping("/api/patientbilling")
 public class PatientBillingDashboardController {
 
     @Autowired

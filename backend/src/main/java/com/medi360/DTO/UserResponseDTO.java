@@ -1,30 +1,46 @@
 package com.medi360.DTO;
 
-import com.medi360.entities.User;
-
 public class UserResponseDTO {
 	
-	private User user;
-	private int statusCode;
-	private String message;
-	public User getUser() {
-		return user;
+	private int userId;
+	private String userName;
+	private String role;
+	private String email;
+	private String phoneNumber;
+	
+	public int getUserId() {
+		return userId;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
-	public int getStatusCode() {
-		return statusCode;
+	public String getUserName() {
+		return userName;
 	}
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
-	public String getMessage() {
-		return message;
+	public String getRole() {
+		return role;
 	}
-	public void setMessage(String message) {
-		this.message = message;
+	public void setRole(String role) {
+		this.role = role;
 	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	
+	
+	
 	
 	
 }
