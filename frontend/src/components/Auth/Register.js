@@ -21,17 +21,23 @@ export default function Register() {
             setError("Please enter correct phone number");
             return;
         }
+
         if(password.length<6){
-            setError("Password must follow rules");
-            return;
+            setError("Password must not be less than 6 Characters")
         }
         if (!userName || !email || !password || !role || !phoneNumber) {
             setError("Please fill in all fields.");
             return;
         }
+
         setLoading(true);
+
         axios.post("http://localhost:9002/api/auth/register", {
-            userName, email, password, role, phoneNumber,
+            userName,
+            email,
+            password,
+            role,
+            phoneNumber,
         })
         .then(() => {
             setSuccess("Account created successfully! Redirecting to login...");
@@ -48,123 +54,88 @@ export default function Register() {
     };
 
     return (
-        <div
-            className="min-vh-100 d-flex align-items-center justify-content-center py-4 px-3"
-            style={{ background: "linear-gradient(135deg, #e8f4f8 0%, #d6eaf8 50%, #eaf4fb 100%)" }}
-        >
-            <div
-                className="card shadow-lg border-0"
-                style={{ width: "100%", maxWidth: 480, borderRadius: "16px" }}
-            >
+        <div className="min-vh-100 d-flex align-items-center justify-content-center bg-dark py-4 px-3">
+            <div className="card bg-black border border-secondary shadow-lg" style={{ width: "100%", maxWidth: 480 }}>
                 <div className="card-body p-4 p-md-5">
 
                     {/* Header */}
-                    <div className="text-center mb-4">
-                        <div
-                            className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
-                            style={{ width: 64, height: 64, background: "#1a73a7" }}
-                        >
-                            {/* Red Cross / Medical Icon */}
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                                <rect x="12" y="4" width="8" height="24" rx="2" fill="white"/>
-                                <rect x="4" y="12" width="24" height="8" rx="2" fill="white"/>
-                            </svg>
+                    <div className="mb-4">
+                        <div className="d-flex align-items-center gap-2 mb-1">
+                            <div className="rounded-2 d-flex align-items-center justify-content-center bg-primary"
+                                style={{ width: 32, height: 32, flexShrink: 0 }}>
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <path d="M8 1.5C4.41 1.5 1.5 4.41 1.5 8s2.91 6.5 6.5 6.5 6.5-2.91 6.5-6.5S11.59 1.5 8 1.5zm0 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 8c-1.93 0-3.64-.98-4.65-2.47.02-.97 3.1-1.5 4.65-1.5s4.63.53 4.65 1.5C11.64 11.52 9.93 12.5 8 12.5z" fill="white"/>
+                                </svg>
+                            </div>
+                            <h5 className="mb-0 fw-bold text-white">MediServe</h5>
                         </div>
-                        <h5 className="fw-bold mb-1" style={{ color: "#1a3c5e" }}>MediServe</h5>
-                        <p className="small mb-0" style={{ color: "#5a8fa8" }}>
-                            Create your hospital account
-                        </p>
-                    </div>
-
-                    {/* Divider with tag */}
-                    <div className="d-flex align-items-center gap-2 mb-4">
-                        <hr className="flex-grow-1 m-0" style={{ borderColor: "#c8dfe9" }} />
-                        <span className="small px-2 py-1 rounded-pill fw-semibold"
-                            style={{ background: "#e3f2fb", color: "#1a73a7", fontSize: "0.7rem", letterSpacing: "0.06em" }}>
-                            NEW REGISTRATION
-                        </span>
-                        <hr className="flex-grow-1 m-0" style={{ borderColor: "#c8dfe9" }} />
+                        <p className="text-secondary small mb-0">Create your account</p>
                     </div>
 
                     {/* Alerts */}
                     {error && (
-                        <div className="alert alert-danger py-2 small" role="alert">
-                            ⚠️ {error}
+                        <div className="alert alert-danger py-2 small border-danger-subtle" role="alert">
+                            {error}
                         </div>
                     )}
                     {success && (
-                        <div className="alert alert-success py-2 small" role="alert">
-                            ✅ {success}
+                        <div className="alert alert-success py-2 small border-success-subtle" role="alert">
+                            {success}
                         </div>
                     )}
 
                     <form onSubmit={register}>
                         <div className="row g-3 mb-3">
                             <div className="col-6">
-                                <label className="form-label small fw-semibold" style={{ color: "#1a3c5e" }}>
-                                    Full Name
-                                </label>
+                                <label className="form-label text-secondary small fw-semibold">Full Name</label>
                                 <input
                                     type="text"
-                                    className="form-control"
+                                    className="form-control bg-dark border-secondary text-white"
                                     placeholder="Jane Doe"
                                     value={userName}
                                     onChange={(e) => setUserName(e.target.value)}
-                                    style={{ borderColor: "#b0cfe0", borderRadius: "8px" }}
                                 />
                             </div>
                             <div className="col-6">
-                                <label className="form-label small fw-semibold" style={{ color: "#1a3c5e" }}>
-                                    Phone
-                                </label>
+                                <label className="form-label text-secondary small fw-semibold">Phone</label>
                                 <input
                                     type="text"
-                                    className="form-control"
+                                    className="form-control bg-dark border-secondary text-white"
                                     placeholder="+91 00000 00000"
                                     value={phoneNumber}
                                     onChange={(e) => setPhoneNumber(e.target.value)}
-                                    style={{ borderColor: "#b0cfe0", borderRadius: "8px" }}
                                 />
                             </div>
                         </div>
 
                         <div className="mb-3">
-                            <label className="form-label small fw-semibold" style={{ color: "#1a3c5e" }}>
-                                Email Address
-                            </label>
+                            <label className="form-label text-secondary small fw-semibold">Email address</label>
                             <input
                                 type="email"
-                                className="form-control"
+                                className="form-control bg-dark border-secondary text-white"
                                 placeholder="jane@hospital.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                style={{ borderColor: "#b0cfe0", borderRadius: "8px" }}
                             />
                         </div>
 
                         <div className="mb-3">
-                            <label className="form-label small fw-semibold" style={{ color: "#1a3c5e" }}>
-                                Password
-                            </label>
+                            <label className="form-label text-secondary small fw-semibold">Password</label>
                             <input
                                 type="password"
-                                className="form-control"
-                                placeholder="Min. 6 characters"
+                                className="form-control bg-dark border-secondary text-white"
+                                placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                style={{ borderColor: "#b0cfe0", borderRadius: "8px" }}
                             />
                         </div>
 
                         <div className="mb-4">
-                            <label className="form-label small fw-semibold" style={{ color: "#1a3c5e" }}>
-                                Role
-                            </label>
+                            <label className="form-label text-secondary small fw-semibold">Role</label>
                             <select
-                                className="form-select"
+                                className="form-select bg-dark border-secondary text-white"
                                 value={role}
                                 onChange={(e) => setRole(e.target.value)}
-                                style={{ borderColor: "#b0cfe0", borderRadius: "8px", color: role ? "#212529" : "#6c757d" }}
                             >
                                 <option value="">Select role</option>
                                 <option value="ADMIN">Admin</option>
@@ -178,24 +149,23 @@ export default function Register() {
 
                         <button
                             type="submit"
-                            className="btn w-100 fw-semibold text-white"
+                            className="btn btn-primary w-100 fw-semibold"
                             disabled={loading}
-                            style={{ background: "#1a73a7", borderRadius: "8px", border: "none", padding: "0.6rem" }}
                         >
                             {loading ? (
                                 <>
                                     <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                                     Creating account...
                                 </>
-                            ) : "🏥 Create Account"}
+                            ) : "Create Account"}
                         </button>
                     </form>
 
-                    <hr className="my-4" style={{ borderColor: "#c8dfe9" }} />
+                    <hr className="border-secondary my-4" />
 
-                    <p className="text-center small mb-0" style={{ color: "#5a8fa8" }}>
+                    <p className="text-center text-secondary small mb-0">
                         Already have an account?{" "}
-                        <Link to="/login" className="fw-semibold text-decoration-none" style={{ color: "#1a73a7" }}>
+                        <Link to="/login" className="text-primary fw-semibold text-decoration-none">
                             Sign in
                         </Link>
                     </p>

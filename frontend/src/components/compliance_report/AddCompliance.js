@@ -2,73 +2,61 @@ import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-export default function AddKpi() {
+export default function AddCompliance() {
 
     const [scope, setScope] = useState("");
     const [metrics, setMetrics] = useState("");
     const [date, setDate] = useState("");
-    const [complianceId, setComplianceId] = useState("");
 
-    //Scope - only alphabets
-    const scopeHandler = (event) => {
-        const value = event.target.value;
+    
+    const scopeHandler = (e) => {
+        const value = e.target.value;
 
+        
         if (/^[A-Za-z ]*$/.test(value)) {
             setScope(value);
         }
     };
 
-    const metricsHandler = (event) => {
-        setMetrics(event.target.value);
+    const metricsHandler = (e) => {
+        setMetrics(e.target.value);
     };
 
-    const dateHandler = (event) => {
-        setDate(event.target.value);
-    };
-
-    //Allow only numbers for complianceId
-    const complianceIdHandler = (event) => {
-        const value = event.target.value;
-
-        if (/^[0-9]*$/.test(value)) {
-            setComplianceId(value);
-        }
+    const dateHandler = (e) => {
+        setDate(e.target.value);
     };
 
     const buttonHandler = () => {
 
-        const url = "http://localhost:9002/api/kpi-report/addKPIReport";
+        let url = "http://localhost:9002/api/compliance-reports/addComplianceReport";
 
-        //  Empty validation
-        if (!scope.trim() || !metrics.trim() || !date || !complianceId) {
+        
+        if (!scope.trim() || !metrics.trim() || !date) {
             toast.warning("Please fill all required fields");
             return;
         }
 
-        //  Scope validation
-        if (!/^[A-Za-z ]+$/.test(scope)) {
+    
+        const scopeRegex = /^[A-Za-z ]+$/;
+        if (!scopeRegex.test(scope)) {
             toast.warning("Scope should contain only letters");
             return;
         }
 
-        //  Date validation
         const selectedDate = new Date(date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
         if (selectedDate > today) {
-            toast.warning("KPI date cannot be in the future");
+            toast.warning("Report date cannot be in the future");
             return;
         }
 
-        const data = {
-            kpiReport: {
-                kpiReportScope: scope,
-                kpiMetrics: metrics,
-                kpiGeneratedDate: date,
-                complianceReport: {
-                    reportId: complianceId
-                }
+        let data = {
+            complianceReport: {
+                reportScope: scope,
+                reportMetrics: metrics,
+                reportGeneratedDate: date
             }
         };
 
@@ -78,27 +66,22 @@ export default function AddKpi() {
             }
         })
         .then(() => {
+            toast.success("Compliance Report Added Successfully");
 
-            toast.success("KPI Report added successfully");
-
-            //  Reset form
+            
             setScope("");
             setMetrics("");
             setDate("");
-            setComplianceId("");
-
         })
         .catch((error) => {
-            console.error(error);
-            toast.error(
-                error.response?.data?.message || "Error adding KPI Report"
-            );
+            toast.error(error.response?.data?.message || error.message);
         });
     };
 
     return (
         <div className="container mt-4">
-            <h2>Add KPI Report</h2>
+
+            <h3 className="mb-4">Add Compliance Report</h3>
 
             {/* Scope */}
             <div className="mb-3">
@@ -106,11 +89,11 @@ export default function AddKpi() {
                     Scope <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
-                    type="text"
                     className="form-control"
+                    type="text"
                     value={scope}
-                    onChange={scopeHandler}
                     placeholder="Enter scope"
+                    onChange={scopeHandler}
                 />
             </div>
 
@@ -120,18 +103,18 @@ export default function AddKpi() {
                     Metrics <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
-                    type="text"
                     className="form-control"
+                    type="text"
                     value={metrics}
-                    onChange={metricsHandler}
                     placeholder="Enter metrics"
+                    onChange={metricsHandler}
                 />
             </div>
 
             {/* Date */}
             <div className="mb-3">
                 <label className="form-label">
-                    Date <span style={{ color: "red" }}>*</span>
+                    Report Date <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                     type="date"
@@ -142,23 +125,10 @@ export default function AddKpi() {
                 />
             </div>
 
-            {/* Compliance ID */}
-            <div className="mb-3">
-                <label className="form-label">
-                    Compliance Report ID <span style={{ color: "red" }}>*</span>
-                </label>
-                <input
-                    type="text"
-                    className="form-control"
-                    value={complianceId}
-                    onChange={complianceIdHandler}
-                    placeholder="Enter report ID"
-                />
-            </div>
-
             <button className="btn btn-primary w-100" onClick={buttonHandler}>
-                Add KPI Report
+                Add Compliance Report
             </button>
+
         </div>
     );
 }

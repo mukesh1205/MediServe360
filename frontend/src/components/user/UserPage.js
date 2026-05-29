@@ -46,7 +46,7 @@ export default function UserPage(){
         fetchfunction();
     },[count])
     return(
-        <div className="container mt-4">
+        <div className="container mt-4 table-responsive">
             <table className="table table-bordered table-striped mt-3">
                 <thead className="table-dark">
                     <tr>
