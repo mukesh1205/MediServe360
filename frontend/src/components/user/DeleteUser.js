@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { toast } from "react-toastify";
 export default function DeleteUser(){
     const {id}=useParams();
     const navigate=useNavigate();
@@ -18,7 +19,7 @@ export default function DeleteUser(){
                     }
                 });
             setData(res.data);
-            alert("Successfully deleted")
+            toast.success("Successfully deleted")
         }catch(err){
             console.log(err.message)
         }

@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-
+import Signout from "../Auth/Signout";
 export default function InsuranceClaimHome() {
     return (
         <div>
@@ -48,7 +48,11 @@ export default function InsuranceClaimHome() {
 
                         </ul>
                     </div>
-
+                <ul className="navbar-nav ms-auto">
+                                            <li className="nav-item">
+                                            <Signout />
+                                            </li>
+                                        </ul>
                 </div>
             </nav>
 

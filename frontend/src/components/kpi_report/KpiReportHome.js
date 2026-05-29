@@ -1,7 +1,7 @@
 import { Link, Outlet } from "react-router-dom";
-
-export default function KpiReportHome() {
-    return (
+import Signout from "../Auth/Signout";
+export default function KpiReportHome(){
+    return(
         <div>
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div className="container-fluid">
@@ -52,9 +52,14 @@ export default function KpiReportHome() {
                     </div>
 
                 </div>
+                <ul className="navbar-nav ms-auto">
+                                        <li className="nav-item">
+                                        <Signout />
+                                        </li>
+                                    </ul>
             </nav>
-
-            <Outlet />
+            
+            <Outlet></Outlet>
         </div>
     );
 }

@@ -1,4 +1,5 @@
 import {Link, Outlet} from 'react-router-dom';
+import Signout from '../Auth/Signout';
 export default function BedHome(){
 
     return(
@@ -27,8 +28,14 @@ export default function BedHome(){
                 </li>
 
             </ul>
+            <ul className="navbar-nav ms-auto">
+                                    <li className="nav-item">
+                                    <Signout />
+                                    </li>
+                                </ul>
 
         </nav>
+        
         <Outlet></Outlet>
         </div>
     );

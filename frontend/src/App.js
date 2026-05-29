@@ -62,9 +62,9 @@ import DisplayCompliancePaginated from './components/compliance_report/DisplayCo
 // KPI
 
 import KpiReportHome from './components/kpi_report/KpiReportHome';
-import AddKpiReport from './components/kpi_report/AddKpi';
-import FindKpiReport from './components/kpi_report/FindKpi';
-import DisplayKPiReport from './components/kpi_report/DisplayKpi';
+import AddKpi from './components/kpi_report/AddKpi';
+import FindKpi from './components/kpi_report/FindKpi';
+import DisplayKpi from './components/kpi_report/DisplayKpi';
 import DisplayKpiPaginated from './components/kpi_report/DisplayKpiPaginated';
 
 
@@ -120,22 +120,34 @@ import UserPage from './components/user/UserPage';
 import NotificationPage from './components/notification/NotificationPage'
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import AdminDash from './components/Dashboards/AdminDash';
+import PatientDD from './components/Dashboards/PatientDD';
+import DoctorDD from './components/Dashboards/DoctorDD';
+import NurseDD from './components/Dashboards/NurseDD';
+import FinanceDD from './components/Dashboards/FinanceDD';
+import CompilanceDD from './components/Dashboards/CompilanceDD';
+
+import Home from './components/Auth/Home';
 
 function App() {
-
-  const ALL_ROLES = ["ADMIN", "DOCTOR", "PATIENT", "FINANCEOFFICER", "COMPLIANCE_OFFICER", "NURSE"];
-  const ADMIN_ONLY = ["ADMIN"];
-  const ADMIN_DP = ["ADMIN", "DOCTOR", "PATIENT"];
-  const ADMIN_NURSE = ["ADMIN", "NURSE"];
-  const ADMIN_COMPLIANCE = ["ADMIN", "COMPLIANCE_OFFICER"];
-  const ADMIN_FINANCE = ["ADMIN", "FINANCEOFFICER"];
-  const ADMIN_PATIENT = ["ADMIN", "PATIENT"];
-  const ADMIN_DOCTOR = ["ADMIN", "DOCTOR"];
-  const FINANCE = ["ADMIN", "FINANCEOFFICER"];
-
-
-
-  function ProtectedRoute({ children, allowedRoles }) {
+ 
+const ALL_ROLES        = ["ADMIN","DOCTOR","PATIENT","FINANCEOFFICER","COMPLIANCE_OFFICER","NURSE"];
+const ADMIN_ONLY       = ["ADMIN"];
+const ADMIN_DP  = ["ADMIN","DOCTOR","PATIENT"];
+const ADMIN_NURSE    = ["ADMIN","NURSE"];
+const ADMIN_COMPLIANCE = ["ADMIN","COMPLIANCE_OFFICER"];
+const ADMIN_FINANCE    = ["ADMIN","FINANCEOFFICER"];
+const ADMIN_PATIENT      = ["ADMIN","PATIENT"];
+const ADMIN_DOCTOR      = ["ADMIN","DOCTOR"];
+const FINANCE=["ADMIN","FINANCEOFFICER"];
+const PATIENT_ONLY=["PATIENT"];
+const DOCTOR_ONLY=["DOCTOR"];
+const NURSE_ONLY=["NURSE"];
+const FINANCEOFFICER_ONLY=["FINANCEOFFICER"];
+const COMPILANCE_ONLY=["COMPLIANCE_OFFICER"]
+ 
+ 
+function ProtectedRoute({ children, allowedRoles }) {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
 
@@ -161,27 +173,35 @@ function App() {
       <Routes>
 
         {/* Appointment */}
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/login" element={<Login />} />
 
-        <Route path="/appointment" element={<ProtectedRoute allowedRoles={ADMIN_DP}><AppointmentHome /></ProtectedRoute>}>
+        <Route  path="/admindd" element={<ProtectedRoute allowedRoles={ADMIN_ONLY}><AdminDash /></ProtectedRoute>} />
+        <Route path="/patientdd" element={<ProtectedRoute allowedRoles={PATIENT_ONLY}><PatientDD /></ProtectedRoute>} />
+        <Route path="/doctordd" element={<ProtectedRoute allowedRoles={DOCTOR_ONLY}><DoctorDD /></ProtectedRoute>} />
+        <Route path="/nursedd" element={<ProtectedRoute allowedRoles={NURSE_ONLY}><NurseDD /></ProtectedRoute>} />
+        <Route path="/financedd" element={<ProtectedRoute allowedRoles={FINANCEOFFICER_ONLY}><FinanceDD /></ProtectedRoute>} />
+        <Route path="/compilancedd" element={<ProtectedRoute allowedRoles={COMPILANCE_ONLY}><CompilanceDD /></ProtectedRoute>} />
+
+
+        {/* <Route path="/appointment" element={}>
           <Route path="add" element={<AddAppointment />} />
           <Route path="delete" element={<DeleteAppointment />} />
           <Route path="update" element={<UpdateAppointment />} />
           <Route path="find" element={<FindAppointment />} />
-        </Route>
+        </Route> */}
 
         {/* Patient */}
-
-        <Route path="/appointment" element={<AppointmentHome />}>
-          <Route path="add" element={<AddAppointment />}></Route>
-          <Route path="delete/:aid" element={<DeleteAppointment />}></Route>
-          <Route path="edit/:aid" element={<UpdateAppointment />}></Route>
-          <Route path="find" element={<FindAppointment />}></Route>
-          <Route path="display" element={<DisplayAppointments />}></Route>
-          <Route path="displayPaginated" element={<DisplayAppointmentsPaginated />} />
+        
+        <Route path="/appointment" element={<ProtectedRoute allowedRoles={ADMIN_DP}><AppointmentHome /></ProtectedRoute>}>
+            <Route path="add" element={<AddAppointment/>}></Route>
+            <Route path="delete/:aid" element={<DeleteAppointment/>}></Route>
+            <Route path="edit/:aid" element={<UpdateAppointment />}></Route>
+            <Route path="find" element={<FindAppointment />}></Route>
+            <Route path="display" element={<DisplayAppointments />}></Route>
+            <Route path="displayPaginated" element={<DisplayAppointmentsPaginated />} /> 
         </Route>
 
         {/* Doctor */}
@@ -282,9 +302,9 @@ function App() {
         </Route>
 
         <Route path="/kpi_report" element={<ProtectedRoute allowedRoles={ADMIN_FINANCE}><KpiReportHome /></ProtectedRoute>}>
-          <Route path="add" element={<AddKpiReport />} />
-          <Route path="find" element={<FindKpiReport />} />
-          <Route path="display" element={<DisplayKPiReport />} />
+          <Route path="add" element={<AddKpi />} />
+          <Route path="find" element={<FindKpi />} />
+          <Route path="display" element={<DisplayKpi />} />
 
 
           <Route path="displayPaginated" element={<DisplayKpiPaginated />} />

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-
+import { Toast } from "bootstrap";
 export default function AddNotification() {
     let [message, setMessage] = useState("");
     let [category, setCategory] = useState("");
@@ -25,7 +25,7 @@ export default function AddNotification() {
                     }
                 }
             );
-            alert("Notification added: " + res.data.message);
+            Toast.success("Notification added");
         } catch (err) {
             alert(err.response?.data?.errorMessage || err.message);
         }

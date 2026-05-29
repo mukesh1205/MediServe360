@@ -6,7 +6,7 @@ export default function DisplayKpi() {
     const [records, setRecords] = useState([]);
 
     useEffect(() => {
-
+        
         let url = "http://localhost:9002/api/kpi-report/fetchAllKPIReports";
 
         axios.get(url, {
