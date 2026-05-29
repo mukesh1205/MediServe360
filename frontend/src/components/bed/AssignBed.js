@@ -15,12 +15,16 @@ export default function AssignBed() {
     }
 
     let assignHandler = () => {
-        let url = `http://localhost:9002/bed/${bedId}/assign`;
+        let url = `http://localhost:9002/api/beds/${bedId}/assign`;
         let data = {
             "patientId": parseInt(patientId)
         };
 
-        axios.post(url, data)
+        axios.post(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 alert("Patient " + patientId + " assigned to Bed " + bedId + " successfully!");
             })

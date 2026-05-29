@@ -14,6 +14,8 @@ import com.medi360.entities.Patient;
 import com.medi360.exception.InsuranceClaimNotFoundException;
 import com.medi360.exception.PatientNotFoundException;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class InsuranceClaimService {
 	@Autowired
@@ -35,21 +37,47 @@ public class InsuranceClaimService {
 				.orElseThrow(() -> new InsuranceClaimNotFoundException("InsuranceClaim not found with id " + id));
 	}
 	
-	public InsuranceClaim updateInsuranceClaim(InsuranceClaim insuranceClaim)
-			throws InsuranceClaimNotFoundException, PatientNotFoundException {
+//	public InsuranceClaim updateInsuranceClaim(InsuranceClaim insuranceClaim)
+//			throws InsuranceClaimNotFoundException, PatientNotFoundException {
+//
+//		if (!insuranceClaimRepository.existsById(insuranceClaim.getInsuranceClaimId())) {
+//			throw new InsuranceClaimNotFoundException(
+//					"Insurance claim not found with id " + insuranceClaim.getInsuranceClaimId());
+//		}
+//
+//		int patientId = insuranceClaim.getPatient().getPatientId();
+//		Patient patient = patientRepository.findById(patientId)
+//				.orElseThrow(() -> new PatientNotFoundException("Patient not found with id " + patientId));
+//
+//		insuranceClaim.setPatient(patient);
+//
+//		return this.insuranceClaimRepository.save(insuranceClaim);
+//	}
+	
+	@Transactional
+	public InsuranceClaim updateInsuranceClaim(InsuranceClaim incoming)
+	        throws InsuranceClaimNotFoundException, PatientNotFoundException {
 
-		if (!insuranceClaimRepository.existsById(insuranceClaim.getInsuranceClaimId())) {
-			throw new InsuranceClaimNotFoundException(
-					"Insurance claim not found with id " + insuranceClaim.getInsuranceClaimId());
-		}
+	    InsuranceClaim existing = insuranceClaimRepository
+	        .findById(incoming.getInsuranceClaimId())
+	        .orElseThrow(() ->
+	            new InsuranceClaimNotFoundException(
+	                "Insurance claim not found with id " + incoming.getInsuranceClaimId()
+	            )
+	        );
 
-		int patientId = insuranceClaim.getPatient().getPatientId();
-		Patient patient = patientRepository.findById(patientId)
-				.orElseThrow(() -> new PatientNotFoundException("Patient not found with id " + patientId));
+	    int patientId = incoming.getPatient().getPatientId();
+	    Patient patient = patientRepository.findById(patientId)
+	        .orElseThrow(() ->
+	            new PatientNotFoundException("Patient not found with id " + patientId)
+	        );
 
-		insuranceClaim.setPatient(patient);
+	    existing.setPatient(patient);
+	    existing.setPolicyNumber(incoming.getPolicyNumber());
+	    existing.setAmount(incoming.getAmount());
+	    existing.setStatus(incoming.getStatus());
 
-		return this.insuranceClaimRepository.save(insuranceClaim);
+	    return insuranceClaimRepository.save(existing);
 	}
 
 	public InsuranceClaim updateClaimStatus(int claimId, String status) throws InsuranceClaimNotFoundException {

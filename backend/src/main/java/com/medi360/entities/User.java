@@ -1,6 +1,7 @@
 package com.medi360.entities;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -10,6 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class User {
@@ -19,10 +22,12 @@ public class User {
 	private int userId;
 	
 	private String userName;
-	private String userRole;
-	private String userEmail;
-	private String userPhone;
-	
+	private String role;
+	@Email(message="Invalid email Format")
+	@NotBlank(message="Email is Requrired")
+	private String email;
+	private String phoneNumber;
+	private String password;
 	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
 	@JsonIgnore
 	private List<AuditLog> auditsLogs;
@@ -44,12 +49,20 @@ public class User {
 	public void setNotification(List<Notification> notification) {
 		this.notification = notification;
 	}
-	public User(String userName, String userRole, String userEmail, String userPhone) {
+	
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public User(String userName, String userRole, String userEmail, String userPhone,String password) {
 		super();
 		this.userName = userName;
-		this.userRole = userRole;
-		this.userEmail = userEmail;
-		this.userPhone = userPhone;
+		this.role = userRole;
+		this.email = userEmail;
+		this.phoneNumber = userPhone;
+		this.password=password;
 	}
 	public User() {
 		super();
@@ -67,24 +80,33 @@ public class User {
 		this.userName = userName;
 	}
 	public String getUserRole() {
-		return userRole;
+		return role;
 	}
 	public void setUserRole(String userRole) {
-		this.userRole = userRole;
+		this.role = userRole;
 	}
 	public String getUserEmail() {
-		return userEmail;
+		return email;
 	}
 	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+		this.email = userEmail;
 	}
 	public String getUserPhone() {
-		return userPhone;
+		return phoneNumber;
 	}
 	public void setUserPhone(String userPhone) {
-		this.userPhone = userPhone;
+		this.phoneNumber = userPhone;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+	    if (o == null || getClass() != o.getClass()) return false;
+	    User user = (User) o;
+	    return Objects.equals(userId, user.userId);
+	}
+
+	@Override
+	public int hashCode() { return Objects.hash(userId); }
 	
 	
 }

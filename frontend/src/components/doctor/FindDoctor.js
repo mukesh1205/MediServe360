@@ -13,9 +13,13 @@ export default function FindDoctor() {
             return;
         }
 
-        let url = `http://localhost:9002/api/doctors/get/${id}`;
+        let url = `http://localhost:9002/api/doctor/get/${id}`;
 
-        axios.get(url)
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 setDoctor(res.data);   // ✅ Doctor returned directly (not DTO)
             })

@@ -1,19 +1,39 @@
 import axios from 'axios';
 import { useState } from 'react';
+import {toast} from 'react-toastify';
 
 export default function AddInvoice() {
 
-    const [patientId, setPatientId] = useState(0);
-    const [amount, setAmount] = useState(0);
+    const [patientId, setPatientId] = useState("");
+    const [amount, setAmount] = useState("");
     const [invoiceDate, setInvoiceDate] = useState("");
     const [paymentStatus, setPaymentStatus] = useState("");
     const [paymentMode, setPaymentMode] = useState("");
-    const [adjustmentAmount, setAdjustmentAmount] = useState(0);
+    const [adjustmentAmount, setAdjustmentAmount] = useState("");
     const [refundStatus, setRefundStatus] = useState("");
 
     const buttonHandler = () => {
 
-        const url = "http://localhost:9002/api/addInvoice";
+        const url = "http://localhost:9002/api/invoice/addInvoice";
+
+        
+        if (!patientId || !amount || !invoiceDate || !paymentStatus || !paymentMode || 
+            !adjustmentAmount || !refundStatus) 
+        {
+            toast.warning("Please fill all fields");
+            return;
+        }
+
+        
+        if (amount <= 0) {
+            toast.info("Amount must be greater than 0");
+            return;
+        }
+
+        if (adjustmentAmount < 0) {
+            toast.info("Adjustment amount cannot be negative");
+            return;
+        }
 
         const data = {
             invoice: {
@@ -29,78 +49,122 @@ export default function AddInvoice() {
             }
         };
 
-        axios.post(url, data)
+        axios.post(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
-                alert("Invoice added successfully");
-                console.log(res.data);
+                toast.success("Invoice added successfully");
+                setPatientId("");
+                setAmount("");
+                setInvoiceDate("");
+                setPaymentStatus("");
+                setPaymentMode("");
+                setAdjustmentAmount("");
+                setRefundStatus("");
             })
             .catch((err) => {
-                console.error(err.response?.data || err);
-                alert("Error adding invoice");
+                toast.error(err.message);
             });
     };
 
     return (
-        <div>
-            <h3>Add Invoice</h3>
+        <div className='container mt-4'>
+            <h3 className='mb-4'>Add Invoice</h3>
 
-            <label>Patient ID</label>
-            <input
+            <div className='mb-3'>
+                <label className='form-label'>Patient ID</label>
+                <input
                 type="number"
-                onChange={e => setPatientId(Number(e.target.value))}
-            />
-            <br />
+                className='form-control'
+                placeholder="Enter patient ID"
+                value={patientId}
+                onChange={e => setPatientId(e.target.value ? Number(e.target.value) : "")}
+                />
+            </div>
 
-            <label>Amount</label>
-            <input
+            <div className='mb-3'>
+                <label className='form-label'>Amount</label>
+                <input
+                className="form-control"
                 type="number"
+                min='0'
                 step="0.01"
-                onChange={e => setAmount(e.target.value)}
-            />
-            <br />
+                placeholder='Enter amount'
+                value={amount}
+                onChange={e => setAmount(e.target.value === "" ? "" : Number(e.target.value))}
+                />
+            </div>
 
-            <label>Invoice Date</label>
-            <input
+            <div className='mb-3'>
+                <label className='form-label'>Invoice Date</label>
+                <input
+                className="form-control"
                 type="date"
+                value={invoiceDate}
                 onChange={e => setInvoiceDate(e.target.value)}
-            />
-            <br />
+                />
+            </div>
 
-            <label>Payment Status</label>
-            <select onChange={e => setPaymentStatus(e.target.value)}>
+            <div className='mb-3'>
+                <label className='form-label'>Payment Status</label>
+                <select
+                className="form-select"
+                value={paymentStatus}
+                onChange={e => setPaymentStatus(e.target.value)}
+                >
                 <option value="">--Select--</option>
                 <option value="Paid">Paid</option>
                 <option value="Pending">Pending</option>
-            </select>
-            <br />
+                </select>
+            </div>
 
-            <label>Payment Mode</label>
-            <select onChange={e => setPaymentMode(e.target.value)}>
+            <div className='mb-3'>
+                <label className='form-label'>Payment Mode</label>
+                <select
+                className="form-select"
+                value={paymentMode}
+                onChange={e => setPaymentMode(e.target.value)}
+                >
                 <option value="">--Select--</option>
                 <option value="Cash">Cash</option>
                 <option value="Card">Card</option>
                 <option value="UPI">UPI</option>
-            </select>
-            <br />
+                </select>
+            </div>
 
-            <label>Adjustment Amount</label>
-            <input
+            <div className='mb-3'>
+                <label className='form-label'>Adjustment Amount</label>
+                <input
+                className="form-control"
                 type="number"
+                min='0'
                 step="0.01"
-                onChange={e => setAdjustmentAmount(e.target.value)}
-            />
-            <br />
+                placeholder='Enter adjusted amount'
+                value={adjustmentAmount}
+                onChange={e => setAdjustmentAmount(e.target.value === "" ? "" : Number(e.target.value))}
+                />
+            </div>
 
-            <label>Refund Status</label>
-            <select onChange={e => setRefundStatus(e.target.value)}>
+            
+            <div className='mb-3'>
+                <label className='form-label'>Refund Status</label>
+                <select
+                className="form-select"
+                value={refundStatus}
+                onChange={e => setRefundStatus(e.target.value)}
+                >
                 <option value="">--Select--</option>
                 <option value="None">None</option>
                 <option value="Processed">Processed</option>
                 <option value="Pending">Pending</option>
-            </select>
-            <br />
+                </select>
+            </div>
 
-            <button onClick={buttonHandler}>Add Invoice</button>
+            <button className='btn btn-primary w-100' onClick={buttonHandler}>
+                Add Invoice
+            </button>
         </div>
     );
 }

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 export default function DeletePatient(){
     
@@ -8,21 +9,31 @@ export default function DeletePatient(){
     let navigate=useNavigate();
     useEffect(()=>{
         
-        let url="http://localhost:9002/api/deletePatient/"+pid;
-        axios.delete(url)
+        
+        if (!window.confirm("Are you sure you want to delete this patient?")) {
+                navigate("/patient");
+                return;
+        }
+
+        let url="http://localhost:9002/api/patient/deletePatient/"+pid;
+        axios.delete(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                })
         .then((res)=>{
-            alert("Deleted successfully");
-            navigate("/patient");
+            toast.success("Deleted successfully");
+            navigate("/patient/display");
 
         })
         .catch((err)=>{
-            console.error(err);
+            toast.error(err.message);
         })
-    })
+    },[pid,navigate])
 
     return(
         <div>
-            <h3>This is delete Patient</h3>
+            <h3>Deleting Patient...</h3>
         </div>
     )
 }

@@ -20,7 +20,7 @@ export default function AddComplianceReport() {
     };
 
     let buttonHandler = () => {
-        let url = "http://localhost:9002/api/addComplianceReport";
+        let url = "http://localhost:9002/api/compliance-reports/addComplianceReport";
 
         let data = {
             "complianceReport": {
@@ -30,7 +30,11 @@ export default function AddComplianceReport() {
             }
         };
 
-        axios.post(url, data)
+        axios.post(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 alert("Compliance Report Saved successfully " + response.data);
             })

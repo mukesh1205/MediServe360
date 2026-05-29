@@ -8,9 +8,13 @@ export default function DisplayKPIReport(){
 
     useEffect(() => {
 
-        let url = "http://localhost:9002/api/fetchAllKPIReports";
+        let url = "http://localhost:9002/api/kpi-reports/fetchAllKPIReports";
 
-        axios.get(url)
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
         .then((res) => {
             setRecords(res.data);
         })

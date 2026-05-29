@@ -1,46 +1,100 @@
 import axios from "axios";
 import { useState } from "react";
-export default function FindNotification(){
+import { toast } from "react-toastify";
 
-    const [id,setId]=useState();
-    const idHandler=(event)=>{
-        setId(event.target.value)
-    }
-    const [data,setData]=useState({});
+export default function FindNotification() {
 
-    async function submitHandler(event){
-        event.preventDefault();
-        let url=`http://localhost:9002/notification/findNotificationById/${id}`;
-        try{
+    const [id, setId] = useState("");
+    const [data, setData] = useState({});
+    const [searched, setSearched] = useState(false);
 
-            let res=await axios.get(url);
-            alert(res.data);
-            setData(res.data);
-
-        }catch(err){
-            alert(err.message)
-        }
+    const idHandler = (event) => {
+        setId(event.target.value);
     };
-    if(data.notificationId){
-        return(
-            <div>
-                <p>{data.message}</p>
-                <p>{data.category}</p>
-            </div>
-        )
+
+    async function submitHandler(event) {
+        event.preventDefault();
+
+        if (!id) {
+            toast.warning("Please enter Notification ID");
+            return;
+        }
+
+        const url = `http://localhost:9002/notification/findNotificationById/${id}`;
+
+        try {
+            const res = await axios.get(url, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }
+            });
+
+            setData(res.data);
+        } catch (err) {
+            if (err.response && err.response.status === 404) {
+                setData({});
+            } else {
+                toast.error("No record found");
+            }
+        }
+
+        setSearched(true);
     }
-    return(
-        <div>
-            
-                <div>
-                    <form onSubmit={submitHandler}>
-                        <label>Id</label><br />
-                        <input onChange={idHandler} text="number" placeholder="Enter NotificationId" />
-                        <br></br>
-                        <button type="submit">Submit</button>
-                    </form>
+
+    return (
+        <div className="container mt-4">
+            <h3 className="mb-4">Find Notification</h3>
+
+            <form onSubmit={submitHandler}>
+                <div className="mb-3">
+                    <label className="form-label">Enter Notification ID</label>
+                    <input
+                        className="form-control"
+                        type="number"
+                        value={id}
+                        onChange={idHandler}
+                        placeholder="Enter Notification ID"
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") submitHandler(e);
+                        }}
+                    />
                 </div>
-            
+
+                <button
+                    className="btn btn-primary w-100"
+                    type="submit"
+                    disabled={!id}
+                >
+                    Find
+                </button>
+            </form>
+
+            {/* No records */}
+            {searched && !data.notificationId && (
+                <p className="mt-3 text-danger">No records found</p>
+            )}
+
+            {/* Display notification */}
+            {data.notificationId && (
+                <div className="table-responsive">
+                    <table className="table table-bordered table-striped mt-4">
+                        <thead className="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Message</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{data.notificationId}</td>
+                                <td>{data.message}</td>
+                                <td>{data.category}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
-    )
+    );
 }

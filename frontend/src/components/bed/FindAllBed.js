@@ -7,8 +7,12 @@ export default function FindAllBeds() {
     let [bedArr, setBedArr] = useState([]);
 
     useEffect(() => {
-        let url = "http://localhost:9002/bed/getAllBeds";
-        axios.get(url)
+        let url = "http://localhost:9002/api/beds/getAllBeds";
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 setBedArr(response.data);
             })

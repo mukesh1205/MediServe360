@@ -17,7 +17,7 @@ import com.medi360.entities.ComplianceReport;
 import com.medi360.service.ComplianceReportService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/compliance-reports")
 public class ComplianceReportController {
 
     @Autowired

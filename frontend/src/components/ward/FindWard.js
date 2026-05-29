@@ -15,8 +15,12 @@ export default function FindWard() {
         setError("");
         setWard(null);
 
-        let url = `http://localhost:9002/ward/getWard/${wardId}`;
-        axios.get(url)
+        let url = `http://localhost:9002/api/ward/getWard/${wardId}`;
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 if (response.data.ward === null) {
                     setError("Ward not found with ID: " + wardId);

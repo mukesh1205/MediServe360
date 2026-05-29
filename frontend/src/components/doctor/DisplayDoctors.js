@@ -7,9 +7,13 @@ export default function DisplayDoctors() {
     let [doctors, setDoctors] = useState([]);
 
     useEffect(() => {
-        let url = "http://localhost:9002/api/doctors/getAll"; // ✅ use correct endpoint
+        let url = "http://localhost:9002/api/doctor/getAll"; // ✅ use correct endpoint
 
-        axios.get(url)
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 // If backend returns array directly:
                 setDoctors(response.data);
