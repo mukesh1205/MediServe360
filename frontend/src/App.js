@@ -62,9 +62,9 @@ import DisplayCompliancePaginated from './components/compliance_report/DisplayCo
 // KPI
 
 import KpiReportHome from './components/kpi_report/KpiReportHome';
-import AddKpiReport from './components/kpi_report/AddKpi';
-import FindKpiReport from './components/kpi_report/FindKpi';
-import DisplayKPiReport from './components/kpi_report/DisplayKpi';
+import AddKpi from './components/kpi_report/AddKpi';
+import FindKpi from './components/kpi_report/FindKpi';
+import DisplayKpi from './components/kpi_report/DisplayKpi';
 import DisplayKpiPaginated from './components/kpi_report/DisplayKpiPaginated';
 
 
@@ -302,9 +302,9 @@ function ProtectedRoute({ children, allowedRoles }) {
         </Route>
 
         <Route path="/kpi_report" element={<ProtectedRoute allowedRoles={ADMIN_FINANCE}><KpiReportHome /></ProtectedRoute>}>
-          <Route path="add" element={<AddKpiReport />} />
-          <Route path="find" element={<FindKpiReport />} />
-          <Route path="display" element={<DisplayKPiReport />} />
+          <Route path="add" element={<AddKpi />} />
+          <Route path="find" element={<FindKpi />} />
+          <Route path="display" element={<DisplayKpi />} />
 
 
           <Route path="displayPaginated" element={<DisplayKpiPaginated />} />
