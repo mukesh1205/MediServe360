@@ -1,4 +1,5 @@
 import {Link, Outlet} from 'react-router-dom';
+import Signout from '../Auth/Signout';
 export default function AppointmentHome(){
 
     return(
@@ -25,6 +26,11 @@ export default function AppointmentHome(){
             </ul>
 
         </nav>
+        <ul className="navbar-nav ms-auto">
+                                <li className="nav-item">
+                                    <Signout />
+                                </li>
+                            </ul>
         <Outlet></Outlet>
         </div>
     );

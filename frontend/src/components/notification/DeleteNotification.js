@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState ,useEffect} from "react";
 import { useParams } from "react-router";
+import { toast } from "react-toastify";
 export default function DeleteNotification(){
     const {id}=useParams();
 
@@ -16,6 +17,7 @@ export default function DeleteNotification(){
                     }
                 });
             setData(res.data);
+            toast.success("Successfully deleted");
 
         }catch(err){
             alert(err.message)

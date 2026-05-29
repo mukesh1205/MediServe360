@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router";
 export default function UpdateNotification(){
     const {id}=useParams();
     const navigate=useNavigate();
-    alert("Okkk");
     let [message,setMessage]=useState("");
     let [category,setCategory]=useState("");
     let [status,setStatus]=useState("");

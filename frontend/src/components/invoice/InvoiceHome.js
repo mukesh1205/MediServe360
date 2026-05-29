@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-
+import Signout from "../Auth/Signout";
 export default function InvoiceHome() {
     return (
         <div>
@@ -47,7 +47,11 @@ export default function InvoiceHome() {
 
                         </ul>
                     </div>
-
+                <ul className="navbar-nav ms-auto">
+                                            <li className="nav-item">
+                                            <Signout />
+                                            </li>
+                                        </ul>
                 </div>
             </nav>
 

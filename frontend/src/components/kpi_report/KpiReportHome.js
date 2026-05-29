@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-
+import Signout from "../Auth/Signout";
 export default function KpiReportHome(){
     return(
         <div>
@@ -19,6 +19,11 @@ export default function KpiReportHome(){
                     </li>
                 </ul>
             </nav>
+            <ul className="navbar-nav ms-auto">
+                                        <li className="nav-item">
+                                        <Signout />
+                                        </li>
+                                    </ul>
             <Outlet></Outlet>
         </div>
     );
