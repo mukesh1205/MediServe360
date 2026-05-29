@@ -27,8 +27,8 @@ public class ComplianceReportController {
     @PostMapping("/addComplianceReport")
     public ResponseEntity<ComplianceReportResponseDTO> addComplianceReport(
             @RequestBody ComplianceReportDTO complianceReportDTO) {
-
-        ComplianceReport report =
+    	System.out.println("okk");
+    	ComplianceReport report =
                 complianceReportService.addComplianceReport(
                         complianceReportDTO.getComplianceReport());
 
@@ -95,7 +95,7 @@ public class ComplianceReportController {
         return complianceReportService.getAllComplianceReports();
     }
     
-    @GetMapping("/compliance-reports")
+    @GetMapping("/paginated")
     public Page<ComplianceReport> getAllComplianceReportsPaginated(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,

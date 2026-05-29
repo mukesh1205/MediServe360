@@ -126,8 +126,8 @@ function App() {
     localStorage.clear();
 
     axios.post("http://localhost:9002/api/auth/login", {
-      email: "raghu@gmail.com",
-      password: "123456"
+      email: "harika@gmail.com",
+      password: "54321"
     })
     .then((res) => {
 
