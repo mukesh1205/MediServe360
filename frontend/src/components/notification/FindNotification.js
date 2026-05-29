@@ -16,10 +16,9 @@ export default function FindNotification(){
             let res=await axios.get(url);
             alert(res.data);
             setData(res.data);
-            
 
         }catch(err){
-            console.log(err.message)
+            alert(err.message)
         }
     };
     if(data.notificationId){

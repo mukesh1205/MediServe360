@@ -1,34 +1,33 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 export default function DeleteUser(){
-
-    const [id,setId]=useState();
-    const idHandler=(event)=>{
-        setId(event.target.value)
-    }
-
+    const {id}=useParams();
+    const navigate=useNavigate();
+    
+    // const idHandler=(event)=>{
+    //     setId(event.target.value)
+    // }
+    const [data,setData]=useState("");
     async function submitHandler(){
         let url=`http://localhost:9002/user/deleteuser/${id}`;
-        alert(id)
         try{
-
             let res=await axios.delete(url);
-            alert("successfully deleted");
+            setData(res.data);
 
         }catch(err){
-            console.log(err.message)
+            alert(err.message)
         }
     }
+    useEffect(()=>{
+        submitHandler();
+        navigate("/user")
+    },[])
     return(
         <div>
             
                 <div>
-                    <form onSubmit={submitHandler}>
-                        <label>Id</label><br />
-                        <input onChange={idHandler} text="number" placeholder="Enter userId" />
-                        <br></br>
-                        <button type="submit">Submit</button>
-                    </form>
+                    <p>{data}</p>
                 </div>
             
         </div>

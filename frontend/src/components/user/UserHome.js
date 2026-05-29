@@ -9,21 +9,19 @@ export default function UserHome(){
     const findUserHandler=()=>{
         navigate("find")
     }
-
-    const updateUserHandler=()=>{
-        navigate("update")
-    }
-    const deleteUserHandler=()=>{
-        navigate("delete")
+    const findalluserhandler=()=>{
+        navigate("findall")
     }
 
+    const paginatedhandler=()=>{
+        navigate("paginated")
+    }
     return(
         <div>
             <button onClick={addUserHandler} >Add User</button>
             <button onClick={findUserHandler} >Find User</button>
-            <button onClick={updateUserHandler} >Update User</button>
-            <button onClick={deleteUserHandler} >Delete User</button>
-
+            <button onClick={findalluserhandler}>get all users</button>
+            <button onClick={paginatedhandler}>Paginated</button>
             <Outlet />
         </div>
     )

@@ -11,11 +11,20 @@ export default function AuditlogHome(){
         navigate("find")
     }
 
+    const findallauditlogHandler=()=>{
+        navigate("findall")
+    }
+
+    const paginatedauditlog=()=>{
+        navigate("paginated")
+    }
+
     return(
         <div>
             <button onClick={addAuditLogHandler}>Add AuditLog</button>
             <button onClick={getAuditLogHandler}>Get Auditlog</button>
-
+            <button onClick={findallauditlogHandler}>Get All Auditlog</button>
+            <button onClick={paginatedauditlog}>Auditlog Paginated</button>
             <Outlet />
         </div>
     )

@@ -21,39 +21,27 @@ public class BedService {
 	private BedRepository bedRepository;
 
 	@Autowired
-	private WardRepository wardRepository; // ADD THIS
+	private WardRepository wardRepository; 
 
 	public BedService(BedRepository bedRepository) {
 		this.bedRepository = bedRepository;
 	}
-
-	// REPLACE the old createBed with this
 	public Bed createBed(Bed bed) {
 
-		// 1. Ward must be provided
 		if (bed.getWard() == null || bed.getWard().getWardId() == 0) {
 			throw new IllegalArgumentException("Ward ID is required to create a bed.");
 		}
-
 		int wardId = bed.getWard().getWardId();
-
-		// 2. Ward must exist in DB
 		Ward ward = wardRepository.findById(wardId)
 				.orElseThrow(() -> new IllegalArgumentException("Ward not found with id " + wardId));
-
-		// 3. Check capacity — count existing beds in this ward
 		List<Bed> existingBeds = bedRepository.findByWard_WardId(wardId);
 		if (existingBeds.size() >= ward.getWardcapacity()) {
 			throw new IllegalStateException("Ward " + ward.getWardname() + " is full. Capacity: "
 					+ ward.getWardcapacity() + ", Current beds: " + existingBeds.size());
 		}
-
-		// 4. Link the full ward object and save
 		bed.setWard(ward);
 		return bedRepository.save(bed);
 	}
-
-	// --- everything below stays exactly the same ---
 
 	public List<Bed> getAllBeds() {
 		return bedRepository.findAll();

@@ -19,7 +19,7 @@ export default function FindUser(){
             
 
         }catch(err){
-            console.log(err.message)
+            alert(err.message)
         }
     };
     if(data.statusCode){
