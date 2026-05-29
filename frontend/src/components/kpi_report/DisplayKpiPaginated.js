@@ -6,13 +6,13 @@ export default function DisplayKpiPaginated() {
 
   const [records, setRecords] = useState([]);
   const [pgno, setPgno] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const size = 10;
 
   const [sorting, setSorting] = useState("kpiId");
   const [asc, setAsc] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  // Fetch KPI Reports
   const fetchKpis = async (page = pgno, sortCol = sorting, order = asc) => {
     try {
       setLoading(true);
@@ -38,8 +38,10 @@ export default function DisplayKpiPaginated() {
         }
       });
 
+      // Correct response handling
       setRecords(res.data.content || []);
-      setPgno(page);
+      setPgno(res.data.number);         // current page from backend
+      setTotalPages(res.data.totalPages); // total pages
 
     } catch (err) {
       console.error(err);
@@ -49,16 +51,15 @@ export default function DisplayKpiPaginated() {
     }
   };
 
-  // Auto load first page
   useEffect(() => {
     fetchKpis(0);
   }, []);
 
-  // Sorting handler
   const handleSort = (column) => {
     if (sorting === column) {
-      setAsc(!asc);
-      fetchKpis(pgno, column, !asc);
+      const newAsc = !asc;   // fix toggle bug
+      setAsc(newAsc);
+      fetchKpis(pgno, column, newAsc);
     } else {
       setSorting(column);
       setAsc(true);
@@ -66,7 +67,6 @@ export default function DisplayKpiPaginated() {
     }
   };
 
-  // Sort arrow
   const sortArrow = (column) => {
     if (sorting !== column) return "";
     return asc ? " ↑" : " ↓";
@@ -84,7 +84,6 @@ export default function DisplayKpiPaginated() {
 
       {records.length > 0 && (
         <>
-          {/*  TABLE */}
           <div className="table-responsive">
             <table className="table table-bordered table-hover table-striped">
               <thead className="table-dark">
@@ -116,18 +115,13 @@ export default function DisplayKpiPaginated() {
                     <td>{e.kpiReportScope}</td>
                     <td>{e.kpiMetrics}</td>
                     <td>{new Date(e.kpiGeneratedDate).toLocaleDateString()}</td>
-                    <td>
-                      {e.complianceReport
-                        ? e.complianceReport.reportId
-                        : "N/A"}
-                    </td>
+                    <td>{e.complianceReportId || "N/A"}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          {/*  PAGINATION */}
           <div className="d-flex justify-content-between mt-3">
             <button
               className="btn btn-secondary"
@@ -138,12 +132,12 @@ export default function DisplayKpiPaginated() {
             </button>
 
             <span className="align-self-center">
-              Page {pgno + 1}
+              Page {pgno + 1} of {totalPages}
             </span>
 
             <button
               className="btn btn-secondary"
-              disabled={records.length < size || loading}
+              disabled={pgno >= totalPages - 1 || loading}
               onClick={() => fetchKpis(pgno + 1)}
             >
               Next

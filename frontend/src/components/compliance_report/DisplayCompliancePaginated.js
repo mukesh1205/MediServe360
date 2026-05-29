@@ -6,13 +6,13 @@ export default function DisplayCompliancePaginated() {
 
   const [records, setRecords] = useState([]);
   const [pgno, setPgno] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const size = 10;
 
   const [sorting, setSorting] = useState("reportId");
   const [asc, setAsc] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  //
   const fetchReports = async (page = pgno, sortCol = sorting, order = asc) => {
     try {
       setLoading(true);
@@ -21,18 +21,20 @@ export default function DisplayCompliancePaginated() {
 
       const res = await axios.get(url, {
         params: {
-          page: page,
+          page: page,       
           size: size,
-          sortBy: sortCol,
+          sortBy: sortCol,   
           asc: order
         },
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
+          Authorization: "Bearer " + localStorage.getItem("token")
         }
       });
 
+      //  Response handling
       setRecords(res.data.content || []);
-      setPgno(page);
+      setPgno(res.data.number);         // current page
+      setTotalPages(res.data.totalPages); // total pages
 
     } catch (err) {
       toast.error(err.response?.data || err.message);
@@ -41,16 +43,15 @@ export default function DisplayCompliancePaginated() {
     }
   };
 
-  //
   useEffect(() => {
     fetchReports(0);
   }, []);
 
-  
   const handleSort = (column) => {
     if (sorting === column) {
-      setAsc(!asc);
-      fetchReports(pgno, column, !asc);
+      const newAsc = !asc;
+      setAsc(newAsc);
+      fetchReports(pgno, column, newAsc);
     } else {
       setSorting(column);
       setAsc(true);
@@ -58,7 +59,6 @@ export default function DisplayCompliancePaginated() {
     }
   };
 
-  
   const sortArrow = (column) => {
     if (sorting !== column) return "";
     return asc ? " ↑" : " ↓";
@@ -76,7 +76,6 @@ export default function DisplayCompliancePaginated() {
 
       {records.length > 0 && (
         <>
-          {/*Table */}
           <div className="table-responsive">
             <table className="table table-bordered table-hover table-striped">
               <thead className="table-dark">
@@ -109,7 +108,6 @@ export default function DisplayCompliancePaginated() {
             </table>
           </div>
 
-          {/*  Pagination */}
           <div className="d-flex justify-content-between mt-3">
             <button
               className="btn btn-secondary"
@@ -120,12 +118,12 @@ export default function DisplayCompliancePaginated() {
             </button>
 
             <span className="align-self-center">
-              Page {pgno + 1}
+              Page {pgno + 1} of {totalPages}
             </span>
 
             <button
               className="btn btn-secondary"
-              disabled={records.length < size || loading}
+              disabled={pgno >= totalPages - 1 || loading}
               onClick={() => fetchReports(pgno + 1)}
             >
               Next
