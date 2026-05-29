@@ -72,7 +72,7 @@ export default function AddNotification() {
 
             {/* Fix: was onSubmit on a button, should be onClick */}
             <button
-                className="btn btn-secondary btn-sm"
+                className="btn btn-primary w-100"
                 onClick={submitHandler}
                 type="button"
             >

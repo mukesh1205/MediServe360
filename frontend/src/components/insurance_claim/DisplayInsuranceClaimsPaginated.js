@@ -1,154 +1,138 @@
 import axios from "axios";
-import { useState } from "react";
-import {toast} from 'react-toastify';
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function DisplayInsuranceClaimsPaginated() {
 
     const [records, setRecords] = useState([]);
-    const [pgno, setPgno] = useState("");
-    const [size, setSize] = useState("");
-    const [sorting, setSorting] = useState("");
-    const [asc, setAsc] = useState(true);
-    const [searched, setSearched] = useState(false);
+    const [pgno, setPgno] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const size = 10;
 
-    const buttonHandler = async () => {
+    const [sorting, setSorting] = useState("insuranceClaimId");
+    const [asc, setAsc] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    const fetchClaims = async (page = pgno, sortCol = sorting, order = asc) => {
         try {
+            setLoading(true);
+
             const url = "http://localhost:9002/api/insurance/fetchAllInsuranceClaimsPaginated";
 
-
-            if (pgno === "" || size === "" || sorting === "") {
-                toast.warning("Please enter page number, size, and sorting column");
-                return;
-            }
-
-            const res = await axios.get(url, {params: {
-                pgno: pgno,
+            const res = await axios.get(url, {
+                params: {
+                    pgno: page,
                     size: size,
-                    sorting: sorting,
-                    asc: asc
-            },
-            headers: {
-                Authorization: "Bearer " + localStorage.getItem("token")
-            }});
-            setRecords(res.data.content);
-            setSearched(true);
+                    sorting: sortCol,
+                    asc: order
+                },
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }
+            });
+
+            setRecords(res.data.content || []);
+            setPgno(res.data.number);
+            setTotalPages(res.data.totalPages);
 
         } catch (err) {
-            toast.error(err.message);
+            toast.error(err.response?.data || err.message);
+        } finally {
+            setLoading(false);
         }
+    };
+
+    useEffect(() => {
+        fetchClaims(0);
+    }, []);
+
+    const handleSort = (column) => {
+        if (sorting === column) {
+            const newAsc = !asc;
+            setAsc(newAsc);
+            fetchClaims(pgno, column, newAsc);
+        } else {
+            setSorting(column);
+            setAsc(true);
+            fetchClaims(pgno, column, true);
+        }
+    };
+
+    const sortArrow = (column) => {
+        if (sorting !== column) return "";
+        return asc ? " ↑" : " ↓";
     };
 
     return (
         <div className="container mt-4">
-            <h3 className="mb-4">Display Insurance Claims Paginated</h3>
+            <h3 className="mb-4">Display Insurance Claims (Paginated)</h3>
 
-            <div className="mb-3">
-                <label className="form-label">Page No</label>
-                <input
-                    className="form-control"
-                    type="number"
-                    value={pgno}
-                    placeholder="Enter page number"
-                    onChange={e =>
-                        setPgno(e.target.value === "" ? "" : Number(e.target.value))
-                    }
-                />
-            </div>
+            {loading && <p>Loading...</p>}
 
-            <div className="mb-3">
-                <label className="form-label">Page Size</label>
-                <input
-                    className="form-control"
-                    type="number"
-                    value={size}
-                    placeholder="Enter page size"
-                    onChange={e =>
-                        setSize(e.target.value === "" ? "" : Number(e.target.value))
-                    }
-                />
-            </div>
-
-            <div className="mb-3">
-                <label className="form-label">Sorting column</label>
-                <select
-                    className="form-select"
-                    value={sorting}
-                    onChange={e => setSorting(e.target.value)}
-                >
-                    <option value="">--Select Column--</option>
-                    <option value="insuranceClaimId">Claim Id</option>
-                    <option value="policyNumber">Policy Number</option>
-                    <option value="amount">Amount</option>
-                    <option value="status">Status</option>
-                </select>
-            </div>
-
-            <div className="mb-3">
-                <label className="form-label">Order</label>
-
-                <div className="form-check">
-                    <input
-                        className="form-check-input"
-                        type="radio"
-                        name="sortOrder"
-                        checked={asc === true}
-                        onChange={() => setAsc(true)}
-                    />
-                    <label className="form-check-label">Ascending</label>
-                </div>
-
-                <div className="form-check">
-                    <input
-                        className="form-check-input"
-                        type="radio"
-                        name="sortOrder"
-                        checked={asc === false}
-                        onChange={() => setAsc(false)}
-                    />
-                    <label className="form-check-label">Descending</label>
-                </div>
-            </div>
-
-            <button
-                className="btn btn-primary w-100"
-                onClick={buttonHandler}
-                disabled={pgno === "" || size === "" || sorting === ""}
-            >
-                Get Insurance Claims
-            </button>
-
-            {searched && records.length === 0 && (
-                <p className="mt-3 text-danger">No insurance claims found</p>
+            {!loading && records.length === 0 && (
+                <p className="text-danger">No insurance claims found</p>
             )}
 
             {records.length > 0 && (
-                <div className="table-responsive mt-4">
-                    <table className="table table-bordered table-striped table-hover mt-3">
-                        <thead className="table-dark">
-                            <tr>
-                                <th>Claim Id</th>
-                                <th>Patient Id</th>
-                                <th>Patient Name</th>
-                                <th>Policy Number</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {records.map((c) => (
-                                <tr key={c.insuranceClaimId}>
-                                    <td>{c.insuranceClaimId}</td>
-                                    <td>{c.patient?.patientId}</td>
-                                    <td>{c.patient?.patientName}</td>
-                                    <td>{c.policyNumber}</td>
-                                    <td>₹ {Number(c.amount).toFixed(2)}</td>
-                                    <td>{c.status}</td>
+                <>
+                    <div className="table-responsive">
+                        <table className="table table-bordered table-hover table-striped">
+                            <thead className="table-dark">
+                                <tr>
+                                    <th onClick={() => handleSort("insuranceClaimId")} style={{ cursor: "pointer" }}>
+                                        Claim Id{sortArrow("insuranceClaimId")}
+                                    </th>
+                                    <th onClick={() => handleSort("policyNumber")} style={{ cursor: "pointer" }}>
+                                        Policy Number{sortArrow("policyNumber")}
+                                    </th>
+                                    <th onClick={() => handleSort("amount")} style={{ cursor: "pointer" }}>
+                                        Amount{sortArrow("amount")}
+                                    </th>
+                                    <th onClick={() => handleSort("status")} style={{ cursor: "pointer" }}>
+                                        Status{sortArrow("status")}
+                                    </th>
+                                    <th>Patient Id</th>
+                                    <th>Patient Name</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+
+                            <tbody>
+                                {records.map((c) => (
+                                    <tr key={c.insuranceClaimId}>
+                                        <td>{c.insuranceClaimId}</td>
+                                        <td>{c.policyNumber}</td>
+                                        <td>₹ {Number(c.amount).toFixed(2)}</td>
+                                        <td>{c.status}</td>
+                                        <td>{c.patient?.patientId}</td>
+                                        <td>{c.patient?.patientName}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="d-flex justify-content-between mt-3">
+                        <button
+                            className="btn btn-secondary"
+                            disabled={pgno === 0 || loading}
+                            onClick={() => fetchClaims(pgno - 1)}
+                        >
+                            Prev
+                        </button>
+
+                        <span className="align-self-center">
+                            Page {pgno + 1} of {totalPages}
+                        </span>
+
+                        <button
+                            className="btn btn-secondary"
+                            disabled={pgno >= totalPages - 1 || loading}
+                            onClick={() => fetchClaims(pgno + 1)}
+                        >
+                            Next
+                        </button>
+                    </div>
+                </>
             )}
         </div>
     );

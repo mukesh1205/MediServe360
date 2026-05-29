@@ -46,11 +46,15 @@ export default function FindInvoice() {
             <h3 className="mb-4">Find Invoice by ID</h3>
 
             <div className="mb-3">
-                <label className="form-label">Enter Invoice ID</label>
+                <label className="form-label">
+                    Invoice ID
+                    <span className="text-danger"> *</span>
+                </label>
                 <input
                     className="form-control"
                     type="number"
                     value={invoiceId}
+                    placeholder="Enter Invoice ID"
                     onChange={(e) => setInvoiceId(e.target.value)}
                     onKeyDown={(e) => {
                             if (e.key === "Enter") {

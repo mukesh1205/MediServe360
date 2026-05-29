@@ -1,151 +1,140 @@
 import axios from "axios";
-import { useState } from "react";
-import {toast} from 'react-toastify';
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 export default function DisplayPatientsPaginated() {
 
     const [records, setRecords] = useState([]);
-    const [pgno, setPgno] = useState("");
-    const [size, setSize] = useState("");
-    const [sorting, setSorting] = useState("");
+    const [pgno, setPgno] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const size = 10;
+
+    const [sorting, setSorting] = useState("patientId");
     const [asc, setAsc] = useState(true);
-    const [searched, setSearched] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const buttonHandler=async()=>{
-        try{
-            const url="http://localhost:9002/api/patient/fetchAllPatientsPaginated";
-            if (pgno === "" || size === "" || sorting === "") {
-                toast.warning("Please enter page number, size, and sorting column");
-                return;
-            }
+    const fetchPatients = async (page = pgno, sortCol = sorting, order = asc) => {
+        try {
+            setLoading(true);
 
-            
-            const res=await axios.get(url,{
-            params: {
-                    pgno:pgno,
-                    size:size,
-                    sorting:sorting,
-                    asc:asc
-            },
-            headers: {
-                Authorization: "Bearer " + localStorage.getItem("token")
-            }
-                });
-            setRecords(res.data.content);
-            setSearched(true);
+            const url = "http://localhost:9002/api/patient/fetchAllPatientsPaginated";
+
+            const res = await axios.get(url, {
+                params: {
+                    pgno: page,
+                    size: size,
+                    sorting: sortCol,
+                    asc: order
+                },
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }
+            });
+
+            setRecords(res.data.content || []);
+            setPgno(res.data.number);
+            setTotalPages(res.data.totalPages);
+
         } catch (err) {
-            toast.error(err.message);
+            toast.error(err.response?.data || err.message);
+        } finally {
+            setLoading(false);
         }
+    };
+
+    useEffect(() => {
+        fetchPatients(0);
+    }, []);
+
+    const handleSort = (column) => {
+        if (sorting === column) {
+            const newAsc = !asc;
+            setAsc(newAsc);
+            fetchPatients(pgno, column, newAsc);
+        } else {
+            setSorting(column);
+            setAsc(true);
+            fetchPatients(pgno, column, true);
+        }
+    };
+
+    const sortArrow = (column) => {
+        if (sorting !== column) return "";
+        return asc ? " ↑" : " ↓";
     };
 
     return (
         <div className="container mt-4">
+            <h3 className="mb-4">Display Patients (Paginated)</h3>
 
-            <h3 className="mb-4">Display Patients Paginated</h3>
+            {loading && <p>Loading...</p>}
 
-            <div className="mb-3">
-                <label className="form-label">Page NO</label>
-                <input
-                    className="form-control"
-                    type="number"
-                    value={pgno}
-                    placeholder="Enter page number"
-                    onChange={e => setPgno(e.target.value === "" ? "" : Number(e.target.value))}
-                />
-            </div>
-
-            <div className="mb-3">
-                <label className="form-label">Page Size</label>
-                <input
-                    className="form-control"
-                    type="number"
-                    value={size}
-                    placeholder="Enter page size"
-                    onChange={e => setSize(e.target.value === "" ? "" : Number(e.target.value))}
-                />
-            </div>
-
-            <div className="mb-3">
-                <label className="form-label">Sorting column</label>
-                <select
-                    className="form-select"
-                    value={sorting}
-                    onChange={e => setSorting(e.target.value)}
-                >
-                    <option value="">--Select Column--</option>
-                    <option value="patientId">Patient Id</option>
-                    <option value="patientName">Patient Name</option>
-                    <option value="patientGender">Patient Gender</option>
-                    <option value="patientDOB">Patient DOB</option>
-                </select>
-            </div>
-
-            <div className="mb-3">
-                <label className="form-label">Order</label>
-
-                <div className="form-check">
-                    <input
-                        className="form-check-input"
-                        type="radio"
-                        name="sortOrder"
-                        checked={asc === true}
-                        onChange={() => setAsc(true)}
-                    />
-                    <label className="form-check-label">Ascending</label>
-                </div>
-
-                <div className="form-check">
-                    <input
-                        className="form-check-input"
-                        type="radio"
-                        name="sortOrder"
-                        checked={asc === false}
-                        onChange={() => setAsc(false)}
-                    />
-                    <label className="form-check-label">Descending</label>
-                </div>
-            </div>
-
-            <button
-                className="btn btn-primary w-100"
-                onClick={buttonHandler}
-                disabled={pgno === "" || size === "" || sorting === ""}
-            >
-                Get Patients
-            </button>
-
-            {searched && records.length === 0 && pgno !== "" && size !== "" && sorting !== "" && (
-                <p className="mt-3">No patients found</p>
+            {!loading && records.length === 0 && (
+                <p className="text-danger">No patients found</p>
             )}
 
             {records.length > 0 && (
-                <div className="table-responsive mt-4">
-                    <table className="table table-bordered table-striped table-hover mt-3">
-                        <thead className="table-dark">
-                            <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>DOB</th>
-                                <th>Gender</th>
-                                <th>Phone Number</th>
-                                <th>Medical History</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {records.map((e) => (
-                                <tr key={e.patientId}>
-                                    <td>{e.patientId}</td>
-                                    <td>{e.patientName}</td>
-                                    <td>{new Date(e.patientDOB).toLocaleDateString()}</td>
-                                    <td>{e.patientGender}</td>
-                                    <td>{e.patientPhoneNumber}</td>
-                                    <td>{e.patientMedicalHistory}</td>
-                                    <td>{e.patientStatus}</td>
+                <>
+                    <div className="table-responsive">
+                        <table className="table table-bordered table-hover table-striped">
+                            <thead className="table-dark">
+                                <tr>
+                                    <th onClick={() => handleSort("patientId")} style={{ cursor: "pointer" }}>
+                                        Id{sortArrow("patientId")}
+                                    </th>
+                                    <th onClick={() => handleSort("patientName")} style={{ cursor: "pointer" }}>
+                                        Name{sortArrow("patientName")}
+                                    </th>
+                                    <th onClick={() => handleSort("patientDOB")} style={{ cursor: "pointer" }}>
+                                        DOB{sortArrow("patientDOB")}
+                                    </th>
+                                    <th onClick={() => handleSort("patientGender")} style={{ cursor: "pointer" }}>
+                                        Gender{sortArrow("patientGender")}
+                                    </th>
+                                    <th>Phone</th>
+                                    <th>Medical History</th>
+                                    <th>Status</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+
+                            <tbody>
+                                {records.map((e) => (
+                                    <tr key={e.patientId}>
+                                        <td>{e.patientId}</td>
+                                        <td>{e.patientName}</td>
+                                        <td>{new Date(e.patientDOB).toLocaleDateString()}</td>
+                                        <td>{e.patientGender}</td>
+                                        <td>{e.patientPhoneNumber}</td>
+                                        <td>{e.patientMedicalHistory}</td>
+                                        <td>{e.patientStatus}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="d-flex justify-content-between mt-3">
+                        <button
+                            className="btn btn-secondary"
+                            disabled={pgno === 0 || loading}
+                            onClick={() => fetchPatients(pgno - 1)}
+                        >
+                            Prev
+                        </button>
+
+                        <span className="align-self-center">
+                            Page {pgno + 1} of {totalPages}
+                        </span>
+
+                        <button
+                            className="btn btn-secondary"
+                            disabled={pgno >= totalPages - 1 || loading}
+                            onClick={() => fetchPatients(pgno + 1)}
+                        >
+                            Next
+                        </button>
+                    </div>
+                </>
             )}
         </div>
     );

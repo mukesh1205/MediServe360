@@ -60,9 +60,10 @@ export default function AddUser(){
                 <input className="form-control" type="text" placeholder="Enter name" onChange={nameHandler} />
             </div>
 
-            <div>
+            <div className="mb-3">
                 <label className="form-label">Role</label>
-                <select onChange={roleHandler}>
+                <select className="form-select" onChange={roleHandler}>
+                    <option value="">--Select Role--</option>
                     <option value="PATIENT">Patient</option>
                     <option value="DOCTOR">Doctor</option>
                     <option value="NURSE">Nurse</option>
@@ -85,7 +86,7 @@ export default function AddUser(){
                 <input className="form-control" type="text" placeholder="Enter Password (min 6 Chars)" onChange={passwordHandler} />
             </div>
 
-                <button class="btn btn-secondary btn-sm dropdown-toggle" onClick={submitHandler} type="submit">Submit</button>
+                <button class="btn btn-primary w-100" onClick={submitHandler} type="submit">Submit</button>
            
         </div>
     )
