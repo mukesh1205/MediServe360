@@ -8,7 +8,7 @@ const navLinks = [
   { to: "/bed", label: "Bed", icon: "🛏️" },
   { to: "/ward", label: "Ward", icon: "🏨" },
   { to: "/insuranceClaim", label: "Insurance Claim", icon: "🛡️" },
-  { to: "/compilance_report", label: "Compliance Report", icon: "📋" },
+  { to: "/compliance_report", label: "Compliance Report", icon: "📋" },
   { to: "/invoice", label: "Invoice", icon: "🧾" },
   { to: "/auditlog", label: "Audit Log", icon: "🔍" },
   { to: "/notification", label: "Notification", icon: "🔔" },

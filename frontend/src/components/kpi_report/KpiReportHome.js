@@ -52,12 +52,13 @@ export default function KpiReportHome(){
                     </div>
 
                 </div>
-            </nav>
-            <ul className="navbar-nav ms-auto">
+                <ul className="navbar-nav ms-auto">
                                         <li className="nav-item">
                                         <Signout />
                                         </li>
                                     </ul>
+            </nav>
+            
             <Outlet></Outlet>
         </div>
     );

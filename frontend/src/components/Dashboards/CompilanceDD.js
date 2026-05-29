@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import Signout from "../Auth/Signout";
 
 const navLinks = [
-  { to: "/compilance_report", label: "Compliance Report", icon: "📋" },
+  { to: "/compliance_report", label: "Compliance Report", icon: "📋" },
 ];
 
 export default function CompilanceDD() {
