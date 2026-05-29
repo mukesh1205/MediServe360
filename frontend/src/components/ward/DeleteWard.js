@@ -7,9 +7,13 @@ export default function DeleteWard() {
       let navigate = useNavigate();
 
     useEffect(() => {
-        let url = `http://localhost:9002/ward/deleteWard/${wardId}`;
+        let url = `http://localhost:9002/api/ward/deleteWard/${wardId}`;
 
-        axios.delete(url)
+        axios.delete(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 alert(response.data);
                  navigate("/ward/findAll");

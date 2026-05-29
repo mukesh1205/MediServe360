@@ -1,55 +1,28 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 export default function DisplayKpi() {
 
     const [records, setRecords] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
 
-        const fetchData = async () => {
-            try {
-                const token = localStorage.getItem("token");
+        let url = "http://localhost:9002/api/kpi-report/fetchAllKPIReports";
 
-                if (!token) {
-                    alert("❌ Please login first");
-                    return;
-                }
-
-                let url = "http://localhost:9002/api/kpi-report/fetchAllKPIReports";
-
-                const res = await axios.get(url, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
-                });
-
-                console.log("✅ KPI Data:", res.data);
-                setRecords(res.data);
-
-            } catch (err) {
-                console.error(err);
-                alert(err.response?.data || "Error fetching KPI reports");
-            } finally {
-                setLoading(false);
+        axios.get(url, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
             }
-        };
-
-        fetchData();
+        })
+        .then((res) => {
+            console.log(res.data); //
+            setRecords(res.data);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
 
     }, []);
-
-    // ✅ Bootstrap loading
-    if (loading) {
-        return (
-            <div className="container mt-4">
-                <h4>Loading...</h4>
-            </div>
-        );
-    }
 
     return (
         <div className="container mt-4">
@@ -79,9 +52,9 @@ export default function DisplayKpi() {
                                 <td>{e.kpiMetrics}</td>
                                 <td>{e.kpiGeneratedDate}</td>
                                 <td>
-                                    {e.complianceReport
-                                        ? e.complianceReport.reportId
-                                        : "N/A"}
+                                    {e.complianceReport?.reportId || 
+                                     e.complianceReport?.id || 
+                                     "N/A"}
                                 </td>
                             </tr>
                         ))}

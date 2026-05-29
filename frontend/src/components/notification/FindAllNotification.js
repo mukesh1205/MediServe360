@@ -1,59 +1,77 @@
-import {useState,useEffect} from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
-export default function FindAllNotification(){
-    let [data,setData]=useState([]);
-    const navigate=useNavigate();
-    async function notificationget(){
-        let url="http://localhost:9002/notification/fetchallnotifications"
-        try{
-            let res=await axios.get(url);
+export default function FindAllNotification() {
+
+    const [data, setData] = useState([]);
+
+    async function fetchNotifications() {
+        const url = "http://localhost:9002/notification/fetchallnotifications";
+
+        try {
+            const res = await axios.get(url, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }
+            });
+
             setData(res.data);
-        }catch(err){
-            alert(err.message);
+        } catch (err) {
+            toast.error(err.message);
         }
     }
-    useEffect(()=>{
-        notificationget();
-    },[])
 
-    function deletehandler(event){
-        navigate(`/notification/delete/${event.target.value}`)
-    }
+    useEffect(() => {
+        fetchNotifications();
+    }, []);
 
-    function updatehandler(event){
-        navigate(`/notification/update/${event.target.value}`)
-    }
-    return(
-        <div>
-            
-            <table border={2}>
-                <thead>
-                    <tr>
-                        <th>NotificationId</th>
-                        <th>Notification Category</th>
-                        <th>Notificatoin message</th>
-                        <th>Notification Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        data.map((m)=>{
-                            return(
-                                <tr>
-                                    <td>{m.notificationId}</td>
+    return (
+        <div className="container mt-4">
+
+            <h3 className="mb-4">Display All Notifications</h3>
+
+            {data.length === 0 ? (
+                <p>No notifications found</p>
+            ) : (
+                <div className="table-responsive">
+                    <table className="table table-bordered table-hover table-striped mt-3">
+                        <thead className="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Category</th>
+                                <th>Message</th>
+                                <th>Status</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {data.map((m) => (
+                                <tr key={m.notificationID}>
+                                    <td>{m.notificationID}</td>
                                     <td>{m.category}</td>
                                     <td>{m.message}</td>
                                     <td>{m.status}</td>
-                                    <button value={m.notificationId} onClick={deletehandler}>Delete</button>
-                                    <button value={m.notificationId} onClick={updatehandler}>Edit</button>
+
+                                    <td className="text-center">
+                                        <Link
+                                            className="btn btn-danger btn-sm"
+                                            to={`/notification/delete/${m.notificationID}`}
+                                        >
+                                            Delete
+                                        </Link>
+                                    </td>
+
                                 </tr>
-                            )
-                        })
-                    }
-                </tbody>
-            </table>
+                            ))}
+                        </tbody>
+
+                    </table>
+                </div>
+            )}
+
         </div>
-    )
+    );
 }

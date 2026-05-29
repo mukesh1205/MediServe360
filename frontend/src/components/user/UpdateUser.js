@@ -1,104 +1,143 @@
-import { useState , useEffect} from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-export default function UpdateUser(){
+export default function UpdateUser() {
 
-    const {id}=useParams();
-    let [name,setName]=useState("");
-    let [role,setRole]=useState("");
-    let [phone,setPhone]=useState("");
-    let [email,setEmail]=useState("");
-    // let [id,setId]=useState();
-    const nameHandler=(event)=>{
-        setName(event.target.value)
-    }
+    const { id } = useParams();
+    const navigate = useNavigate();
 
-    const roleHandler=(event)=>{
-        setRole(event.target.value)
-    }
+    const [name, setName] = useState("");
+    const [role, setRole] = useState("");
+    const [phone, setPhone] = useState("");
+    const [password, setPassword] = useState("");
 
-    const emailHandler=(event)=>{
-        setEmail(event.target.value)
-    }
+    useEffect(() => {
+        fetchUser();
+    }, [id]);
 
-    const phoneHandler=(event)=>{
-        setPhone(event.target.value)
-    }
+    async function fetchUser() {
+        const url = `http://localhost:9002/user/findbyid/${id}`;
 
-    // const idHandler=(event)=>{
-    //     setId(event.target.value);
-    // }
-
-    async function findById(){
-
-        let url=`http://localhost:9002/user/findbyid/${id}`;
-        try{
-
-            let res=await axios.get(url);
-            setName(res.data.user.userName);
-            setEmail(res.data.user.userEmail);
-            setRole(res.data.user.userRole);
-            setPhone(res.data.user.userPhone);
-
-        }catch(err){
-            alert(err.message)
-        }
-    }
-
-    useEffect(()=>{
-        findById()
-    },[])
-    async function submitHandler(){
-        let data={
-                
-                "user": {
-                    "userId":id,
-                    "userName": name,
-                    "userRole": role,
-                    "userEmail": email,
-                    "userPhone": phone
+        try {
+            const res = await axios.get(url, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
                 }
-                
-            }
-        try{
-            let res=await axios.put("http://localhost:9002/user/updateuser",data);
-            alert(res.data.message)
-        }catch(err){
-            alert(err.message);
+            });
+
+            setName(res.data.userName);
+            setRole(res.data.role);
+            setPhone(res.data.phoneNumber);
+            setPassword("");
+        } catch (err) {
+            toast.error(err.message);
         }
     }
-    return(
-        <div>
+
+    async function submitHandler(e) {
+        e.preventDefault();
+
+        if (!name || !role || !phone) {
+            toast.warning("Please fill all required fields");
+            return;
+        }
+
+        const data = {
+            userName: name,
+            userRole: role,
+            phonenumber: phone,
+            password: password
+        };
+
+        try {
+            await axios.put(
+                `http://localhost:9002/user/updateuser/${id}`,
+                data,
+                {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                }
+            );
+
+            toast.success("User updated successfully");
+            navigate("/user/findall");
+        } catch (err) {
+            toast.error(err.message);
+        }
+    }
+
+    return (
+        <div className="container mt-4">
+            <h3 className="mb-4">Update User</h3>
+
             <form onSubmit={submitHandler}>
-                {/* <label>Id</label>
-                <input type="number" placeholder="Enter Id" value={id} onChange={idHandler} />
-                <br></br> */}
-                <p>Update the user with id {id}</p>
-                <label>Name</label>
-                <input type="text" placeholder="Enter name" value={name} onChange={nameHandler} />
-                <br></br>
 
-                <label>Role</label>
-                <select onChange={roleHandler} value={role}>
-                    <option value="Patient">Patient</option>
-                    <option value="Doctor">Doctor</option>
-                    <option value="Nurse">Nurse</option>
-                    <option value="Admin">Admin</option>
-                    
-                </select>
-                <br></br>
+                <div className="mb-3">
+                    <label className="form-label">User ID</label>
+                    <input
+                        className="form-control"
+                        type="text"
+                        value={id}
+                        disabled
+                    />
+                </div>
 
-                <label>Email</label>
-                <input type="email" value={email} placeholder="Enter email" onChange={emailHandler} />
-                <br></br>
+                <div className="mb-3">
+                    <label className="form-label">Name</label>
+                    <input
+                        className="form-control"
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                </div>
 
-                <label>Phone</label>
-                <input type="text" value={phone} placeholder="Enter phone number" onChange={phoneHandler} />
-                <br></br>
+                <div className="mb-3">
+                    <label className="form-label">Role</label>
+                    <select
+                        className="form-select"
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                    >
+                        <option value="">--Select Role--</option>
+                        <option value="PATIENT">Patient</option>
+                        <option value="DOCTOR">Doctor</option>
+                        <option value="NURSE">Nurse</option>
+                        <option value="ADMIN">Admin</option>
+                        <option value="FINANCEOFFICER">Finance Officer</option>
+                        <option value="COMPLIANCE_OFFICER">Compliance Officer</option>
+                    </select>
+                </div>
 
-                <button type="submit">Submit</button>
+                <div className="mb-3">
+                    <label className="form-label">Phone Number</label>
+                    <input
+                        className="form-control"
+                        type="text"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Password</label>
+                    <input
+                        className="form-control"
+                        type="text"
+                        value={password}
+                        placeholder="Leave blank to keep current password"
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+
+                <button className="btn btn-warning w-100" type="submit">
+                    Update
+                </button>
+
             </form>
         </div>
-    )
+    );
 }

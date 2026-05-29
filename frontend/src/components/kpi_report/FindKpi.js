@@ -12,25 +12,14 @@ export default function FindKpi() {
     };
 
     const buttonHandler = async () => {
-        setError("");
-        setRecords([]);
-
         try {
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-                setError("❌ Please login first");
-                return;
-            }
-
             let url = "http://localhost:9002/api/kpi-report/fetchAllKPIReports";
 
-            let res = await axios.get(url, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
-            });
+            let res = await axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                });
 
             let kpis = res.data;
 

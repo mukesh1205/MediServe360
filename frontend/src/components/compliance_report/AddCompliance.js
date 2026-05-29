@@ -1,18 +1,58 @@
 import axios from "axios";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
-export default function AddComplianceReport() {
+export default function AddCompliance() {
 
     const [scope, setScope] = useState("");
     const [metrics, setMetrics] = useState("");
     const [date, setDate] = useState("");
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    
+    const scopeHandler = (e) => {
+        const value = e.target.value;
 
-        const url = "http://localhost:9002/api/compliance-reports/addComplianceReport";
+        
+        if (/^[A-Za-z ]*$/.test(value)) {
+            setScope(value);
+        }
+    };
 
-        const data = {
+    const metricsHandler = (e) => {
+        setMetrics(e.target.value);
+    };
+
+    const dateHandler = (e) => {
+        setDate(e.target.value);
+    };
+
+    const buttonHandler = () => {
+
+        let url = "http://localhost:9002/api/compliance-reports/addComplianceReport";
+
+        
+        if (!scope.trim() || !metrics.trim() || !date) {
+            toast.warning("Please fill all required fields");
+            return;
+        }
+
+    
+        const scopeRegex = /^[A-Za-z ]+$/;
+        if (!scopeRegex.test(scope)) {
+            toast.warning("Scope should contain only letters");
+            return;
+        }
+
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate > today) {
+            toast.warning("Report date cannot be in the future");
+            return;
+        }
+
+        let data = {
             complianceReport: {
                 reportScope: scope,
                 reportMetrics: metrics,
@@ -20,70 +60,75 @@ export default function AddComplianceReport() {
             }
         };
 
-        try {
-            const response = await axios.post(url, data, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            });
+        axios.post(url, data, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }
+        })
+        .then(() => {
+            toast.success("Compliance Report Added Successfully");
 
-            alert(response.data.message);
-
-            // reset form
+            
             setScope("");
             setMetrics("");
             setDate("");
-
-        } catch (error) {
-            console.error(error);
-            alert(error.response?.data?.message || "Error adding report");
-        }
+        })
+        .catch((error) => {
+            toast.error(error.response?.data?.message || error.message);
+        });
     };
 
     return (
         <div className="container mt-4">
-            <h2>Add Compliance Report</h2>
 
-            <form onSubmit={handleSubmit}>
+            <h3 className="mb-4">Add Compliance Report</h3>
 
-                <div className="mb-3">
-                    <label className="form-label">Scope</label>
-                    <input
-                        className="form-control"
-                        value={scope}
-                        onChange={(e) => setScope(e.target.value)}
-                        placeholder="Enter scope"
-                        required
-                    />
-                </div>
+            {/* Scope */}
+            <div className="mb-3">
+                <label className="form-label">
+                    Scope <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                    className="form-control"
+                    type="text"
+                    value={scope}
+                    placeholder="Enter scope"
+                    onChange={scopeHandler}
+                />
+            </div>
 
-                <div className="mb-3">
-                    <label className="form-label">Metrics</label>
-                    <input
-                        className="form-control"
-                        value={metrics}
-                        onChange={(e) => setMetrics(e.target.value)}
-                        placeholder="Enter metrics"
-                        required
-                    />
-                </div>
+            {/* Metrics */}
+            <div className="mb-3">
+                <label className="form-label">
+                    Metrics <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                    className="form-control"
+                    type="text"
+                    value={metrics}
+                    placeholder="Enter metrics"
+                    onChange={metricsHandler}
+                />
+            </div>
 
-                <div className="mb-3">
-                    <label className="form-label">Report Date</label>
-                    <input
-                        type="date"
-                        className="form-control"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                        required
-                    />
-                </div>
+            {/* Date */}
+            <div className="mb-3">
+                <label className="form-label">
+                    Report Date <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                    type="date"
+                    className="form-control"
+                    value={date}
+                    onChange={dateHandler}
+                    max={new Date().toISOString().split("T")[0]}
+                />
+            </div>
 
-                <button type="submit" className="btn btn-primary">
-                    Save
-                </button>
+            <button className="btn btn-primary w-100" onClick={buttonHandler}>
+                Add Compliance Report
+            </button>
 
-            </form>
         </div>
     );
 }

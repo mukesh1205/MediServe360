@@ -15,7 +15,7 @@ export default function AddBed() {
     }
 
     let saveHandler = () => {
-        let url = "http://localhost:9002/bed/create";
+        let url = "http://localhost:9002/api/beds/create";
         let data = {
             "bed": {
                 "bedStatus": bedStatus,
@@ -24,7 +24,11 @@ export default function AddBed() {
                 }
             }
         };
-        axios.post(url, data)
+        axios.post(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 alert("Bed saved successfully! Bed ID: " + response.data.bed.bedId);
             })

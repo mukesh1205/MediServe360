@@ -10,30 +10,41 @@ export default function ComplianceReportHome() {
                         Compliance Report
                     </Link>
 
-                    <div className="collapse navbar-collapse">
+                    {/*  Added navbar toggler like PatientHome */}
+                    <button
+                        className="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                    >
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+
+                    {/* Added ID for collapse */}
+                    <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav">
 
                             <li className="nav-item">
                                 <Link className="nav-link" to="add">
-                                    Add Compliance Report
+                                    Add
                                 </Link>
                             </li>
 
                             <li className="nav-item">
                                 <Link className="nav-link" to="find">
-                                    Find Compliance Report
+                                    Find
                                 </Link>
                             </li>
 
                             <li className="nav-item">
                                 <Link className="nav-link" to="display">
-                                    Display Compliance Reports
+                                    Display
                                 </Link>
                             </li>
 
                             <li className="nav-item">
                                 <Link className="nav-link" to="paginated">
-                                    Display Paginated Compliance Reports
+                                    Paginated
                                 </Link>
                             </li>
 

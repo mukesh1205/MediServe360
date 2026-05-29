@@ -14,11 +14,19 @@ export default function AddAppointment() {
 
     // ✅ Fetch doctors for dropdown
     useEffect(() => {
-        axios.get("http://localhost:9002/api/doctors/getAll")
+        axios.get("http://localhost:9002/api/doctor/getAll",{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => setDoctors(res.data))
             .catch(() => alert("Failed to load doctors"));
 
-        axios.get("http://localhost:9002/api/fetchAllPatients")
+        axios.get("http://localhost:9002/api/patient/fetchAllPatients",{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => setPatients(res.data))
             .catch(() => alert("Failed to load patients"));
     }, []);
@@ -29,7 +37,7 @@ export default function AddAppointment() {
             return;
         }
 
-        let url = "http://localhost:9002/api/appointments/add";
+        let url = "http://localhost:9002/api/appointment/add";
 
         let data = {
             "appointment": {
@@ -41,7 +49,11 @@ export default function AddAppointment() {
             }
         };
 
-        axios.post(url, data)
+        axios.post(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((response) => {
                 alert(response.data.message);
                 setDate("");

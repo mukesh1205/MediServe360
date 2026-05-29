@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router";
 export default function UpdateNotification(){
     const {id}=useParams();
     const navigate=useNavigate();
-
+    alert("Okkk");
     let [message,setMessage]=useState("");
     let [category,setCategory]=useState("");
     let [status,setStatus]=useState("");
@@ -61,7 +61,11 @@ export default function UpdateNotification(){
                 
             }
         try{
-            let res=await axios.put("http://localhost:9002/notification/updatenotification",data);
+            let res=await axios.put("http://localhost:9002/notification/updatenotification",data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                });
             alert(res.data.message);
             navigate("/notification")
         }catch(err){

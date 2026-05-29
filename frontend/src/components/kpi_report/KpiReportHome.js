@@ -10,30 +10,41 @@ export default function KpiReportHome() {
                         KPI Report
                     </Link>
 
-                    <div className="collapse navbar-collapse">
+                    {/*  Add toggle button  */}
+                    <button
+                        className="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                    >
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+
+                    {/* Add ID for collapse */}
+                    <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav">
 
                             <li className="nav-item">
                                 <Link className="nav-link" to="add">
-                                    Add KPI Report
+                                    Add
                                 </Link>
                             </li>
 
                             <li className="nav-item">
                                 <Link className="nav-link" to="find">
-                                    Find KPI Report
+                                    Find
                                 </Link>
                             </li>
 
                             <li className="nav-item">
                                 <Link className="nav-link" to="display">
-                                    Display KPI Reports
+                                    Display
                                 </Link>
                             </li>
 
                             <li className="nav-item">
                                 <Link className="nav-link" to="displayPaginated">
-                                    Display KPI Reports Paginated
+                                    Paginated
                                 </Link>
                             </li>
 

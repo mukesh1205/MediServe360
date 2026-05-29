@@ -6,14 +6,30 @@ export default function FindCompliance() {
     const [scope, setScope] = useState("");
     const [records, setRecords] = useState([]);
     const [error, setError] = useState("");
+    const [scopeError, setScopeError] = useState(""); 
 
+    
     const scopeHandler = (e) => {
-        setScope(e.target.value);
+        const value = e.target.value;
+
+        if (/^[A-Za-z ]*$/.test(value)) {
+            setScope(value);
+            setScopeError(""); 
+        } else {
+            setScopeError("Scope accepts only letters (A–Z, a–z)");
+        }
     };
 
     const buttonHandler = async () => {
+
         setError("");
         setRecords([]);
+
+        
+        if (scopeError) {
+            setError(scopeError);
+            return;
+        }
 
         try {
             const url = "http://localhost:9002/api/compliance-reports/fetchAllComplianceReports";
@@ -26,6 +42,7 @@ export default function FindCompliance() {
 
             let reports = res.data;
 
+            
             if (scope.trim()) {
                 reports = reports.filter((r) =>
                     r.reportScope.toLowerCase().includes(scope.toLowerCase())
@@ -48,9 +65,10 @@ export default function FindCompliance() {
         <div className="container mt-4">
             <h2>Find Compliance Report</h2>
 
+            {/*  Input */}
             <div className="input-group mb-3">
                 <input
-                    className="form-control"
+                    className={`form-control ${scopeError ? "is-invalid" : ""}`} // red border
                     placeholder="Enter Scope"
                     value={scope}
                     onChange={scopeHandler}
@@ -60,8 +78,21 @@ export default function FindCompliance() {
                 </button>
             </div>
 
-            {error && <div className="alert alert-danger">{error}</div>}
+            {/*  Show only when invalid */}
+            {scopeError && (
+                <small style={{ color: "red" }}>
+                    {scopeError}
+                </small>
+            )}
 
+            {/*  Error */}
+            {error && (
+                <div className="alert alert-danger mt-3">
+                    {error}
+                </div>
+            )}
+
+            {/*  Table */}
             {records.length > 0 && (
                 <table className="table table-bordered table-striped mt-3">
                     <thead className="table-dark">
@@ -72,6 +103,7 @@ export default function FindCompliance() {
                             <th>Date</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         {records.map((e) => (
                             <tr key={e.reportId}>

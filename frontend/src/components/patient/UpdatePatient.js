@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import {toast} from "react-toastify";
 
 export default function UpdatePatient() {
   let { pid } = useParams();
@@ -39,7 +40,13 @@ export default function UpdatePatient() {
   };
 
   let updateButtonHandler = (e) => {
-    let url = "http://localhost:9002/api/updatePatient";
+
+    if (!patientName || !patientDOB || !patientGender || !patientPN || !patientMH || !patientStatus) {
+      toast.warning("Please fill all fields");
+      return;
+    }
+    let url = "http://localhost:9002/api/patient/updatePatient";
+
     let data={
         "patient":{
             "patientId":pid,
@@ -53,20 +60,28 @@ export default function UpdatePatient() {
     };
 
     axios
-      .put(url, data)
+      .put(url, data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
-        alert("Updated successfully");
+        toast.success("Updated successfully");
         navigate("/patient/display");
       })
       .catch((err) => {
-        console.error(err);
+        toast.error(err.message);
       });
   };
 
   useEffect(() => {
-    let url = "http://localhost:9002/api/getPatientById/" + pid;
+    let url = "http://localhost:9002/api/patient/getPatientById/" + pid;
     axios
-      .get(url)
+      .get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
       .then((res) => {
         let p = res.data.patient;
         setPatientName(p.patientName);
@@ -77,37 +92,89 @@ export default function UpdatePatient() {
         setPatientStatus(p.patientStatus);
       })
       .catch((err) => {
-        console.error(err);
+        toast.error(err.message);
       });
   }, [pid]);
 
   return (
-    <div>
-      <label>Patient Name </label>
-      <input value={patientName} onChange={patientNameHandler} />
-      <br />
+    <div className="container mt-4">
+      <h3 className="mb-4">Update Patient</h3>
+      <div className="mb-3">
+      <label className="form-label">Patient Name </label>
+      <input className="form-control" type="text" value={patientName} onChange={patientNameHandler} />
+      </div>
 
-      <label>Patient DOB </label>
-      <input type="date" value={patientDOB} onChange={patientDOBHandler} />
-      <br />
+      <div className="mb-3">
+      <label className="form-label">Patient DOB </label>
+      <input className="form-control" type="date" value={patientDOB} onChange={patientDOBHandler} />
+      </div>
 
-      <label>Patient Gender </label>
-      <input value={patientGender} onChange={patientGenderHandler} />
-      <br />
+      <div className="mb-3">
+        <label className="form-label">Patient Gender</label>
 
-      <label>Patient Phone Number </label>
-      <input type="number" value={patientPN} onChange={patientPNHandler} />
-      <br />
+        <div className="form-check">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="gender"
+            value="Male"
+            checked={patientGender === "Male"}
+            onChange={patientGenderHandler}
+          />
+          <label className="form-check-label">Male</label>
+        </div>
 
-      <label>Patient Medical History </label>
-      <input value={patientMH} onChange={patientMHHandler} />
-      <br />
+        <div className="form-check">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="gender"
+            value="Female"
+            checked={patientGender === "Female"}
+            onChange={patientGenderHandler}
+          />
+          <label className="form-check-label">Female</label>
+        </div>
 
-      <label>Patient Status </label>
-      <input value={patientStatus} onChange={patientStatusHandler} />
-      <br />
+        <div className="form-check">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="gender"
+            value="Other"
+            checked={patientGender === "Other"}
+            onChange={patientGenderHandler}
+          />
+          <label className="form-check-label">Other</label>
+        </div>
+      </div>
 
-      <button onClick={updateButtonHandler}>Update</button>
+      <div className="mb-3">
+      <label className="form-label">Patient Phone Number </label>
+      <input className="form-control" type="tel" value={patientPN} onChange={patientPNHandler} />
+      </div>
+
+      <div className="mb-3">
+      <label className="form-label">Patient Medical History </label>
+      <textarea className="form-control" value={patientMH} onChange={patientMHHandler} />
+      </div>
+
+      <div className="mb-3">
+        <label className="form-label">Patient Status</label>
+        <select
+          className="form-select"
+          value={patientStatus}
+          onChange={patientStatusHandler}
+        >
+          <option value="">--Select Status--</option>
+          <option value="Admitted">Admitted</option>
+          <option value="Discharged">Discharged</option>
+          <option value="Under Treatment">Under Treatment</option>
+          <option value="Recovered">Recovered</option>
+        </select>
+      </div>
+
+      <button className="btn btn-warning w-100" onClick={updateButtonHandler}>Update</button>
     </div>
   );
 }

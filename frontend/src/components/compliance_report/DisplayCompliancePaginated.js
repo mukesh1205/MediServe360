@@ -1,139 +1,138 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function DisplayCompliancePaginated() {
 
-    const [records, setRecords] = useState([]);
-    const [page, setPage] = useState(0);
-    const [size, setSize] = useState(3);
-    const [sortBy, setSortBy] = useState("reportId");
-    const [asc, setAsc] = useState(true);
+  const [records, setRecords] = useState([]);
+  const [pgno, setPgno] = useState(0);
+  const size = 10;
 
-    const buttonHandler = async () => {
-        try {
-            const url = "http://localhost:9002/api/compliance-reports/paginated";
+  const [sorting, setSorting] = useState("reportId");
+  const [asc, setAsc] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-            const res = await axios.get(url, {
-                params: {
-                    page: page,
-                    size: size,
-                    sortBy: sortBy,
-                    asc: asc
-                },
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            });
+  //
+  const fetchReports = async (page = pgno, sortCol = sorting, order = asc) => {
+    try {
+      setLoading(true);
 
-            console.log(res.data);
-            setRecords(res.data.content || []);
+      const url = "http://localhost:9002/api/compliance-reports/paginated";
 
-        } catch (err) {
-            console.error(err.response?.data);
-            alert(err.response?.data || err.message);
+      const res = await axios.get(url, {
+        params: {
+          page: page,
+          size: size,
+          sortBy: sortCol,
+          asc: order
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
         }
-    };
+      });
 
-    return (
-        <div className="container mt-4">
-            <h2>Paginated Compliance Reports</h2>
+      setRecords(res.data.content || []);
+      setPgno(page);
 
-            {/* Page No */}
-            <div className="mb-3">
-                <label className="form-label">Enter Page No</label>
-                <input
-                    type="number"
-                    className="form-control"
-                    defaultValue={0}
-                    onChange={e => setPage(Number(e.target.value))}
-                />
-            </div>
+    } catch (err) {
+      toast.error(err.response?.data || err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            {/* Page Size */}
-            <div className="mb-3">
-                <label className="form-label">Enter Page Size</label>
-                <input
-                    type="number"
-                    className="form-control"
-                    defaultValue={3}
-                    onChange={e => setSize(Number(e.target.value))}
-                />
-            </div>
+  //
+  useEffect(() => {
+    fetchReports(0);
+  }, []);
 
-            {/* Sorting */}
-            <div className="mb-3">
-                <label className="form-label">Select Sorting Column</label>
-                <select
-                    className="form-select"
-                    onChange={e => setSortBy(e.target.value)}
-                >
-                    <option value="reportId">Report Id</option>
-                    <option value="reportScope">Report Scope</option>
-                    <option value="reportMetrics">Report Metrics</option>
-                    <option value="reportGeneratedDate">Generated Date</option>
-                </select>
-            </div>
+  
+  const handleSort = (column) => {
+    if (sorting === column) {
+      setAsc(!asc);
+      fetchReports(pgno, column, !asc);
+    } else {
+      setSorting(column);
+      setAsc(true);
+      fetchReports(pgno, column, true);
+    }
+  };
 
-            {/* Order */}
-            <div className="mb-3">
-                <label className="form-label">Order</label>
-                <div>
-                    <div className="form-check form-check-inline">
-                        <input
-                            type="radio"
-                            className="form-check-input"
-                            name="order"
-                            checked={asc === true}
-                            onChange={() => setAsc(true)}
-                        />
-                        <label className="form-check-label">Ascending</label>
-                    </div>
+  
+  const sortArrow = (column) => {
+    if (sorting !== column) return "";
+    return asc ? " ↑" : " ↓";
+  };
 
-                    <div className="form-check form-check-inline">
-                        <input
-                            type="radio"
-                            className="form-check-input"
-                            name="order"
-                            checked={asc === false}
-                            onChange={() => setAsc(false)}
-                        />
-                        <label className="form-check-label">Descending</label>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="container mt-4">
+      <h3 className="mb-4">Compliance Reports (Paginated)</h3>
 
-            <button className="btn btn-primary" onClick={buttonHandler}>
-                Get Reports
+      {loading && <p>Loading...</p>}
+
+      {!loading && records.length === 0 && (
+        <p className="text-danger">No reports found</p>
+      )}
+
+      {records.length > 0 && (
+        <>
+          {/*Table */}
+          <div className="table-responsive">
+            <table className="table table-bordered table-hover table-striped">
+              <thead className="table-dark">
+                <tr>
+                  <th onClick={() => handleSort("reportId")} style={{ cursor: "pointer" }}>
+                    ID{sortArrow("reportId")}
+                  </th>
+                  <th onClick={() => handleSort("reportScope")} style={{ cursor: "pointer" }}>
+                    Scope{sortArrow("reportScope")}
+                  </th>
+                  <th onClick={() => handleSort("reportMetrics")} style={{ cursor: "pointer" }}>
+                    Metrics{sortArrow("reportMetrics")}
+                  </th>
+                  <th onClick={() => handleSort("reportGeneratedDate")} style={{ cursor: "pointer" }}>
+                    Date{sortArrow("reportGeneratedDate")}
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {records.map((e) => (
+                  <tr key={e.reportId}>
+                    <td>{e.reportId}</td>
+                    <td>{e.reportScope}</td>
+                    <td>{e.reportMetrics}</td>
+                    <td>{new Date(e.reportGeneratedDate).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/*  Pagination */}
+          <div className="d-flex justify-content-between mt-3">
+            <button
+              className="btn btn-secondary"
+              disabled={pgno === 0 || loading}
+              onClick={() => fetchReports(pgno - 1)}
+            >
+              Prev
             </button>
 
-            {/* Table */}
-            {records.length === 0 ? (
-                <div className="alert alert-warning mt-3">
-                    No Data Found
-                </div>
-            ) : (
-                <table className="table table-bordered table-striped mt-4">
-                    <thead className="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Scope</th>
-                            <th>Metrics</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
+            <span className="align-self-center">
+              Page {pgno + 1}
+            </span>
 
-                    <tbody>
-                        {records.map((e) => (
-                            <tr key={e.reportId}>
-                                <td>{e.reportId}</td>
-                                <td>{e.reportScope}</td>
-                                <td>{e.reportMetrics}</td>
-                                <td>{e.reportGeneratedDate}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-        </div>
-    );
+            <button
+              className="btn btn-secondary"
+              disabled={records.length < size || loading}
+              onClick={() => fetchReports(pgno + 1)}
+            >
+              Next
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
 }

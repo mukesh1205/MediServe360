@@ -29,7 +29,7 @@ public class BedService {
 
 	// REPLACE the old createBed with this
 	public Bed createBed(Bed bed) {
-
+		System.out.println("Done");
 		// 1. Ward must be provided
 		if (bed.getWard() == null || bed.getWard().getWardId() == 0) {
 			throw new IllegalArgumentException("Ward ID is required to create a bed.");

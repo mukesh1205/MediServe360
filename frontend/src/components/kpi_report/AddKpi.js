@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function AddKpi() {
 
@@ -8,8 +9,13 @@ export default function AddKpi() {
     const [date, setDate] = useState("");
     const [complianceId, setComplianceId] = useState("");
 
+    //Scope - only alphabets
     const scopeHandler = (event) => {
-        setScope(event.target.value);
+        const value = event.target.value;
+
+        if (/^[A-Za-z ]*$/.test(value)) {
+            setScope(value);
+        }
     };
 
     const metricsHandler = (event) => {
@@ -20,13 +26,40 @@ export default function AddKpi() {
         setDate(event.target.value);
     };
 
+    //Allow only numbers for complianceId
     const complianceIdHandler = (event) => {
-        setComplianceId(event.target.value);
+        const value = event.target.value;
+
+        if (/^[0-9]*$/.test(value)) {
+            setComplianceId(value);
+        }
     };
 
-    const buttonHandler = async () => {
+    const buttonHandler = () => {
 
         const url = "http://localhost:9002/api/kpi-report/addKPIReport";
+
+        //  Empty validation
+        if (!scope.trim() || !metrics.trim() || !date || !complianceId) {
+            toast.warning("Please fill all required fields");
+            return;
+        }
+
+        //  Scope validation
+        if (!/^[A-Za-z ]+$/.test(scope)) {
+            toast.warning("Scope should contain only letters");
+            return;
+        }
+
+        //  Date validation
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate > today) {
+            toast.warning("KPI date cannot be in the future");
+            return;
+        }
 
         const data = {
             kpiReport: {
@@ -39,88 +72,91 @@ export default function AddKpi() {
             }
         };
 
-        try {
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-                alert("No token found. Please login first.");
-                return;
+        axios.post(url, data, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
             }
+        })
+        .then(() => {
 
-            const response = await axios.post(url, data, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
-            });
+            toast.success("KPI Report added successfully");
 
-            console.log(response.data);
-            alert("✅ KPI Report Saved successfully");
-
-            // reset form
+            //  Reset form
             setScope("");
             setMetrics("");
             setDate("");
             setComplianceId("");
 
-        } catch (error) {
+        })
+        .catch((error) => {
             console.error(error);
-            alert(error.response?.data || "❌ Error occurred");
-        }
+            toast.error(
+                error.response?.data?.message || "Error adding KPI Report"
+            );
+        });
     };
 
     return (
         <div className="container mt-4">
             <h2>Add KPI Report</h2>
 
+            {/* Scope */}
             <div className="mb-3">
-                <label className="form-label">Scope</label>
+                <label className="form-label">
+                    Scope <span style={{ color: "red" }}>*</span>
+                </label>
                 <input
                     type="text"
                     className="form-control"
                     value={scope}
                     onChange={scopeHandler}
                     placeholder="Enter scope"
-                    required
                 />
             </div>
 
+            {/* Metrics */}
             <div className="mb-3">
-                <label className="form-label">Metrics</label>
+                <label className="form-label">
+                    Metrics <span style={{ color: "red" }}>*</span>
+                </label>
                 <input
                     type="text"
                     className="form-control"
                     value={metrics}
                     onChange={metricsHandler}
                     placeholder="Enter metrics"
-                    required
                 />
             </div>
 
+            {/* Date */}
             <div className="mb-3">
-                <label className="form-label">Date</label>
+                <label className="form-label">
+                    Date <span style={{ color: "red" }}>*</span>
+                </label>
                 <input
                     type="date"
                     className="form-control"
                     value={date}
                     onChange={dateHandler}
-                    required
+                    max={new Date().toISOString().split("T")[0]}
                 />
             </div>
 
+            {/* Compliance ID */}
             <div className="mb-3">
-                <label className="form-label">Compliance Report ID</label>
+                <label className="form-label">
+                    Compliance Report ID <span style={{ color: "red" }}>*</span>
+                </label>
                 <input
-                    type="number"
+                    type="text"
                     className="form-control"
                     value={complianceId}
                     onChange={complianceIdHandler}
                     placeholder="Enter report ID"
-                    required
                 />
             </div>
 
-            <button className="btn btn-primary" onClick={buttonHandler}>
+            <button className="btn btn-primary w-100" onClick={buttonHandler}>
                 Add KPI Report
             </button>
         </div>

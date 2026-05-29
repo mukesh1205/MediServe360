@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 export default function DeleteCompliance() {
 
@@ -11,7 +12,6 @@ export default function DeleteCompliance() {
 
         const deleteReport = async () => {
             try {
-                // ✅ FIXED URL
                 const url = `http://localhost:9002/api/compliance-reports/deleteComplianceReport/${id}`;
 
                 await axios.delete(url, {
@@ -20,14 +20,21 @@ export default function DeleteCompliance() {
                     }
                 });
 
-                alert("✅ Compliance Report deleted successfully");
+                
+                toast.success("Compliance Report deleted successfully");
 
-                // ✅ Better navigation (go back to display page)
-                navigate("/compliance_report/display");
+                // Navigate after short delay (optional but smoother UX)
+                setTimeout(() => {
+                    navigate("/compliance_report/display");
+                }, 1000);
 
             } catch (error) {
                 console.error(error);
-                alert(error.response?.data || "Error deleting report");
+
+                
+                toast.error(
+                    error.response?.data?.message || "Error deleting report"
+                );
             }
         };
 
@@ -36,7 +43,7 @@ export default function DeleteCompliance() {
     }, [id, navigate]);
 
     return (
-        <div>
+        <div className="container mt-4">
             <h3>Deleting Compliance Report...</h3>
         </div>
     );

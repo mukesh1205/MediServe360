@@ -14,11 +14,11 @@ export default function DisplayCompliance() {
       }
     })
     .then((res) => {
-      console.log("✅ Data:", res.data);
+      console.log("Data:", res.data);
       setReports(res.data);
     })
     .catch((err) => {
-      console.log("❌ Error:", err.response?.data || err.message);
+      console.log("Error:", err.response?.data || err.message);
       alert(err.response?.data || err.message);
     });
 
@@ -27,7 +27,7 @@ export default function DisplayCompliance() {
   return (
     <div className="container mt-4">
       <h2>Compliance Reports</h2>
-
+      <div className="table-responsive">
       <table className="table table-bordered table-striped mt-3">
         <thead className="table-dark">
           <tr>
@@ -75,6 +75,7 @@ export default function DisplayCompliance() {
           )}
         </tbody>
       </table>
+      </div>
 
     </div>
   );

@@ -1,29 +1,35 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {toast} from 'react-toastify';
 
 export default function DisplayInsuranceClaims() {
 
     const [claims, setClaims] = useState([]);
 
     useEffect(() => {
-        const url = "http://localhost:9002/api/fetchAllInsuranceClaims";
+        const url = "http://localhost:9002/api/insurance/fetchAllInsuranceClaims";
 
-        axios.get(url)
+        axios.get(url,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token") 
+                    }
+                })
             .then((res) => {
                 setClaims(res.data);
             })
             .catch((err) => {
-                console.error(err);
+                toast.error(err.message);
             });
     }, []);
 
     return (
-        <div>
-            <h3>Display All Insurance Claims</h3>
-
-            <table border={1}>
-                <thead>
+        <div className="container mt-4">
+            <h3 className="mb-4">Display All Insurance Claims</h3>
+            {claims.length ===0 ?(<p>No insurance claims found</p>):
+            (<div className="table-responsive">
+            <table className="table table-bordered table-hover table-striped mt-3">
+                <thead className="table-dark">
                     <tr>
                         <th>Claim Id</th>
                         <th>Patient Id</th>
@@ -31,7 +37,7 @@ export default function DisplayInsuranceClaims() {
                         <th>Policy Number</th>
                         <th>Amount</th>
                         <th>Status</th>
-                        <th>Edit</th>
+                        <th>Update</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
@@ -45,17 +51,17 @@ export default function DisplayInsuranceClaims() {
                             <td>{c.patient?.patientName}</td>
 
                             <td>{c.policyNumber}</td>
-                            <td>{c.amount}</td>
+                            <td>₹ {Number(c.amount).toFixed(2)}</td>
                             <td>{c.status}</td>
 
-                            <td>
-                                <Link to={`/insuranceClaim/update/${c.insuranceClaimId}`}>
-                                    Edit
+                            <td className="text-center">
+                                <Link className="btn btn-warning btn-sm" to={`/insuranceClaim/update/${c.insuranceClaimId}`}>
+                                    Update
                                 </Link>
                             </td>
 
-                            <td>
-                                <Link to={`/insuranceClaim/delete/${c.insuranceClaimId}`}>
+                            <td className="text-center">
+                                <Link className="btn btn-danger btn-sm" to={`/insuranceClaim/delete/${c.insuranceClaimId}`}>
                                     Delete
                                 </Link>
                             </td>
@@ -63,6 +69,8 @@ export default function DisplayInsuranceClaims() {
                     ))}
                 </tbody>
             </table>
+            </div>
+            )}
         </div>
     );
 }

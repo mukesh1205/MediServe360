@@ -27,7 +27,11 @@ export default function AddAuditlog(){
                 
             }
         try{
-            let res=await axios.post("http://localhost:9002/auditlog/insertauditlog",data);
+            let res=await axios.post("http://localhost:9002/auditlog/insertauditlog",data,{
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }
+                });
             alert(res.data.message)
         }catch(err){
             alert(err.message);

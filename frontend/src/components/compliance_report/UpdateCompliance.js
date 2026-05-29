@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-export default function UpdateComplianceReport() {
+export default function UpdateCompliance() {
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -11,7 +12,13 @@ export default function UpdateComplianceReport() {
   const [metrics, setMetrics] = useState("");
   const [date, setDate] = useState("");
 
-  // ✅ Fetch existing record
+  //  Date error state (NEW)
+  const [dateError, setDateError] = useState("");
+
+  //  Today's date
+  const todayDate = new Date().toISOString().split("T")[0];
+
+  // Fetch existing record
   useEffect(() => {
 
     const fetchReport = async () => {
@@ -31,13 +38,12 @@ export default function UpdateComplianceReport() {
           setMetrics(report.reportMetrics);
           setDate(report.reportGeneratedDate);
         } else {
-          alert("❌ Report not found");
-          navigate("/compliance-reports/display");
+          toast.error("Report not found");
+          navigate("/compliance_report/display");
         }
 
       } catch (err) {
-        console.error(err);
-        alert(err.response?.data || err.message);
+        toast.error(err.response?.data?.message || err.message);
       }
     };
 
@@ -45,8 +51,35 @@ export default function UpdateComplianceReport() {
 
   }, [id, navigate]);
 
-  // ✅ Update record
+  // Scope validation (letters only)
+  const scopeHandler = (e) => {
+    const value = e.target.value;
+
+    if (/^[A-Za-z ]*$/.test(value)) {
+      setScope(value);
+    }
+  };
+
+  //  Update handler
   const updateButtonHandler = async () => {
+
+    // Empty validation
+    if (!scope.trim() || !metrics.trim() || !date) {
+      toast.warning("Please fill all required fields");
+      return;
+    }
+
+    // Scope validation
+    if (!/^[A-Za-z ]+$/.test(scope)) {
+      toast.warning("Scope should contain only letters");
+      return;
+    }
+
+    // Check if date has error
+    if (dateError) {
+      return;
+    }
+
     try {
       const url = "http://localhost:9002/api/compliance-reports/updateComplianceReport";
 
@@ -65,12 +98,14 @@ export default function UpdateComplianceReport() {
         }
       });
 
-      alert("✅ Compliance Report updated successfully");
-      navigate("/compliance_report/display");
+      toast.success("Compliance Report updated successfully");
+
+      setTimeout(() => {
+        navigate("/compliance_report/display");
+      }, 1000);
 
     } catch (err) {
-      console.error(err);
-      alert(err.response?.data || err.message);
+      toast.error(err.response?.data?.message || err.message);
     }
   };
 
@@ -78,22 +113,30 @@ export default function UpdateComplianceReport() {
     <div className="container mt-4">
       <h2>Update Compliance Report {id}</h2>
 
+      {/* ID */}
       <div className="mb-3">
         <label className="form-label">Report ID</label>
         <input className="form-control" value={id} readOnly />
       </div>
 
+      {/* Scope */}
       <div className="mb-3">
-        <label className="form-label">Scope</label>
+        <label className="form-label">
+          Scope <span style={{ color: "red" }}>*</span>
+        </label>
         <input
           className="form-control"
           value={scope}
-          onChange={(e) => setScope(e.target.value)}
+          onChange={scopeHandler}
+          placeholder="Only letters allowed"
         />
       </div>
 
+      {/* Metrics */}
       <div className="mb-3">
-        <label className="form-label">Metrics</label>
+        <label className="form-label">
+          Metrics <span style={{ color: "red" }}>*</span>
+        </label>
         <input
           className="form-control"
           value={metrics}
@@ -101,18 +144,40 @@ export default function UpdateComplianceReport() {
         />
       </div>
 
+      {/*  Date */}
       <div className="mb-3">
-        <label className="form-label">Date</label>
+        <label className="form-label">
+          Date <span style={{ color: "red" }}>*</span>
+        </label>
+
         <input
           type="date"
-          className="form-control"
+          className={`form-control ${dateError ? "is-invalid" : ""}`}
           value={date}
-          onChange={(e) => setDate(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setDate(value);
+
+            if (value > todayDate) {
+              setDateError("Future dates are not allowed");
+            } else {
+              setDateError("");
+            }
+          }}
+          max={todayDate}
         />
+
+        {/*  Inline error message */}
+        {dateError && (
+          <div className="invalid-feedback">
+            {dateError}
+          </div>
+        )}
       </div>
 
-      <button className="btn btn-warning" onClick={updateButtonHandler}>
-        Update
+      {/* Button */}
+      <button className="btn btn-warning w-100" onClick={updateButtonHandler}>
+        Update Compliance Report
       </button>
     </div>
   );
