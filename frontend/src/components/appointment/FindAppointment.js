@@ -85,10 +85,6 @@ export default function FindAppointment() {
             return;
         }
 
-<<<<<<< HEAD
-        let url = `http://localhost:9002/api/appointments/get/${id}`;
-        axios.get(url)
-=======
         let url = `http://localhost:9002/api/appointment/get/${id}`;
 
         axios.get(url,{
@@ -96,7 +92,6 @@ export default function FindAppointment() {
                         Authorization: "Bearer " + localStorage.getItem("token") 
                     }
                 })
->>>>>>> 4a13951c1b65ad9c78169498f0ce149db738cb93
             .then((res) => {
                 if (!res.data.appointment) {
                     setError("Appointment not found with ID: " + id);

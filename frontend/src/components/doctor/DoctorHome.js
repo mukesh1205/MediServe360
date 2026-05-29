@@ -1,36 +1,52 @@
 import { Link, Outlet } from "react-router-dom";
 
 export default function DoctorHome() {
-
     return (
         <div>
+            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div className="container-fluid">
 
-            <h2>Doctor Management</h2>
+                    <Link className="navbar-brand" to="/doctor">
+                        Doctor
+                    </Link>
 
-            <nav>
-                <ul>
+                    <button
+                        className="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                    >
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
 
-                    <li>
-                        <Link to="add">Add Doctor</Link>
-                    </li>
+                    <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav">
 
-                    <li>
-                        <Link to="find">Find Doctor</Link>
-                    </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="add">Add</Link>
+                            </li>
 
-                    <li>
-                        <Link to="display">Display Doctors</Link>
-                    </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="find">Find</Link>
+                            </li>
 
-                    <li>
-                        <Link to="displayPaginated">Display Paginated Doctors</Link>
-                    </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="display">Display</Link>
+                            </li>
 
-                </ul>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="displayPaginated">
+                                    Display Paginated
+                                </Link>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                </div>
             </nav>
 
             <Outlet />
-
         </div>
     );
 }
