@@ -2,29 +2,22 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export default function DisplayKpiPaginated() {
+export default function DisplayCompliancePaginated() {
 
   const [records, setRecords] = useState([]);
   const [pgno, setPgno] = useState(0);
   const size = 10;
 
-  const [sorting, setSorting] = useState("kpiId");
+  const [sorting, setSorting] = useState("reportId");
   const [asc, setAsc] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  // Fetch KPI Reports
-  const fetchKpis = async (page = pgno, sortCol = sorting, order = asc) => {
+  //
+  const fetchReports = async (page = pgno, sortCol = sorting, order = asc) => {
     try {
       setLoading(true);
 
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        toast.error("Please login first");
-        return;
-      }
-
-      const url = "http://localhost:9002/api/kpi-report/fetchAllKPIReports/paginated";
+      const url = "http://localhost:9002/api/compliance-reports/paginated";
 
       const res = await axios.get(url, {
         params: {
@@ -34,7 +27,7 @@ export default function DisplayKpiPaginated() {
           asc: order
         },
         headers: {
-          Authorization: "Bearer " + token
+          Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       });
 
@@ -42,31 +35,30 @@ export default function DisplayKpiPaginated() {
       setPgno(page);
 
     } catch (err) {
-      console.error(err);
-      toast.error(err.response?.data || "Error fetching KPI reports");
+      toast.error(err.response?.data || err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // Auto load first page
+  //
   useEffect(() => {
-    fetchKpis(0);
+    fetchReports(0);
   }, []);
 
-  // Sorting handler
+  
   const handleSort = (column) => {
     if (sorting === column) {
       setAsc(!asc);
-      fetchKpis(pgno, column, !asc);
+      fetchReports(pgno, column, !asc);
     } else {
       setSorting(column);
       setAsc(true);
-      fetchKpis(pgno, column, true);
+      fetchReports(pgno, column, true);
     }
   };
 
-  // Sort arrow
+  
   const sortArrow = (column) => {
     if (sorting !== column) return "";
     return asc ? " ↑" : " ↓";
@@ -74,65 +66,55 @@ export default function DisplayKpiPaginated() {
 
   return (
     <div className="container mt-4">
-      <h3 className="mb-4">KPI Reports (Paginated)</h3>
+      <h3 className="mb-4">Compliance Reports (Paginated)</h3>
 
       {loading && <p>Loading...</p>}
 
       {!loading && records.length === 0 && (
-        <p className="text-danger">No KPI reports found</p>
+        <p className="text-danger">No reports found</p>
       )}
 
       {records.length > 0 && (
         <>
-          {/*  TABLE */}
+          {/*Table */}
           <div className="table-responsive">
             <table className="table table-bordered table-hover table-striped">
               <thead className="table-dark">
                 <tr>
-                  <th onClick={() => handleSort("kpiId")} style={{ cursor: "pointer" }}>
-                    KPI ID{sortArrow("kpiId")}
+                  <th onClick={() => handleSort("reportId")} style={{ cursor: "pointer" }}>
+                    ID{sortArrow("reportId")}
                   </th>
-
-                  <th onClick={() => handleSort("kpiReportScope")} style={{ cursor: "pointer" }}>
-                    Scope{sortArrow("kpiReportScope")}
+                  <th onClick={() => handleSort("reportScope")} style={{ cursor: "pointer" }}>
+                    Scope{sortArrow("reportScope")}
                   </th>
-
-                  <th onClick={() => handleSort("kpiMetrics")} style={{ cursor: "pointer" }}>
-                    Metrics{sortArrow("kpiMetrics")}
+                  <th onClick={() => handleSort("reportMetrics")} style={{ cursor: "pointer" }}>
+                    Metrics{sortArrow("reportMetrics")}
                   </th>
-
-                  <th onClick={() => handleSort("kpiGeneratedDate")} style={{ cursor: "pointer" }}>
-                    Date{sortArrow("kpiGeneratedDate")}
+                  <th onClick={() => handleSort("reportGeneratedDate")} style={{ cursor: "pointer" }}>
+                    Date{sortArrow("reportGeneratedDate")}
                   </th>
-
-                  <th>Compliance Report ID</th>
                 </tr>
               </thead>
 
               <tbody>
                 {records.map((e) => (
-                  <tr key={e.kpiId}>
-                    <td>{e.kpiId}</td>
-                    <td>{e.kpiReportScope}</td>
-                    <td>{e.kpiMetrics}</td>
-                    <td>{new Date(e.kpiGeneratedDate).toLocaleDateString()}</td>
-                    <td>
-                      {e.complianceReport
-                        ? e.complianceReport.reportId
-                        : "N/A"}
-                    </td>
+                  <tr key={e.reportId}>
+                    <td>{e.reportId}</td>
+                    <td>{e.reportScope}</td>
+                    <td>{e.reportMetrics}</td>
+                    <td>{new Date(e.reportGeneratedDate).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          {/*  PAGINATION */}
+          {/*  Pagination */}
           <div className="d-flex justify-content-between mt-3">
             <button
               className="btn btn-secondary"
               disabled={pgno === 0 || loading}
-              onClick={() => fetchKpis(pgno - 1)}
+              onClick={() => fetchReports(pgno - 1)}
             >
               Prev
             </button>
@@ -144,7 +126,7 @@ export default function DisplayKpiPaginated() {
             <button
               className="btn btn-secondary"
               disabled={records.length < size || loading}
-              onClick={() => fetchKpis(pgno + 1)}
+              onClick={() => fetchReports(pgno + 1)}
             >
               Next
             </button>

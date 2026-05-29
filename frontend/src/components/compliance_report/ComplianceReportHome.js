@@ -1,16 +1,16 @@
 import { Link, Outlet } from "react-router-dom";
 
-export default function KpiReportHome() {
+export default function ComplianceReportHome() {
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div className="container-fluid">
 
-                    <Link className="navbar-brand" to="/kpi">
-                        KPI Report
+                    <Link className="navbar-brand" to="/compliance">
+                        Compliance Report
                     </Link>
 
-                    {/*  Add toggle button  */}
+                    {/*  Added navbar toggler like PatientHome */}
                     <button
                         className="navbar-toggler"
                         type="button"
@@ -20,7 +20,7 @@ export default function KpiReportHome() {
                         <span className="navbar-toggler-icon"></span>
                     </button>
 
-                    {/* Add ID for collapse */}
+                    {/* Added ID for collapse */}
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav">
 
@@ -43,7 +43,7 @@ export default function KpiReportHome() {
                             </li>
 
                             <li className="nav-item">
-                                <Link className="nav-link" to="displayPaginated">
+                                <Link className="nav-link" to="paginated">
                                     Paginated
                                 </Link>
                             </li>

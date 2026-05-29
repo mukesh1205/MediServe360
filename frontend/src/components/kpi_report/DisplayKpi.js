@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router";
 
-export default function DisplayKPIReport(){
+export default function DisplayKpi() {
 
     const [records, setRecords] = useState([]);
 
     useEffect(() => {
 
-        let url = "http://localhost:9002/api/kpi-reports/fetchAllKPIReports";
+        let url = "http://localhost:9002/api/kpi-report/fetchAllKPIReports";
 
-        axios.get(url,{
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token") 
-                    }
-                })
+        axios.get(url, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }
+        })
         .then((res) => {
+            console.log(res.data); //
             setRecords(res.data);
         })
         .catch((err) => {
@@ -24,42 +24,40 @@ export default function DisplayKPIReport(){
 
     }, []);
 
-    return(
-        <div>
-            <h3>This is Display KPI Report</h3>
+    return (
+        <div className="container mt-4">
+            <h2>KPI Reports</h2>
 
-            {records.length > 0 && (
-                <table border="1">
-                    <thead>
+            {records.length === 0 ? (
+                <div className="alert alert-warning mt-3">
+                    No Data Found
+                </div>
+            ) : (
+                <table className="table table-bordered table-striped mt-3">
+                    <thead className="table-dark">
                         <tr>
                             <th>KPI ID</th>
                             <th>Scope</th>
                             <th>Metrics</th>
                             <th>Date</th>
                             <th>Compliance Report ID</th>
-                            
                         </tr>
                     </thead>
 
                     <tbody>
-                        {
-                            records.map((e) => {
-                                return(
-                                    <tr key={e.kpiId}>
-                                        <td>{e.kpiId}</td>
-                                        <td>{e.kpiReportScope}</td>
-                                        <td>{e.kpiMetrics}</td>
-                                        <td>{e.kpiGeneratedDate}</td>
-                                        <td>
-                                            {e.complianceReport
-                                                ? e.complianceReport.reportId
-                                                : "N/A"}
-                                        </td>
-                                        
-                                    </tr>
-                                );
-                            })
-                        }
+                        {records.map((e) => (
+                            <tr key={e.kpiId}>
+                                <td>{e.kpiId}</td>
+                                <td>{e.kpiReportScope}</td>
+                                <td>{e.kpiMetrics}</td>
+                                <td>{e.kpiGeneratedDate}</td>
+                                <td>
+                                    {e.complianceReport?.reportId || 
+                                     e.complianceReport?.id || 
+                                     "N/A"}
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             )}
