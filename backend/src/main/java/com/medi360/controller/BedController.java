@@ -62,16 +62,15 @@ public class BedController {
 	}
 
 
+	
 	@PutMapping("/updateBed")
 	public ResponseEntity<BedResponseDTO> updateBed(@RequestBody BedDTO bedDTO) throws BedNotFoundException {
-		Bed bed = bedService.updateBed(bedDTO.getBed());
-		BedResponseDTO dto = new BedResponseDTO();
-		dto.setBed(bed);
-		dto.setStatusCode(200);
-		dto.setMessage("Bed updated successfully");
-
-		return ResponseEntity.status(200).body(dto);
-
+	    Bed updatedBed = bedService.updateBed(bedDTO.getBed());
+	    BedResponseDTO dto = new BedResponseDTO();
+	    dto.setBed(updatedBed);
+	    dto.setStatusCode(200);
+	    dto.setMessage("Bed updated successfully");
+	    return ResponseEntity.status(200).body(dto);
 	}
 
 	@DeleteMapping("/delete/{bedId}")
