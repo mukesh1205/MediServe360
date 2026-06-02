@@ -1,8 +1,6 @@
 package com.medi360.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +13,8 @@ import com.medi360.DTO.UserDTO;
 import com.medi360.DTO.UserResponseDTO;
 import com.medi360.db.AuditlogRepository;
 import com.medi360.db.UserRepository;
-import com.medi360.entities.AuditLog;
 import com.medi360.entities.User;
 import com.medi360.exception.BadRequestException;
-import com.medi360.exception.PatientNotFoundException;
 import com.medi360.exception.ResourceNotFoundException;
 import com.medi360.exception.UserNotFoundException;
 
@@ -169,4 +165,14 @@ public class UserService {
 	    dto.setPhoneNumber(u.getUserPhone());
 	    return dto;
 	}
+	
+	public UserResponseDTO getUserByEmail(String email) {
+
+	    User user = userrepo.findByEmail(email)
+	            .orElseThrow(() -> new ResourceNotFoundException(
+	                    "User not found with email: " + email));
+
+	    return mapToDTO(user);
+	}
+	
 }

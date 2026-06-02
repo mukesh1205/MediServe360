@@ -40,9 +40,9 @@ public class Security {
 //                        .requestMatchers("/api/kpi-reports/**").permitAll()
 //                        .requestMatchers("/user/findbyid/{id}").permitAll()
  
-                        .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "PATIENT")
-                        .requestMatchers("/user/**").hasAnyRole("ADMIN","PATIENT","DOCTOR")
-                        .requestMatchers("/api/doctor/**").hasAnyRole("ADMIN", "DOCTOR")
+                        .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "RECEPTIONIST")
+                        .requestMatchers("/user/**").hasAnyRole("ADMIN","PATIENT","DOCTOR","RECEPTIONIST")
+                        .requestMatchers("/api/doctor/**").hasAnyRole("ADMIN", "DOCTOR","RECEPTIONIST")
                         .requestMatchers("/api/ward/**").hasAnyRole("ADMIN", "NURSE")	
                         .requestMatchers("/api/beds/**").hasAnyRole("ADMIN", "NURSE")
                         .requestMatchers("/api/appointment/**").hasAnyRole("ADMIN", "DOCTOR","PATIENT")

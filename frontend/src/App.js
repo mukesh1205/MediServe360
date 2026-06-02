@@ -74,6 +74,7 @@ import AddUser from './components/user/AddUser';
 import DeleteUser from './components/user/DeleteUser';
 import UpdateUser from './components/user/UpdateUser';
 import FindUser from './components/user/FindUser';
+import MyProfile from './components/user/MyProfile';
 
 import AuditlogHome from './components/auditlog/AuditlogHome';
 import FindAuditlog from './components/auditlog/FindAuditlog';
@@ -108,10 +109,6 @@ import UpdateNotification from './components/notification/UpdateNotification';
 import FindAllNotification from './components/notification/FindAllNotification';
 import FindAllUser from './components/user/FindAllUser';
 
-// AUDIT
-// import AuditlogHome from './components/auditlog/AuditlogHome';
-// import AddAuditlog from './components/auditlog/AddAuditlog';
-// import FindAuditlog from './components/auditlog/FindAuditlog';
 import FindAllAuditlog from './components/auditlog/FindAllAuditlog';
 
 
@@ -121,30 +118,30 @@ import NotificationPage from './components/notification/NotificationPage'
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import AdminDash from './components/Dashboards/AdminDash';
-import PatientDD from './components/Dashboards/PatientDD';
+import ReceptionistDD from './components/Dashboards/ReceptionistDD';
 import DoctorDD from './components/Dashboards/DoctorDD';
 import NurseDD from './components/Dashboards/NurseDD';
 import FinanceDD from './components/Dashboards/FinanceDD';
-import CompilanceDD from './components/Dashboards/CompilanceDD';
+import ComplianceDD from './components/Dashboards/ComplianceDD';
 
 import Home from './components/Auth/Home';
 
 function App() {
  
-const ALL_ROLES        = ["ADMIN","DOCTOR","PATIENT","FINANCEOFFICER","COMPLIANCE_OFFICER","NURSE"];
+const ALL_ROLES        = ["ADMIN","DOCTOR","RECEPTIONIST","FINANCEOFFICER","COMPLIANCE_OFFICER","NURSE"];
 const ADMIN_ONLY       = ["ADMIN"];
-const ADMIN_DP  = ["ADMIN","DOCTOR","PATIENT"];
+const ADMIN_DR  = ["ADMIN","DOCTOR","RECEPTIONIST"];
 const ADMIN_NURSE    = ["ADMIN","NURSE"];
 const ADMIN_COMPLIANCE = ["ADMIN","COMPLIANCE_OFFICER"];
 const ADMIN_FINANCE    = ["ADMIN","FINANCEOFFICER"];
-const ADMIN_PATIENT      = ["ADMIN","PATIENT"];
+const ADMIN_RECEPTIONIST      = ["ADMIN","RECEPTIONIST"];
 const ADMIN_DOCTOR      = ["ADMIN","DOCTOR"];
 const FINANCE=["ADMIN","FINANCEOFFICER"];
-const PATIENT_ONLY=["PATIENT"];
+const RECEPTIONIST_ONLY=["RECEPTIONIST"];
 const DOCTOR_ONLY=["DOCTOR"];
 const NURSE_ONLY=["NURSE"];
 const FINANCEOFFICER_ONLY=["FINANCEOFFICER"];
-const COMPILANCE_ONLY=["COMPLIANCE_OFFICER"]
+const COMPLIANCE_ONLY=["COMPLIANCE_OFFICER"]
  
  
 function ProtectedRoute({ children, allowedRoles }) {
@@ -179,23 +176,15 @@ function ProtectedRoute({ children, allowedRoles }) {
         <Route path="/login" element={<Login />} />
 
         <Route  path="/admindd" element={<ProtectedRoute allowedRoles={ADMIN_ONLY}><AdminDash /></ProtectedRoute>} />
-        <Route path="/patientdd" element={<ProtectedRoute allowedRoles={PATIENT_ONLY}><PatientDD /></ProtectedRoute>} />
+        <Route path="/receptionistdd" element={<ProtectedRoute allowedRoles={RECEPTIONIST_ONLY}><ReceptionistDD /></ProtectedRoute>} />
         <Route path="/doctordd" element={<ProtectedRoute allowedRoles={DOCTOR_ONLY}><DoctorDD /></ProtectedRoute>} />
         <Route path="/nursedd" element={<ProtectedRoute allowedRoles={NURSE_ONLY}><NurseDD /></ProtectedRoute>} />
         <Route path="/financedd" element={<ProtectedRoute allowedRoles={FINANCEOFFICER_ONLY}><FinanceDD /></ProtectedRoute>} />
-        <Route path="/compilancedd" element={<ProtectedRoute allowedRoles={COMPILANCE_ONLY}><CompilanceDD /></ProtectedRoute>} />
-
-
-        {/* <Route path="/appointment" element={}>
-          <Route path="add" element={<AddAppointment />} />
-          <Route path="delete" element={<DeleteAppointment />} />
-          <Route path="update" element={<UpdateAppointment />} />
-          <Route path="find" element={<FindAppointment />} />
-        </Route> */}
-
-        {/* Patient */}
+        <Route path="/compilancedd" element={<ProtectedRoute allowedRoles={COMPLIANCE_ONLY}><ComplianceDD /></ProtectedRoute>} />
         
-        <Route path="/appointment" element={<ProtectedRoute allowedRoles={ADMIN_DP}><AppointmentHome /></ProtectedRoute>}>
+        <Route path="/profile" element={<ProtectedRoute allowedRoles={ALL_ROLES}><MyProfile /></ProtectedRoute>} />
+
+        <Route path="/appointment" element={<ProtectedRoute allowedRoles={ADMIN_DR}><AppointmentHome /></ProtectedRoute>}>
             <Route path="add" element={<AddAppointment/>}></Route>
             <Route path="delete/:aid" element={<DeleteAppointment/>}></Route>
             <Route path="edit/:aid" element={<UpdateAppointment />}></Route>
@@ -205,7 +194,7 @@ function ProtectedRoute({ children, allowedRoles }) {
         </Route>
 
         {/* Doctor */}
-        <Route path="/doctor" element={<ProtectedRoute allowedRoles={ADMIN_DOCTOR}><DoctorHome /></ProtectedRoute>}>
+        <Route path="/doctor" element={<ProtectedRoute allowedRoles={ADMIN_DR}><DoctorHome /></ProtectedRoute>}>
           <Route path="delete/:id" element={<DeleteDoctor />} />
           <Route path="update/:id" element={<UpdateDoctor />} />
           <Route path="add" element={<AddDoctor />} />
@@ -215,7 +204,7 @@ function ProtectedRoute({ children, allowedRoles }) {
         </Route>
 
         {/* Patient */}
-        <Route path="/patient" element={<ProtectedRoute allowedRoles={ADMIN_PATIENT}><PatientHome /></ProtectedRoute>}>
+        <Route path="/patient" element={<ProtectedRoute allowedRoles={ADMIN_RECEPTIONIST}><PatientHome /></ProtectedRoute>}>
           <Route path="add" element={<AddPatient />} />
           <Route path="update/:pid" element={<UpdatePatient />} />
           <Route path="delete/:pid" element={<DeletePatient />} />
