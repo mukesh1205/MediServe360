@@ -126,6 +126,15 @@ import ComplianceDD from './components/Dashboards/ComplianceDD';
 
 import Home from './components/Auth/Home';
 
+// Nurse
+import NurseHome from './components/Nurse/NurseHome';
+import NurseDashboard from './components/Nurse/NurseDashboard';
+import PatientSearch from './components/Nurse/PatientSearch';
+import AddVitals from './components/Nurse/Vitals/AddVitals';
+import ViewVitals from './components/Nurse/Vitals/ViewVitals';
+import AddCareNote from './components/Nurse/CareNotes/AddCareNote';
+import ViewCareNotes from './components/Nurse/CareNotes/ViewCareNotes';
+
 function App() {
  
 const ALL_ROLES        = ["ADMIN","DOCTOR","RECEPTIONIST","FINANCEOFFICER","COMPLIANCE_OFFICER","NURSE"];
@@ -288,6 +297,15 @@ function ProtectedRoute({ children, allowedRoles }) {
           <Route path="occupancy" element={<WardOccupancyReport />} />
           <Route path="pages" element={<PaginatedWard />} />
 
+        </Route>
+        {/* Nurse */}
+        <Route path="/nursedd" element={<ProtectedRoute allowedRoles={NURSE_ONLY}><NurseHome /></ProtectedRoute>}>
+          <Route index element={<NurseDashboard />} />
+          <Route path="dashboard" element={<NurseDashboard />} />
+          <Route path="vitals/add" element={<AddVitals />} />
+          <Route path="vitals/view" element={<ViewVitals />} />
+          <Route path="carenotes/add" element={<AddCareNote />} />
+          <Route path="carenotes/view" element={<ViewCareNotes />} />
         </Route>
 
         <Route path="/kpi_report" element={<ProtectedRoute allowedRoles={ADMIN_FINANCE}><KpiReportHome /></ProtectedRoute>}>
