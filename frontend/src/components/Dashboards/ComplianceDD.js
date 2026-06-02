@@ -5,7 +5,7 @@ const navLinks = [
   { to: "/compliance_report", label: "Compliance Report", icon: "📋" },
 ];
 
-export default function CompilanceDD() {
+export default function ComplianceDD() {
   return (
     <div className="min-vh-100 bg-light">
 

@@ -41,8 +41,9 @@ public class Security {
 //                        .requestMatchers("/user/findbyid/{id}").permitAll()
  
                         .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "RECEPTIONIST")
-                        .requestMatchers("/user/**").hasAnyRole("ADMIN","RECEPTIONIST","DOCTOR")
-                        .requestMatchers("/api/doctor/**").hasAnyRole("ADMIN", "DOCTOR")
+                        .requestMatchers("/user/**").hasAnyRole("ADMIN","DOCTOR","RECEPTIONIST")
+                        .requestMatchers("/api/doctor/**").hasAnyRole("ADMIN", "DOCTOR","RECEPTIONIST")
+
                         .requestMatchers("/api/ward/**").hasAnyRole("ADMIN", "NURSE")	
                         .requestMatchers("/api/beds/**").hasAnyRole("ADMIN", "NURSE")
                         .requestMatchers("/api/appointment/**").hasAnyRole("ADMIN", "DOCTOR","RECEPTIONIST")

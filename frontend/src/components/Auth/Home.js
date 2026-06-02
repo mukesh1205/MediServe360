@@ -37,7 +37,7 @@ const roles = [
   { icon: "⚙️", label: "Admin" },
   { icon: "👨‍⚕️", label: "Doctor" },
   { icon: "🏥", label: "Nurse" },
-  { icon: "🧑", label: "Patient" },
+  { icon: "🧑", label: "Receptionist" },
   { icon: "💰", label: "Finance Officer" },
   { icon: "📋", label: "Compliance Officer" },
 ];

@@ -167,4 +167,14 @@ public class UserService {
 	    dto.setPhoneNumber(u.getUserPhone());
 	    return dto;
 	}
+	
+	public UserResponseDTO getUserByEmail(String email) {
+
+	    User user = userrepo.findByEmail(email)
+	            .orElseThrow(() -> new ResourceNotFoundException(
+	                    "User not found with email: " + email));
+
+	    return mapToDTO(user);
+	}
+	
 }

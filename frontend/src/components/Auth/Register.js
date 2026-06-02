@@ -22,7 +22,7 @@ export default function Register() {
             return;
         }
         if(password.length<6){
-            setError("Password must contain 6 characters");
+            setError("Password must be at least 6 characters");
             return;
         }
         if (!userName || !email || !password || !role || !phoneNumber) {
@@ -31,7 +31,9 @@ export default function Register() {
         }
         setLoading(true);
         axios.post("http://localhost:9002/api/auth/register", {
-            userName, email, password, role, phoneNumber,
+            userName: userName.trim(),
+            email: email.trim(),
+            password, role, phoneNumber,
         })
         .then(() => {
             setSuccess("Account created successfully! Redirecting to login...");
@@ -118,7 +120,7 @@ export default function Register() {
                                     Phone
                                 </label>
                                 <input
-                                    type="text"
+                                    type="tel"
                                     className="form-control"
                                     placeholder="+91 00000 00000"
                                     value={phoneNumber}
@@ -166,7 +168,7 @@ export default function Register() {
                                 onChange={(e) => setRole(e.target.value)}
                                 style={{ borderColor: "#b0cfe0", borderRadius: "8px", color: role ? "#212529" : "#6c757d" }}
                             >
-                                <option value="">Select role</option>
+                                <option value="" disabled>Select role</option>
                                 <option value="RECEPTIONIST">Receptionist</option>
                                 <option value="DOCTOR">Doctor</option>
                                 <option value="NURSE">Nurse</option>
