@@ -20,7 +20,7 @@ export default function DeleteNotification(){
             toast.success("Successfully deleted");
 
         }catch(err){
-            alert(err.message)
+            toast.error(err.response.data.errorMessage)
         }
     };
 

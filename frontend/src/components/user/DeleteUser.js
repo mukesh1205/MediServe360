@@ -21,7 +21,7 @@ export default function DeleteUser(){
             setData(res.data);
             toast.success("Successfully deleted")
         }catch(err){
-            console.log(err.message)
+            toast.error(err.response.data.errorMessage)
         }
     }
     useEffect(()=>{

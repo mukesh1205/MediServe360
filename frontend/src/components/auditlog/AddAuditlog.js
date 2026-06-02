@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { Toast } from "bootstrap";
+import { toast } from "react-toastify";
 export default function AddAuditlog() {
     let [action, setAction] = useState("");
 
@@ -26,7 +26,7 @@ export default function AddAuditlog() {
                     Authorization: "Bearer " + localStorage.getItem("token")
                 }
             });
-            Toast.success("Successfully added");
+            toast.success("Successfully added");
         } catch (err) {
             alert(err.message);
         }

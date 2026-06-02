@@ -168,7 +168,7 @@ export default function Register() {
                             >
                                 <option value="">Select role</option>
                                 <option value="ADMIN">Admin</option>
-                                <option value="PATIENT">Patient</option>
+                                <option value="RECEPTIONIST">Receptionist</option>
                                 <option value="DOCTOR">Doctor</option>
                                 <option value="NURSE">Nurse</option>
                                 <option value="FINANCEOFFICER">Finance Officer</option>

@@ -65,7 +65,7 @@ export default function UpdateUser() {
             toast.success("User updated successfully");
             navigate("/user/findall");
         } catch (err) {
-            toast.error(err.message);
+            toast.error(err.response.data.errorMessage);
         }
     }
 
