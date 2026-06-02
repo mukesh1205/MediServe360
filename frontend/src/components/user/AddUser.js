@@ -82,7 +82,6 @@ export default function AddUser(){
                     <option value="RECEPTIONIST">Receptionist</option>
                     <option value="DOCTOR">Doctor</option>
                     <option value="NURSE">Nurse</option>
-                    <option value="ADMIN">Admin</option>
                     <option value="FINANCEOFFICER">Finance Officer</option>
                     <option value="COMPLIANCE_OFFICER">Compilance officer</option>
                     
