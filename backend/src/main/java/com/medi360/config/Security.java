@@ -40,14 +40,15 @@ public class Security {
 //                        .requestMatchers("/api/kpi-reports/**").permitAll()
 //                        .requestMatchers("/user/findbyid/{id}").permitAll()
  
-                        .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "PATIENT")
+                        .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "PATIENT", "NURSE") 
                         .requestMatchers("/user/**").hasAnyRole("ADMIN","PATIENT","DOCTOR")
                         .requestMatchers("/api/doctor/**").hasAnyRole("ADMIN", "DOCTOR")
                         .requestMatchers("/api/ward/**").hasAnyRole("ADMIN", "NURSE")	
                         .requestMatchers("/api/beds/**").hasAnyRole("ADMIN", "NURSE")
                         .requestMatchers("/api/appointment/**").hasAnyRole("ADMIN", "DOCTOR","PATIENT")
                         .requestMatchers("/api/compliance-reports/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
-
+                        .requestMatchers("/api/vitals/**").hasAnyRole("ADMIN", "NURSE")               // ✅ add this new line
+                        .requestMatchers("/api/care-notes/**").hasAnyRole("ADMIN", "NURSE") 
                         .requestMatchers("/api/kpi-report/**").hasRole("ADMIN")
 
                         .requestMatchers("/api/invoice/**").hasAnyRole("ADMIN","FINANCEOFFICER")

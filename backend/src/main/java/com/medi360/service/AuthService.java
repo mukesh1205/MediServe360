@@ -92,6 +92,7 @@ public class AuthService {
         response.setEmail(user.getUserEmail());
         response.setRole(user.getUserRole());
         response.setUserName(user.getUserName());
+        response.setUserId(user.getUserId());
         return response;
     }
 }
