@@ -1,10 +1,10 @@
-import { useParams } from "react-router";
+import { useParams,useNavigate } from "react-router";
 import axios from 'axios';
 import { useEffect } from "react";
 
 export default function DeleteBed() {
     let { bedId } = useParams();
-
+     let navigate = useNavigate();
     useEffect(() => {
         let url = `http://localhost:9002/api/beds/delete/${bedId}`;
 
@@ -15,6 +15,8 @@ export default function DeleteBed() {
                 })
             .then((response) => {
                 alert(response.data);
+                  navigate("/bed/findAll");
+                 
             })
             .catch((error) => {
                 if (error.response) {
