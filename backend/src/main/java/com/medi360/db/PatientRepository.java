@@ -10,4 +10,5 @@ import com.medi360.entities.Patient;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Integer>{
 	List<Patient> findByPatientNameContainingIgnoreCase(String patientName);
+	
 }
