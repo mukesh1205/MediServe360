@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import Signout from "../Auth/Signout";
-
 const navLinks = [
   { to: "/user", label: "User", icon: "👤" },
   { to: "/patient", label: "Patient", icon: "🏥" },
