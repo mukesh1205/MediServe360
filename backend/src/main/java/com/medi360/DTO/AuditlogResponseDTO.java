@@ -2,7 +2,6 @@ package com.medi360.DTO;
 
 import java.time.LocalDateTime;
 
-import com.medi360.entities.AuditLog;
 
 public class AuditlogResponseDTO {
 	

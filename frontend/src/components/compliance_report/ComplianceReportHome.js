@@ -6,7 +6,7 @@ export default function ComplianceReportHome() {
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div className="container-fluid">
 
-                    <Link className="navbar-brand" to="/compliance">
+                    <Link className="navbar-brand" to="/compliance_report">
                         Compliance Report
                     </Link>
 
