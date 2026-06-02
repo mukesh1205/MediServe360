@@ -37,11 +37,10 @@ export default function Register() {
         })
         .then(() => {
             setSuccess("Account created successfully! Redirecting to login...");
-            setTimeout(() => navigate("/login"), 2000);
-            setLoading(false);
+            setTimeout(() => navigate("/login"), 1000);
         })
         .catch((err) => {
-            if (err.response?.status === 400) {
+            if (err.response?.data.httpStatusCode === 404) {
                 setError("Email already registered. Try a different one.");
             } else {
                 setError("Registration failed. Please try again.");

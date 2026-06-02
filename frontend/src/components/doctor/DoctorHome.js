@@ -1,42 +1,88 @@
-import { Link, Outlet } from "react-router-dom";
-import Signout from "../Auth/Signout";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import TopNavbar from "../common/TopNavbar";
+
+const navLinks = [
+  { to: "add", label: "Add Doctor", icon: "➕" },
+  { to: "find", label: "Find Doctor", icon: "🔍" },
+  { to: "display", label: "Display", icon: "📋" },
+  { to: "displayPaginated", label: "Paginated", icon: "📄" },
+];
+
 export default function DoctorHome() {
 
-    return (
-        <div>
+  const location = useLocation();
 
-            <h2>Doctor Management</h2>
+  return (
+    <div className="min-vh-100 bg-light">
 
-            <nav>
-                <ul>
+      {/* ✅ Top Navbar */}
+      <TopNavbar />
 
-                    <li>
-                        <Link to="add">Add Doctor</Link>
-                    </li>
+      <div className="container-fluid px-4 py-4">
 
-                    <li>
-                        <Link to="find">Find Doctor</Link>
-                    </li>
+        {/* ✅ Header (Clickable) */}
+        <div className="mb-4">
+          <Link to="/doctor" className="text-decoration-none">
+            <h4 className="fw-bold text-dark mb-1">
+              Doctor Management
+            </h4>
+          </Link>
 
-                    <li>
-                        <Link to="display">Display Doctors</Link>
-                    </li>
+          <p className="text-muted small mb-0">
+            Manage doctors · Availability · Departments
+          </p>
+        </div>
 
-                    <li>
-                        <Link to="displayPaginated">Display Paginated Doctors</Link>
-                    </li>
+        {/* ✅ Cards */}
+        <div className="row g-3 mb-4">
 
-                </ul>
-                <ul className="navbar-nav ms-auto">
-                                        <li className="nav-item">
-                                        <Signout />
-                                        </li>
-                                    </ul>
-            </nav>
-            
+          {navLinks.map((link) => (
+            <div className="col-6 col-sm-4 col-md-3" key={link.to}>
 
-            <Outlet />
+              <Link
+                to={link.to}
+                className="btn btn-outline-dark w-100 py-4 d-flex flex-column align-items-center gap-2 text-decoration-none hover-card"
+                style={{
+                  borderRadius: "12px",
+                  minHeight: "100px"
+                }}
+              >
+                <span style={{ fontSize: "1.8rem" }}>
+                  {link.icon}
+                </span>
+
+                <span className="fw-semibold small">
+                  {link.label}
+                </span>
+
+              </Link>
+
+            </div>
+          ))}
 
         </div>
-    );
+
+        {/* ✅ Content Area */}
+        {!location.pathname.startsWith("/doctor/") ? (
+
+          <div className="card shadow-sm p-4 text-muted text-center">
+            <h6 className="mb-2">Welcome to Doctor Module</h6>
+            <p className="mb-0">
+              Select an option above to continue
+            </p>
+          </div>
+
+        ) : (
+
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <Outlet />
+            </div>
+          </div>
+
+        )}
+
+      </div>
+    </div>
+  );
 }

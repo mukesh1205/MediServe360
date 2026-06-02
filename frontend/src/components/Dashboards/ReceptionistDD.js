@@ -1,130 +1,180 @@
-import { Link, useLocation } from "react-router-dom";
-import "./Dashboard.css";
-import DisplayPatients from "../patient/DisplayPatients";
+import { Link } from "react-router-dom";
 import TopNavbar from "../common/TopNavbar";
 
+const navLinks = [
+  { to: "/patient", label: "Patients", icon: "🧾" },
+  { to: "/appointment", label: "Appointments", icon: "📅" },
+  { to: "/doctor", label: "Doctors", icon: "👨‍⚕️" },
+];
+
+const stats = [
+  {
+    label: "Total Patients",
+    value: "120",
+    change: "+12 this week",
+    pos: true,
+    icon: "🧾",
+    color: "primary",
+  },
+  {
+    label: "Appointments Today",
+    value: "35",
+    change: "+5 compared yesterday",
+    pos: true,
+    icon: "📅",
+    color: "success",
+  },
+  {
+    label: "Doctors Available",
+    value: "8",
+    change: "-2 unavailable",
+    pos: false,
+    icon: "👨‍⚕️",
+    color: "warning",
+  },
+  {
+    label: "Completed Appointments",
+    value: "28",
+    change: "+3 since yesterday",
+    pos: true,
+    icon: "✅",
+    color: "info",
+  },
+];
+
+
+const recentActivity = [
+  { icon: "✅", text: "New patient registered successfully" },
+  { icon: "📅", text: "Appointment booked for Patient #102" },
+  { icon: "❌", text: "Appointment #55 cancelled" },
+  { icon: "👨‍⚕️", text: "Doctor Dr. Kumar marked unavailable" },
+  { icon: "📄", text: "Patient report generated" },
+];
+
+const quickActions = [
+  { to: "/patient/add", label: "Add Patient", icon: "➕", color: "primary" },
+  { to: "/appointment/add", label: "Book Appointment", icon: "📅", color: "success" },
+  { to: "/doctor/display", label: "View Doctors", icon: "👨‍⚕️", color: "dark" },
+];
+
 export default function ReceptionistDD() {
-  const location = useLocation();
 
   return (
-    <div className="container-fluid">
-      
-      <TopNavbar/>
+    <div className="min-vh-100 bg-light">
 
-      <div className="row">
-        <nav className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-          <div className="position-sticky pt-3">
-            <ul className="nav flex-column">
-              <li className="nav-item">
-                <Link
-                  className={`nav-link ${
-                    location.pathname === "/receptionistdd" ? "active" : ""
-                  }`}
-                  to="/receptionistdd"
-                >
-                  📊 Dashboard
-                </Link>
-              </li>
+      {/* ✅ Navbar */}
+      <TopNavbar />
 
-              <li className="nav-item">
-                <Link
-                  className={`nav-link ${
-                    location.pathname.startsWith("/patient") ? "active" : ""
-                  }`}
-                  to="/patient/display"
-                >
-                  🧾 Manage Patients
-                </Link>
-              </li>
+      <div className="container-fluid px-4 py-4">
 
-              <li className="nav-item">
-                <Link
-                  className={`nav-link ${
-                    location.pathname.startsWith("/appointment") ? "active" : ""
-                  }`}
-                  to="/appointment"
-                >
-                  📅 Appointments
-                </Link>
-              </li>
+        {/* ✅ Header */}
+        <div className="mb-4">
+          <h4 className="fw-bold text-dark mb-1">Reception Dashboard</h4>
+          <p className="text-muted small mb-0">
+            Overview · Daily operations · Patient flow
+          </p>
+        </div>
 
-              <li className="nav-item">
-                <Link
-                  className={`nav-link ${
-                    location.pathname.startsWith("/doctor") ? "active" : ""
-                  }`}
-                  to="/doctor"
-                >
-                  👨‍⚕️ Doctors
-                </Link>
-              </li>
-            </ul>
+        {/* ✅ Stats */}
+        <div className="row g-3 mb-4">
+          {stats.map((s) => (
+            <div className="col-12 col-sm-6 col-xl-3" key={s.label}>
+              <div className={`card border-0 shadow-sm border-start border-4 border-${s.color}`}>
+                <div className="card-body d-flex align-items-center gap-3">
 
-            <hr />
+                  <div
+                    className={`bg-${s.color} bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center`}
+                    style={{ width: "52px", height: "52px", fontSize: "1.4rem" }}
+                  >
+                    {s.icon}
+                  </div>
 
-            <ul className="nav flex-column mb-2">
-              <li className="nav-item">
-                <Link
-                  className={`nav-link ${
-                    location.pathname === "/profile" ? "active" : ""
-                  }`}
-                  to="/profile"
-                >
-                  👤 My Profile
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/settings">
-                  ⚙️ Settings
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </nav>
+                  <div>
+                    <p className="text-muted small mb-1 text-uppercase fw-semibold" style={{ fontSize: "0.7rem" }}>
+                      {s.label}
+                    </p>
+                    <h5 className="fw-bold mb-1">{s.value}</h5>
+                    <span className={`small text-${s.pos ? "success" : "danger"}`}>
+                      {s.pos ? "▲" : "▼"} {s.change}
+                    </span>
+                  </div>
 
-        <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-          <div className="mt-3 mb-3 d-flex flex-wrap gap-2">
-            <Link to="/patient/add" className="btn btn-primary">
-              <i className="bi bi-person-plus me-1"></i>
-              Add Patient
-            </Link>
-
-            <Link to="/appointment/add" className="btn btn-success">
-              <i className="bi bi-calendar-check me-1"></i>
-              Book Appointment
-            </Link>
-
-            <Link to="/doctor/display" className="btn btn-outline-dark">
-              <i className="bi bi-hospital me-1"></i>
-              View Doctors
-            </Link>
-          </div>
-
-          <div className="row mb-4">
-            <div className="col-md-4">
-              <div className="card shadow-sm p-3">
-                <h6>Total Patients</h6>
-                <h3>120</h3>
+                </div>
               </div>
             </div>
+          ))}
+        </div>
 
-            <div className="col-md-4">
-              <div className="card shadow-sm p-3">
-                <h6>Appointments Today</h6>
-                <h3>35</h3>
+        {/* ✅ MODULES + ACTIVITY */}
+        <div className="row g-3">
+
+          {/* ✅ Modules */}
+          <div className="col-12 col-lg-8">
+            <div className="card border-0 shadow-sm h-100">
+              <div className="card-header bg-white border-bottom py-3">
+                <h6 className="fw-bold mb-0">⬡ Modules</h6>
               </div>
-            </div>
 
-            <div className="col-md-4">
-              <div className="card shadow-sm p-3">
-                <h6>Doctors Available</h6>
-                <h3>8</h3>
+              <div className="card-body">
+                <div className="row g-3">
+                  {navLinks.map((link) => (
+                    <div className="col-6 col-sm-4 col-md-3" key={link.to}>
+                      <Link
+                        to={link.to}
+                        className="btn btn-outline-dark w-100 py-3 d-flex flex-column align-items-center gap-2"
+                        style={{ borderRadius: "10px" }}
+                      >
+                        <span style={{ fontSize: "1.6rem" }}>{link.icon}</span>
+                        <span className="small fw-semibold">{link.label}</span>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
-          <DisplayPatients />
-        </main>
+          {/* ✅ Recent Activity */}
+          <div className="col-12 col-lg-4">
+            <div className="card border-0 shadow-sm h-100">
+              <div className="card-header bg-white border-bottom py-3">
+                <h6 className="fw-bold mb-0">🔔 Recent Activity</h6>
+              </div>
+
+              <div className="card-body p-0">
+                <ul className="list-group list-group-flush">
+                  {recentActivity.map((a, i) => (
+                    <li key={i} className="list-group-item border-0 py-3 px-3 d-flex gap-2">
+                      <span>{a.icon}</span>
+                      <span className="text-muted small">{a.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* ✅ Quick Actions */}
+        <div className="card border-0 shadow-sm mt-4">
+          <div className="card-header bg-white border-bottom">
+            <h6 className="fw-bold mb-0">⚡ Quick Actions</h6>
+          </div>
+
+          <div className="card-body d-flex flex-wrap gap-2">
+            {quickActions.map((btn) => (
+              <Link
+                key={btn.to}
+                to={btn.to}
+                className={`btn btn-${btn.color}`}
+              >
+                {btn.icon} {btn.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );
