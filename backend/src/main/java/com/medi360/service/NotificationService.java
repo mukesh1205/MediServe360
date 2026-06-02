@@ -17,7 +17,6 @@ import com.medi360.entities.Notification;
 import com.medi360.entities.User;
 import com.medi360.exception.NotificationNotfoundException;
 import com.medi360.exception.ResourceNotFoundException;
-import com.medi360.exception.UserNotFoundException;
 
 @Service
 public class NotificationService {

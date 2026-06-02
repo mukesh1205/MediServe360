@@ -1,7 +1,5 @@
 package com.medi360.DTO;
 
-import com.medi360.entities.User;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 

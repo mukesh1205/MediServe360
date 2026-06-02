@@ -40,12 +40,12 @@ public class Security {
 //                        .requestMatchers("/api/kpi-reports/**").permitAll()
 //                        .requestMatchers("/user/findbyid/{id}").permitAll()
  
-                        .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "PATIENT")
-                        .requestMatchers("/user/**").hasAnyRole("ADMIN","PATIENT","DOCTOR")
+                        .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "RECEPTIONIST")
+                        .requestMatchers("/user/**").hasAnyRole("ADMIN","RECEPTIONIST","DOCTOR")
                         .requestMatchers("/api/doctor/**").hasAnyRole("ADMIN", "DOCTOR")
                         .requestMatchers("/api/ward/**").hasAnyRole("ADMIN", "NURSE")	
                         .requestMatchers("/api/beds/**").hasAnyRole("ADMIN", "NURSE")
-                        .requestMatchers("/api/appointment/**").hasAnyRole("ADMIN", "DOCTOR","PATIENT")
+                        .requestMatchers("/api/appointment/**").hasAnyRole("ADMIN", "DOCTOR","RECEPTIONIST")
                         .requestMatchers("/api/compliance-reports/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
 
                         .requestMatchers("/api/kpi-report/**").hasRole("ADMIN")
@@ -57,7 +57,7 @@ public class Security {
                         .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN","FINANCEOFFICER")
 //                         audit-logs — GET allowed, POST blocked
                         .requestMatchers(HttpMethod.GET, "/auditlog/**")
-                        .hasAnyRole("ADMIN")
+                        .hasAnyRole("ADMIN,COMPLIANCE_OFFICER")
                         .requestMatchers(HttpMethod.POST, "/auditlog/**")
                         .denyAll()
  

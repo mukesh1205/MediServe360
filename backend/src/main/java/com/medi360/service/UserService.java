@@ -1,8 +1,6 @@
 package com.medi360.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,19 +8,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.medi360.DTO.UserDTO;
 import com.medi360.DTO.UserResponseDTO;
 import com.medi360.db.AuditlogRepository;
 import com.medi360.db.UserRepository;
-import com.medi360.entities.AuditLog;
 import com.medi360.entities.User;
 import com.medi360.exception.BadRequestException;
-import com.medi360.exception.PatientNotFoundException;
 import com.medi360.exception.ResourceNotFoundException;
 import com.medi360.exception.UserNotFoundException;
 
 @Service
+@RestControllerAdvice
 public class UserService {
 	
 	@Autowired
