@@ -32,7 +32,7 @@ public class Security {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
- 
+                			.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 //                        .requestMatchers("/user/insertuserdata").permitAll()
@@ -49,13 +49,13 @@ public class Security {
                         .requestMatchers("/api/appointment/**").hasAnyRole("ADMIN", "DOCTOR","RECEPTIONIST")
                         .requestMatchers("/api/compliance-reports/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
 
-                        .requestMatchers("/api/kpi-report/**").hasRole("ADMIN")
+                        .requestMatchers("/api/kpi-report/**").hasAnyRole("ADMIN","COMPLIANCE_OFFICER")
 
                         .requestMatchers("/api/invoice/**").hasAnyRole("ADMIN","FINANCEOFFICER")
                         .requestMatchers("/api/patientbilling/**").hasAnyRole("ADMIN","FINANCEOFFICER")
                         .requestMatchers("/notification/**").authenticated()
                         .requestMatchers("/api/insurance/**").hasAnyRole("ADMIN","FINANCEOFFICER")
-                        .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN","FINANCEOFFICER")
+                        .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN","FINANCEOFFICER","COMPLIANCE_OFFICER")
 //                         audit-logs — GET allowed, POST blocked
                         .requestMatchers(HttpMethod.GET, "/auditlog/**")
                         .hasAnyRole("ADMIN,COMPLIANCE_OFFICER")

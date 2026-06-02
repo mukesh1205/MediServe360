@@ -30,7 +30,7 @@ public class Appointment {
 	private String status;
 	
 	@Column
-	private int durationMinutes; 
+	private Integer durationMinutes; 
 	
 	@ManyToOne
 	@JoinColumn(name="patient_id")
