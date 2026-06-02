@@ -7,10 +7,13 @@ export default function FindPatient() {
   const [searched, setSearched] = useState(false);
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // ✅ Input handler
   const nameHandler = (e) => {
     setName(e.target.value);
   };
 
+  // ✅ Search function
   const buttonHandler = async () => {
     try {
       if (!name.trim()) {
@@ -45,66 +48,83 @@ export default function FindPatient() {
   };
 
   return (
-    <div className="container mt-4">
-      <h3 className="mb-4">Find Patient by Name</h3>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          buttonHandler();
-        }}
-      >
-        <div className="mb-3">
-          <label className="form-label">
-            Patient Name
-            <span className="text-danger"> *</span>
-          </label>
+    <div className="mt-3">
+
+      {/* ✅ Header + Search Bar */}
+      <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+
+        <h4 className="mb-0">🔍 Find Patient</h4>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            buttonHandler();
+          }}
+          className="d-flex gap-2"
+        >
           <input
             className="form-control"
             type="text"
-            value={name}
             placeholder="Enter patient name"
+            value={name}
             onChange={nameHandler}
-            pattern="[A-Za-z\s]+"
-            title="Only letters allowed"
+            style={{ width: "250px" }}
             required
           />
-        </div>
 
-        <button
-          className="btn btn-primary w-100"
-          type="submit"
-          disabled={!name.trim() || loading}
-        >
-          {loading ? (
-            <>
-              <span className="spinner-border spinner-border-sm me-2"></span>
-              Searching...
-            </>
-          ) : (
-            "Find"
-          )}
-        </button>
-      </form>
+          <button
+            className="btn btn-primary"
+            type="submit"
+            disabled={!name.trim() || loading}
+          >
+            {loading ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-1"></span>
+                Searching
+              </>
+            ) : (
+              <>
+                <i className="bi bi-search me-1"></i>
+                Search
+              </>
+            )}
+          </button>
+        </form>
+
+      </div>
+
+      {/* ✅ No results message */}
       {searched && records.length === 0 && name && (
-        <p className="mt-3 text-danger">No records found</p>
+        <p className="text-danger fw-semibold">
+          ❌ No patients found with this name
+        </p>
       )}
+
+      {/* ✅ Table */}
       {records.length > 0 && (
-        <div className="table-responsive">
-          <table className="table table-bordered table-hover table-striped mt-3">
-            <thead className="table-dark">
-              <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>DOB</th>
-                <th>Gender</th>
-                <th>Phone Number</th>
-                <th>Medical History</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((e) => {
-                return (
+        <div>
+
+          <p className="mb-2 text-success">
+            ✅ Found {records.length} patient(s)
+          </p>
+
+          <div className="table-responsive">
+            <table className="table table-bordered table-hover table-striped">
+              
+              <thead className="table-dark">
+                <tr>
+                  <th>Id</th>
+                  <th>Name</th>
+                  <th>DOB</th>
+                  <th>Gender</th>
+                  <th>Phone Number</th>
+                  <th>Medical History</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {records.map((e) => (
                   <tr key={e.patientId}>
                     <td>{e.patientId}</td>
                     <td>{e.patientName}</td>
@@ -112,12 +132,27 @@ export default function FindPatient() {
                     <td>{e.patientGender}</td>
                     <td>{e.patientPhoneNumber}</td>
                     <td>{e.patientMedicalHistory}</td>
-                    <td>{e.patientStatus}</td>
+
+                    {/* ✅ Status Badge */}
+                    <td>
+                      <span
+                        className={`badge 
+                          ${e.patientStatus === "ADMITTED" ? "bg-success" : ""}
+                          ${e.patientStatus === "REGISTERED" ? "bg-primary" : ""}
+                          ${e.patientStatus === "DISCHARGED" ? "bg-secondary" : ""}
+                        `}
+                      >
+                        {e.patientStatus}
+                      </span>
+                    </td>
+
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                ))}
+              </tbody>
+
+            </table>
+          </div>
+
         </div>
       )}
     </div>

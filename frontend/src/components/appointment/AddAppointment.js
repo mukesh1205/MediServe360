@@ -1,111 +1,194 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 export default function AddAppointment() {
 
-    let [date, setDate] = useState("");
-    let [time, setTime] = useState("");
-    let [durationMinutes, setDurationMinutes] = useState(30);
-    let [patientId, setPatientId] = useState("");
-    let [doctorId, setDoctorId] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [durationMinutes, setDurationMinutes] = useState(30);
+  const [patientId, setPatientId] = useState("");
+  const [doctorId, setDoctorId] = useState("");
 
-    let [doctors, setDoctors] = useState([]);
-    let [patients, setPatients] = useState([]);
+  const [patients, setPatients] = useState([]);
+  const [doctors, setDoctors] = useState([]);
 
-    // ✅ Fetch doctors for dropdown
-    useEffect(() => {
-        axios.get("http://localhost:9002/api/doctor/getAll",{
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token") 
-                    }
-                })
-            .then((res) => setDoctors(res.data))
-            .catch(() => alert("Failed to load doctors"));
+  const [loading, setLoading] = useState(false);
 
-        axios.get("http://localhost:9002/api/patient/fetchAllPatients",{
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token") 
-                    }
-                })
-            .then((res) => setPatients(res.data))
-            .catch(() => alert("Failed to load patients"));
-    }, []);
+  // ✅ Load dropdown data
+  useEffect(() => {
+    axios.get("http://localhost:9002/api/patient/fetchAllPatients", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    })
+    .then(res => setPatients(res.data))
+    .catch(() => toast.error("Failed to load patients"));
 
-    let saveHandler = () => {
-        if (!date || !time || !durationMinutes || !patientId || !doctorId) {
-            alert("Please fill all fields");
-            return;
-        }
+    axios.get("http://localhost:9002/api/doctor/getAll", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    })
+    .then(res => setDoctors(res.data))
+    .catch(() => toast.error("Failed to load doctors"));
+  }, []);
 
-        let url = "http://localhost:9002/api/appointment/add";
+  const buttonHandler = () => {
+    if (loading) return;
 
-        let data = {
-            "appointment": {
-                "date": date,
-                "time": time,
-                "durationMinutes": parseInt(durationMinutes),
-                "patient": { "patientId": parseInt(patientId) }, // ✅ patientId
-                "doctor": { "id": parseInt(doctorId) }           // ✅ id
-            }
-        };
+    if (!date || !time || !durationMinutes || !patientId || !doctorId) {
+      toast.warning("Please fill all fields");
+      return;
+    }
 
-        axios.post(url, data,{
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token") 
-                    }
-                })
-            .then((response) => {
-                alert(response.data.message);
-                setDate("");
-                setTime("");
-                setDurationMinutes(30);
-                setPatientId("");
-                setDoctorId("");
-            })
-            .catch((error) => {
-                alert(error.response?.data?.message || "Error creating appointment");
-            });
+    setLoading(true);
+
+    const url = "http://localhost:9002/api/appointment/add";
+
+    const data = {
+      appointment: {
+        date: date,
+        time: time,
+        durationMinutes: parseInt(durationMinutes),
+        patient: { patientId: parseInt(patientId) },
+        doctor: { id: parseInt(doctorId) }
+      }
     };
 
-    return (
-        <div>
-            <h2>Add Appointment</h2>
+    axios.post(url, data, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    })
+    .then(() => {
+      toast.success("Appointment created successfully");
 
-            <label>Date</label>
-            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-            <br />
+      setDate("");
+      setTime("");
+      setDurationMinutes(30);
+      setPatientId("");
+      setDoctorId("");
 
-            <label>Time</label>
-            <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
-            <br />
+      setLoading(false);
+    })
+    .catch((error) => {
+      toast.error(error.response?.data?.message || "Error creating appointment");
+      setLoading(false);
+    });
+  };
 
-            <label>Duration (minutes)</label>
-            <input type="number" value={durationMinutes} onChange={(e) => setDurationMinutes(e.target.value)} />
-            <br />
+  return (
+    <div className="container mt-4">
 
-            <label>Select Patient</label>
-            <select value={patientId} onChange={(e) => setPatientId(e.target.value)}>
-                <option value="">-- Select Patient --</option>
-                {patients.map((p) => (
-                    <option key={p.patientId} value={p.patientId}>
-                        {p.patientName} ({p.patientGender})
-                    </option>
-                ))}
-            </select>
-            <br />
+      <h3 className="mb-4">Add Appointment</h3>
 
-            <label>Select Doctor</label>
-            <select value={doctorId} onChange={(e) => setDoctorId(e.target.value)}>
-                <option value="">-- Select Doctor --</option>
-                {doctors.map((doc) => (
-                    <option key={doc.id} value={doc.id}>
-                        {doc.name} ({doc.department})
-                    </option>
-                ))}
-            </select>
-            <br />
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        buttonHandler();
+      }}>
 
-            <button onClick={saveHandler}>Save Appointment</button>
+        {/* Date */}
+        <div className="mb-3">
+          <label className="form-label">
+            Date <span className="text-danger">*</span>
+          </label>
+          <input
+            className="form-control"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            min={new Date().toISOString().split("T")[0]}
+            required
+          />
         </div>
-    );
+
+        {/* Time */}
+        <div className="mb-3">
+          <label className="form-label">
+            Time <span className="text-danger">*</span>
+          </label>
+          <input
+            className="form-control"
+            type="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            required
+          />
+        </div>
+
+        {/* Duration */}
+        <div className="mb-3">
+          <label className="form-label">
+            Duration (minutes) <span className="text-danger">*</span>
+          </label>
+          <input
+            className="form-control"
+            type="number"
+            value={durationMinutes}
+            onChange={(e) => setDurationMinutes(e.target.value)}
+            min="5"
+            required
+          />
+        </div>
+
+        {/* Patient */}
+        <div className="mb-3">
+          <label className="form-label">
+            Select Patient <span className="text-danger">*</span>
+          </label>
+          <select
+            className="form-select"
+            value={patientId}
+            onChange={(e) => setPatientId(e.target.value)}
+            required
+          >
+            <option value="">-- Select Patient --</option>
+            {patients.map(p => (
+              <option key={p.patientId} value={p.patientId}>
+                {p.patientName} ({p.patientGender})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Doctor */}
+        <div className="mb-3">
+          <label className="form-label">
+            Select Doctor <span className="text-danger">*</span>
+          </label>
+          <select
+            className="form-select"
+            value={doctorId}
+            onChange={(e) => setDoctorId(e.target.value)}
+            required
+          >
+            <option value="">-- Select Doctor --</option>
+            {doctors.map(doc => (
+              <option key={doc.id} value={doc.id}>
+                {doc.name} ({doc.department})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Submit */}
+        <button
+          className="btn btn-primary w-100"
+          type="submit"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2"></span>
+              Submitting...
+            </>
+          ) : (
+            "Add Appointment"
+          )}
+        </button>
+
+      </form>
+    </div>
+  );
 }

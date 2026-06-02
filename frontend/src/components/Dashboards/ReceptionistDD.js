@@ -2,38 +2,76 @@ import { Link } from "react-router-dom";
 import TopNavbar from "../common/TopNavbar";
 
 const navLinks = [
-  { to: "/insuranceClaim", label: "Insurance Claim", icon: "🛡️" },
-  { to: "/invoice", label: "Invoice", icon: "🧾" },
+  { to: "/patient", label: "Patients", icon: "🧾" },
+  { to: "/appointment", label: "Appointments", icon: "📅" },
+  { to: "/doctor", label: "Doctors", icon: "👨‍⚕️" },
 ];
 
 const stats = [
-  { label: "Total Revenue", value: "₹84.2L", change: "+12.4% this month", pos: true, icon: "💰", color: "primary" },
-  { label: "Pending Claims", value: "38", change: "+5 since last week", pos: false, icon: "🛡️", color: "warning" },
-  { label: "Invoices Raised", value: "214", change: "+18 this month", pos: true, icon: "🧾", color: "success" },
-  { label: "Outstanding", value: "₹12.7L", change: "-3.1% from last month", pos: true, icon: "📊", color: "info" },
+  {
+    label: "Total Patients",
+    value: "120",
+    change: "+12 this week",
+    pos: true,
+    icon: "🧾",
+    color: "primary",
+  },
+  {
+    label: "Appointments Today",
+    value: "35",
+    change: "+5 compared yesterday",
+    pos: true,
+    icon: "📅",
+    color: "success",
+  },
+  {
+    label: "Doctors Available",
+    value: "8",
+    change: "-2 unavailable",
+    pos: false,
+    icon: "👨‍⚕️",
+    color: "warning",
+  },
+  {
+    label: "Completed Appointments",
+    value: "28",
+    change: "+3 since yesterday",
+    pos: true,
+    icon: "✅",
+    color: "info",
+  },
 ];
+
 
 const recentActivity = [
-  { icon: "✅", text: "Insurance claim #CLM-441 approved for ₹58,000" },
-  { icon: "💳", text: "Invoice INV-0091 marked as paid by Reliance Ltd." },
-  { icon: "🕐", text: "New claim #CLM-442 submitted — under review" },
-  { icon: "⚠️", text: "INV-0089 overdue by 7 days — reminder sent" },
-  { icon: "📄", text: "Monthly reconciliation report generated" },
+  { icon: "✅", text: "New patient registered successfully" },
+  { icon: "📅", text: "Appointment booked for Patient #102" },
+  { icon: "❌", text: "Appointment #55 cancelled" },
+  { icon: "👨‍⚕️", text: "Doctor Dr. Kumar marked unavailable" },
+  { icon: "📄", text: "Patient report generated" },
 ];
 
-export default function FinanceDD() {
+const quickActions = [
+  { to: "/patient/add", label: "Add Patient", icon: "➕", color: "primary" },
+  { to: "/appointment/add", label: "Book Appointment", icon: "📅", color: "success" },
+  { to: "/doctor/display", label: "View Doctors", icon: "👨‍⚕️", color: "dark" },
+];
+
+export default function ReceptionistDD() {
+
   return (
     <div className="min-vh-100 bg-light">
 
-      {/* ✅ Global Navbar */}
+      {/* ✅ Navbar */}
       <TopNavbar />
 
       <div className="container-fluid px-4 py-4">
 
+        {/* ✅ Header */}
         <div className="mb-4">
-          <h4 className="fw-bold text-dark mb-1">Finance Dashboard</h4>
+          <h4 className="fw-bold text-dark mb-1">Reception Dashboard</h4>
           <p className="text-muted small mb-0">
-            Overview · FY 2025–26 · Updated just now
+            Overview · Daily operations · Patient flow
           </p>
         </div>
 
@@ -41,14 +79,16 @@ export default function FinanceDD() {
         <div className="row g-3 mb-4">
           {stats.map((s) => (
             <div className="col-12 col-sm-6 col-xl-3" key={s.label}>
-              <div className={`card border-0 shadow-sm h-100 border-start border-4 border-${s.color}`}>
+              <div className={`card border-0 shadow-sm border-start border-4 border-${s.color}`}>
                 <div className="card-body d-flex align-items-center gap-3">
+
                   <div
                     className={`bg-${s.color} bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center`}
-                    style={{ width: "52px", height: "52px", fontSize: "1.5rem" }}
+                    style={{ width: "52px", height: "52px", fontSize: "1.4rem" }}
                   >
                     {s.icon}
                   </div>
+
                   <div>
                     <p className="text-muted small mb-1 text-uppercase fw-semibold" style={{ fontSize: "0.7rem" }}>
                       {s.label}
@@ -58,15 +98,17 @@ export default function FinanceDD() {
                       {s.pos ? "▲" : "▼"} {s.change}
                     </span>
                   </div>
+
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* ✅ Modules + Activity */}
+        {/* ✅ MODULES + ACTIVITY */}
         <div className="row g-3">
 
+          {/* ✅ Modules */}
           <div className="col-12 col-lg-8">
             <div className="card border-0 shadow-sm h-100">
               <div className="card-header bg-white border-bottom py-3">
@@ -89,10 +131,10 @@ export default function FinanceDD() {
                   ))}
                 </div>
               </div>
-
             </div>
           </div>
 
+          {/* ✅ Recent Activity */}
           <div className="col-12 col-lg-4">
             <div className="card border-0 shadow-sm h-100">
               <div className="card-header bg-white border-bottom py-3">
@@ -109,10 +151,28 @@ export default function FinanceDD() {
                   ))}
                 </ul>
               </div>
-
             </div>
           </div>
 
+        </div>
+
+        {/* ✅ Quick Actions */}
+        <div className="card border-0 shadow-sm mt-4">
+          <div className="card-header bg-white border-bottom">
+            <h6 className="fw-bold mb-0">⚡ Quick Actions</h6>
+          </div>
+
+          <div className="card-body d-flex flex-wrap gap-2">
+            {quickActions.map((btn) => (
+              <Link
+                key={btn.to}
+                to={btn.to}
+                className={`btn btn-${btn.color}`}
+              >
+                {btn.icon} {btn.label}
+              </Link>
+            ))}
+          </div>
         </div>
 
       </div>

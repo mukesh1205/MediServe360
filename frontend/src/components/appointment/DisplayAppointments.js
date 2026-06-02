@@ -1,79 +1,120 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function DisplayAppointments() {
 
-    let [appointments, setAppointments] = useState([]);
+  const [appointments, setAppointments] = useState([]);
+  const [search, setSearch] = useState("");
 
-    useEffect(() => {
-        let url = "http://localhost:9002/api/appointment/getAll";
+  useEffect(() => {
+    axios
+      .get("http://localhost:9002/api/appointment/getAll", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setAppointments(res.data);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  }, []);
 
-        axios.get(url,{
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token") 
-                    }
-                })
-            .then((response) => {
-                setAppointments(response.data);
-            })
-            .catch((error) => {
-                console.error("Error fetching appointments", error);
-            });
+  // ✅ Filter logic (by doctor or patient)
+  const filteredAppointments = appointments.filter((a) =>
+    (a.doctor?.name || "").toLowerCase().includes(search.toLowerCase()) ||
+    (a.patient?.patientName || "").toLowerCase().includes(search.toLowerCase())
+  );
 
-    }, []);   // ✅ IMPORTANT: run only once (fixed infinite loop issue)
+  return (
+    <div>
 
-    return (
-        <div>
+      {/* ✅ Header + Search */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
 
-            <h2>Appointments List</h2>
+        <h2 className="mb-0">All Appointments</h2>
 
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Duration</th>
-                        <th>Status</th>
-                        <th>Patient ID</th>
-                        <th>Doctor</th>
-                        <th>Delete</th>
-                        <th>Edit</th>
-                    </tr>
-                </thead>
+        <div className="d-flex">
+          <input
+            type="text"
+            className="form-control me-2"
+            placeholder="Search by patient / doctor..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ width: "250px" }}
+          />
 
-                <tbody>
-                    {
-                        appointments.map((a) => {
-                            return (
-                                <tr key={a.id}>
-                                    <td>{a.id}</td>
-                                    <td>{a.date}</td>
-                                    <td>{a.time}</td>
-                                    <td>{a.durationMinutes}</td>
-                                    <td>{a.status}</td>
-                                    <td>{a.patient?.patientId}</td>
-                                    <td>{a.doctor?.name}</td>
+          <button className="btn btn-primary">
+            <i className="bi bi-search"></i>
+          </button>
+        </div>
 
-                                    <td>
-                                        <Link to={`/appointment/delete/${a.id}`}>
-                                            Delete
-                                        </Link>
-                                    </td>
+      </div>
 
-                                    <td>
-                                        <Link to={`/appointment/edit/${a.id}`}>
-                                            Edit
-                                        </Link>
-                                    </td>
-                                </tr>
-                            );
-                        })
-                    }
-                </tbody>
-            </table>
+      {/* ✅ No data */}
+      {filteredAppointments.length === 0 ? (
+        <p className="text-danger">No appointments found</p>
+      ) : (
+
+        <div className="table-responsive">
+
+          <table className="table table-bordered table-hover table-striped">
+
+            <thead className="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Duration</th>
+                <th>Status</th>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Update</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {filteredAppointments.map((a) => (
+                <tr key={a.id}>
+                  <td>{a.id}</td>
+                  <td>{new Date(a.date).toLocaleDateString()}</td>
+                  <td>{a.time}</td>
+                  <td>{a.durationMinutes} min</td>
+                  <td>{a.status}</td>
+                  <td>{a.patient?.patientName}</td>
+                  <td>{a.doctor?.name}</td>
+
+                  <td className="text-center">
+                    <Link
+                      className="btn btn-warning btn-sm"
+                      to={`/appointment/edit/${a.id}`}
+                    >
+                      Edit
+                    </Link>
+                  </td>
+
+                  <td className="text-center">
+                    <Link
+                      className="btn btn-danger btn-sm"
+                      to={`/appointment/delete/${a.id}`}
+                    >
+                      Delete
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+
+          </table>
 
         </div>
-    );
+
+      )}
+
+    </div>
+  );
 }

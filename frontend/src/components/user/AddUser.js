@@ -60,7 +60,7 @@ export default function AddUser(){
             navigate("/user");
         }
         catch(err){
-            alert(err.message);
+            toast.error(err.response.data.errorMessage);
         }
     }
     return(
@@ -79,10 +79,9 @@ export default function AddUser(){
                 <label className="form-label">Role</label>
                 <select className="form-select" onChange={roleHandler}>
                     <option value="">--Select Role--</option>
-                    <option value="PATIENT">Patient</option>
+                    <option value="RECEPTIONIST">Receptionist</option>
                     <option value="DOCTOR">Doctor</option>
                     <option value="NURSE">Nurse</option>
-                    <option value="ADMIN">Admin</option>
                     <option value="FINANCEOFFICER">Finance Officer</option>
                     <option value="COMPLIANCE_OFFICER">Compilance officer</option>
                     

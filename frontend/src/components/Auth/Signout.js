@@ -1,17 +1,21 @@
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+
 export default function Signout() {
   const navigate = useNavigate();
-  const signoutHandler = () => {
-    localStorage.clear();
-    navigate("/");
-  };
   return (
     <button
-      type="button"
-      className="btn btn-outline-danger"
-      onClick={signoutHandler}
-    >
-      Logout
-    </button>
+            className="btn btn-sm"
+            title="Logout"
+            style={{
+              background: "#ef4444",
+              color: "white",
+            }}
+            onClick={() => {
+              localStorage.clear();
+              navigate("/");
+            }}
+          >
+            <i className="bi bi-box-arrow-right"></i>
+          </button>
   );
 }
