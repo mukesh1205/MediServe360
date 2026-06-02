@@ -41,32 +41,35 @@ export default function UpdateWard() {
     }, []);
 
     let updateButtonHandler = () => {
-        let url = "http://localhost:9002/ward/updateWard";
-        let data = {
-            "ward": {
-                "wardId": parseInt(wardId),
-                "wardname": wardName,
-                "wardcapacity": parseInt(wardCapacity),
-                "wardstatus": wardStatus
-            }
-        };
+    let url = "http://localhost:9002/api/ward/updateWard";  // ✅ added /api
+    let data = {
+        "ward": {
+            "wardId": parseInt(wardId),
+            "wardname": wardName,
+            "wardcapacity": parseInt(wardCapacity),
+            "wardstatus": wardStatus
+        }
+    };
 
-        axios.put(url, data)
-            .then((res) => {
-                alert("Ward updated successfully");
-                navigate("/ward/findAll");
-            })
-            .catch((error) => {
-                if (error.response) {
-                    alert("Error " + error.response.status + ": " + (error.response.data?.errorMessage || JSON.stringify(error.response.data)));
-                } else if (error.request) {
-                    alert("No response from server. Make sure the backend is running on port 9002.");
-                } else {
-                    alert("Error: " + error.message);
-                }
-            });
-    }
-
+    axios.put(url, data, {
+        headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")  // ✅ added auth
+        }
+    })
+    .then((res) => {
+        alert("Ward updated successfully");
+        navigate("/ward/findAll");
+    })
+    .catch((error) => {
+        if (error.response) {
+            alert("Error " + error.response.status + ": " + (error.response.data?.errorMessage || JSON.stringify(error.response.data)));
+        } else if (error.request) {
+            alert("No response from server. Make sure the backend is running on port 9002.");
+        } else {
+            alert("Error: " + error.message);
+        }
+    });
+}
     return (
         <div className="container mt-4">
             <h2>Update Ward {wardId}</h2>

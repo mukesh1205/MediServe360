@@ -1,73 +1,122 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 export default function AddWard() {
 
-    let [wardName, setWardName] = useState("");
-    let [wardCapacity, setWardCapacity] = useState("");
-    let [wardStatus, setWardStatus] = useState("");
+    const [wardName, setWardName] = useState("");
+    const [wardCapacity, setWardCapacity] = useState("");
+    const [wardStatus, setWardStatus] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    let wardNameHandler = (e) => {
-        setWardName(e.target.value);
-    }
+    const saveHandler = () => {
+        if (loading) return;
+        setLoading(true);
 
-    let wardCapacityHandler = (e) => {
-        setWardCapacity(e.target.value);
-    }
-
-    let wardStatusHandler = (e) => {
-        setWardStatus(e.target.value);
-    }
-
-    let saveHandler = () => {
-        let url = "http://localhost:9002/api/ward/create";
-        let data = {
+        const url = "http://localhost:9002/api/ward/create";
+        const data = {
             "ward": {
-                "wardname": wardName,
+                "wardname": wardName.trim(),
                 "wardcapacity": parseInt(wardCapacity),
                 "wardstatus": wardStatus
             }
         };
 
-        axios.post(url, data,{
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token") 
-                    }
-                })
-            .then((response) => {
-                alert("Ward created successfully! Ward ID: " + response.data.ward.wardId);
-            })
-            .catch((error) => {
-                if (error.response) {
-                    alert("Error " + error.response.status + ": " + (error.response.data?.errorMessage || JSON.stringify(error.response.data)));
-                } else if (error.request) {
-                    alert("No response from server. Make sure the backend is running on port 9002.");
-                } else {
-                    alert("Error: " + error.message);
-                }
-            });
-    }
+        axios.post(url, data, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }
+        })
+        .then((response) => {
+            toast.success("Ward created successfully! Ward ID: " + response.data.ward.wardId);
+            setWardName("");
+            setWardCapacity("");
+            setWardStatus("");
+        })
+        .catch((error) => {
+            toast.error(error.response?.data?.errorMessage || error.message);
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+    };
 
     return (
         <div className="container mt-4">
-            <h2>Add Ward</h2>
+            <h2 className="mb-4">Add Ward</h2>
 
-            <div className="mb-3">
-                <label className="form-label">Ward Name</label>
-                <input className="form-control" value={wardName} onChange={wardNameHandler} placeholder="Enter Ward Name" />
-            </div>
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                saveHandler();
+            }}>
 
-            <div className="mb-3">
-                <label className="form-label">Ward Capacity</label>
-                <input className="form-control" value={wardCapacity} onChange={wardCapacityHandler} placeholder="Enter Ward Capacity" />
-            </div>
+                <div className="mb-3">
+                    <label className="form-label">
+                        Ward Name
+                        <span style={{ color: "red" }}> *</span>
+                    </label>
+                    <input
+                        className="form-control"
+                        type="text"
+                        value={wardName}
+                        onChange={(e) => setWardName(e.target.value)}
+                        placeholder="Enter Ward Name"
+                        pattern="[A-Za-z\s]+"
+                        title="Only letters allowed"
+                        required
+                    />
+                </div>
 
-            <div className="mb-3">
-                <label className="form-label">Ward Status</label>
-                <input className="form-control" value={wardStatus} onChange={wardStatusHandler} placeholder="e.g. active" />
-            </div>
+                <div className="mb-3">
+                    <label className="form-label">
+                        Ward Capacity
+                        <span style={{ color: "red" }}> *</span>
+                    </label>
+                    <input
+                        className="form-control"
+                        type="number"
+                        value={wardCapacity}
+                        onChange={(e) => setWardCapacity(e.target.value)}
+                        placeholder="Enter Ward Capacity"
+                        min="1"
+                        required
+                    />
+                </div>
 
-            <button className="btn btn-primary" onClick={saveHandler}>Save</button>
+                <div className="mb-3">
+                    <label className="form-label">
+                        Ward Status
+                        <span style={{ color: "red" }}> *</span>
+                    </label>
+                    <select
+                        className="form-select"
+                        value={wardStatus}
+                        onChange={(e) => setWardStatus(e.target.value)}
+                        required
+                    >
+                        <option value="">-- Select Ward Status --</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Under Maintenance">Under Maintenance</option>
+                    </select>
+                </div>
+
+                <button
+                    className="btn btn-primary w-100"
+                    type="submit"
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2"></span>
+                            Saving...
+                        </>
+                    ) : (
+                        "Save Ward"
+                    )}
+                </button>
+
+            </form>
         </div>
     );
 }

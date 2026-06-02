@@ -6,7 +6,7 @@ export default function KpiReportHome(){
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div className="container-fluid">
 
-                    <Link className="navbar-brand" to="/kpi">
+                    <Link className="navbar-brand" to="/kpi_report">
                         KPI Report
                     </Link>
 

@@ -5,6 +5,9 @@ public class BadRequestException extends RuntimeException {
 		super();
 	}
     public BadRequestException(String message) {
+	private static final long serialVersionUID = 1L;
+
+	public BadRequestException(String message) {
         super(message);
     }
 }

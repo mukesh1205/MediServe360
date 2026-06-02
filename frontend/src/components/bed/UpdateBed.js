@@ -50,7 +50,7 @@ export default function UpdateBed() {
                 })
             .then((res) => {
                 alert("Bed updated successfully");
-                navigate("/bed/all");
+                navigate("/bed/FindAll");
             })
             .catch((error) => {
                 if (error.response) {
