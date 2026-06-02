@@ -204,11 +204,12 @@ export default function AddPatient(){
                     onChange={patientStatusHandler}
                     required
                 >
-                    <option value="">--Select Status--</option>
-                    <option value="Admitted">Admitted</option>
-                    <option value="Discharged">Discharged</option>
-                    <option value="Under Treatment">Under Treatment</option>
-                    <option value="Recovered">Recovered</option>
+                    <option value="">--Select Status--</option>                 
+                    <option value="REGISTERED">REGISTERED</option>
+                    <option value="ADMITTED">ADMITTED</option>
+                    <option value="DISCHARGED">DISCHARGED</option>
+                    <option value="OUTPATIENT">OUTPATIENT</option>
+
                 </select>
             </div>
 

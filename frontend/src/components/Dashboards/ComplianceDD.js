@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState, useMemo } from "react";
 import { toast } from "react-toastify";
+import TopNavbar from "../common/TopNavbar";
 
 export default function ComplianceDD() {
     const [complianceReports, setComplianceReports] = useState([]);
@@ -95,8 +96,10 @@ export default function ComplianceDD() {
     }
 
     return (
+        
+            <div>
+            <TopNavbar />
         <div className="container-fluid py-4 px-4">
-
             {/* Page header — renamed so it's not "Compliance Dashboard" inside the dashboard */}
             <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                 <div>
@@ -305,6 +308,7 @@ export default function ComplianceDD() {
                     )}
                 </div>
             </div>
+        </div>
         </div>
     );
 }

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.medi360.DTO.UserDTO;
 import com.medi360.DTO.UserResponseDTO;
@@ -19,6 +20,7 @@ import com.medi360.exception.ResourceNotFoundException;
 import com.medi360.exception.UserNotFoundException;
 
 @Service
+@RestControllerAdvice
 public class UserService {
 	
 	@Autowired
@@ -165,4 +167,14 @@ public class UserService {
 	    dto.setPhoneNumber(u.getUserPhone());
 	    return dto;
 	}
+	
+	public UserResponseDTO getUserByEmail(String email) {
+
+	    User user = userrepo.findByEmail(email)
+	            .orElseThrow(() -> new ResourceNotFoundException(
+	                    "User not found with email: " + email));
+
+	    return mapToDTO(user);
+	}
+	
 }
