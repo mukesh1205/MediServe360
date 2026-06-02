@@ -22,7 +22,7 @@ export default function Register() {
             return;
         }
         if(password.length<6){
-            setError("Password must follow rules");
+            setError("Password must contain 6 characters");
             return;
         }
         if (!userName || !email || !password || !role || !phoneNumber) {
@@ -35,10 +35,10 @@ export default function Register() {
         })
         .then(() => {
             setSuccess("Account created successfully! Redirecting to login...");
-            setTimeout(() => navigate("/login"), 2000);
+            setTimeout(() => navigate("/login"), 1000);
         })
         .catch((err) => {
-            if (err.response?.status === 400) {
+            if (err.response?.data.httpStatusCode === 404) {
                 setError("Email already registered. Try a different one.");
             } else {
                 setError("Registration failed. Please try again.");
@@ -167,7 +167,6 @@ export default function Register() {
                                 style={{ borderColor: "#b0cfe0", borderRadius: "8px", color: role ? "#212529" : "#6c757d" }}
                             >
                                 <option value="">Select role</option>
-                                <option value="ADMIN">Admin</option>
                                 <option value="RECEPTIONIST">Receptionist</option>
                                 <option value="DOCTOR">Doctor</option>
                                 <option value="NURSE">Nurse</option>

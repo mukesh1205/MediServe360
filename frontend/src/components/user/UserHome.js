@@ -12,7 +12,7 @@ const roleInfo = [
   { role: "Admin",              icon: "⚙️",  desc: "Full system access, manages all modules and settings." },
   { role: "Doctor",             icon: "👨‍⚕️", desc: "Views and manages patient appointments and records." },
   { role: "Nurse",              icon: "🏥",  desc: "Handles bed and ward assignments for patients." },
-  { role: "Patient",            icon: "🧑",  desc: "Can view personal appointments and health info." },
+  { role: "Receptionist",            icon: "🧑",  desc: "Can view personal appointments and health info." },
   { role: "Finance Officer",    icon: "💰",  desc: "Manages invoices, insurance claims and billing." },
   { role: "Compliance Officer", icon: "📋",  desc: "Oversees compliance reports and regulatory audits." },
 ];
