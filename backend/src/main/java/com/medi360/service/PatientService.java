@@ -63,4 +63,7 @@ public class PatientService {
 	public Page<Patient> getAllPatientsWithPagination(Pageable pageable) {
 		return this.patientRepository.findAll(pageable);
 	}
+	public List<Patient> searchByName(String name) {
+	    return patientRepository.findByPatientNameContainingIgnoreCase(name);
+	}
 }

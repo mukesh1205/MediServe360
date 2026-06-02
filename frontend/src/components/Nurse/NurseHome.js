@@ -1,22 +1,23 @@
+// src/components/Nurse/NurseHome.jsx
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import Signout from '../Auth/Signout';
 
-export default function BedHome() {
+export default function NurseHome() {
     const location = useLocation();
 
     const navLinks = [
-        { to: "/nursedd", label: "Dashboard", icon: "🏠" },
-        { to: "add", label: "Add Bed", icon: "➕" },
-        { to: "find", label: "Find Bed", icon: "🔍" },
-        { to: "findAll", label: "All Beds", icon: "🛏️" },
-        { to: "assignBed", label: "Assign Bed", icon: "👤" },
-        { to: "dischargeBed", label: "Discharge", icon: "🚪" },
-        { to: "pages", label: "Pages", icon: "📄" },
+        { to: "/nursedd/dashboard", label: "Dashboard", icon: "🏠" },
+        { to: "/bed", label: "Bed", icon: "🛏️" },
+        { to: "/ward", label: "Ward", icon: "🏨" },
+        { to: "vitals/add", label: "Add Vitals", icon: "❤️" },
+        { to: "vitals/view", label: "View Vitals", icon: "📋" },
+        { to: "carenotes/add", label: "Add Note", icon: "📝" },
+        { to: "carenotes/view", label: "View Notes", icon: "📄" },
     ];
 
     return (
         <div style={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
-         
+            {/* Top Header Bar */}
             <div style={{ backgroundColor: "#0d6efd", padding: "10px 0" }}>
                 <div className="container-fluid px-4 d-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center gap-2">
@@ -24,9 +25,14 @@ export default function BedHome() {
                         <span style={{ color: "white", fontWeight: "700", fontSize: "1.3rem", letterSpacing: "0.5px" }}>
                             MediServe <span style={{ color: "#cfe2ff" }}>360</span>
                         </span>
-                        <span style={{ color: "#cfe2ff", marginLeft: "8px", fontSize: "0.85rem" }}>| Bed Management</span>
+                        <span style={{ color: "#cfe2ff", marginLeft: "8px", fontSize: "0.85rem" }}>| Nurse Console</span>
                     </div>
-                    <Signout />
+                    <div className="d-flex align-items-center gap-3">
+                        <span style={{ color: "#cfe2ff", fontSize: "0.85rem" }}>
+                            👤 {localStorage.getItem("userName")}
+                        </span>
+                        <Signout />
+                    </div>
                 </div>
             </div>
 
@@ -35,7 +41,9 @@ export default function BedHome() {
                 <div className="container-fluid px-4">
                     <ul className="nav" style={{ gap: "4px" }}>
                         {navLinks.map(link => {
-                            const isActive = location.pathname.includes(link.to);
+                            const isActive = link.to.startsWith("/")
+                                ? location.pathname === link.to
+                                : location.pathname.includes(link.to);
                             return (
                                 <li className="nav-item" key={link.to}>
                                     <Link

@@ -6,6 +6,7 @@ public class LoginResponseDTO {
     private String email;
     private String role;
     private String userName;
+    private Integer userId;
 
     // Getters & Setters
     public String getToken() { return token; }
@@ -16,4 +17,6 @@ public class LoginResponseDTO {
     public void setRole(String role) { this.role = role; }
     public String getUserName() { return userName; }
     public void setUserName(String userName) { this.userName = userName; }
+    public Integer getUserId() { return userId; }   
+    public void setUserId(Integer userId) { this.userId = userId; }  
 }

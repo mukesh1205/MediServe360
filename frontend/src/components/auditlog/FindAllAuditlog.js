@@ -6,6 +6,7 @@ export default function FindAllAuditlog(){
     const navigate=useNavigate();
 
     async function notificationget(){
+        
         let url="http://localhost:9002/auditlog/fetchallauditlog"
         try{
             let res=await axios.get(url,{
