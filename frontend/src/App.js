@@ -25,6 +25,7 @@ import DisplayDoctorsPaginated from './components/doctor/DisplayDoctorsPaginated
 
 // Patient
 import PatientHome from './components/patient/PatientHome';
+import PatientHomeNav from './components/patient/PatientHomeNav'
 import AddPatient from './components/patient/AddPatient';
 import DeletePatient from './components/patient/DeletePatient';
 import UpdatePatient from './components/patient/UpdatePatient';
@@ -123,7 +124,6 @@ import DoctorDD from './components/Dashboards/DoctorDD';
 import NurseDD from './components/Dashboards/NurseDD';
 import FinanceDD from './components/Dashboards/FinanceDD';
 import ComplianceDD from './components/Dashboards/ComplianceDD';
-
 import Home from './components/Auth/Home';
 
 // Nurse

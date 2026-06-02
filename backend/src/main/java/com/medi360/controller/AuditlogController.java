@@ -26,37 +26,6 @@ public class AuditlogController {
 	@Autowired
 	private AuditlogService as;
 	
-//	@PostMapping("/insertauditlog")
-//	public ResponseEntity<AuditlogResponseDTO> addAuditlog(@RequestBody AuditlogDTO ald){
-//		AuditLog a=this.as.addAuditlog(ald);
-//		
-//		AuditlogResponseDTO dto=new AuditlogResponseDTO();
-//		
-//		dto.setAuditlog(a);
-//		dto.setMessage("Successfully added auditlog");
-//		dto.setStatusCode(201);
-//		
-//		return ResponseEntity.status(201).body(dto);
-//	}
-	
-//	@PutMapping("/updateauditlog")
-//	public ResponseEntity<AuditlogResponseDTO> updateAuditlog(@RequestBody AuditlogDTO ald){
-//		AuditLog a=this.as.addAuditlog(ald.getAuditLog());
-//		
-//		AuditlogResponseDTO dto=new AuditlogResponseDTO();
-//		
-//		dto.setAuditlog(a);
-//		dto.setMessage("Successfully updated auditlog");
-//		dto.setStatusCode(200);
-//		
-//		return ResponseEntity.status(200).body(dto);
-//	}
-//	
-//	@DeleteMapping("/deleteauditlog/{uid}")
-//	public String deleteAuditlog(@PathVariable int uid) {
-//		return this.deleteAuditlog(uid);
-//	}
-	
 	@GetMapping("/fetchallauditlog")
 	public ResponseEntity<List<AuditlogResponseDTO>> getAllAuditlog(){
 		System.out.println("okk got it");
