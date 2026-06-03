@@ -132,6 +132,7 @@ import AddVitals from './components/Nurse/Vitals/AddVitals';
 import ViewVitals from './components/Nurse/Vitals/ViewVitals';
 import AddCareNote from './components/Nurse/CareNotes/AddCareNote';
 import ViewCareNotes from './components/Nurse/CareNotes/ViewCareNotes';
+import UserApproval from './components/user/UserApproval';
 
 function App() {
  
@@ -250,15 +251,14 @@ function ProtectedRoute({ children, allowedRoles }) {
           <Route path="paginated" element={<DisplayCompliancePaginated />} />
         </Route>
 
-
-
         <Route path="/user" element={<ProtectedRoute allowedRoles={ADMIN_ONLY}><UserHome /></ProtectedRoute>}>
           <Route path="add" element={<AddUser />} />
           <Route path="delete/:id" element={<DeleteUser />} />
           <Route path="update/:id" element={<UpdateUser />} />
           <Route path="find" element={<FindUser />} />
           <Route path="findall" element={<FindAllUser />} />
-          <Route path="paginated" element={<UserPage />} />
+          <Route path="paginated" element={<UserPage />} />\
+          <Route path="approval" element={<UserApproval />} />
         </Route>
 
         <Route path="/auditlog" element={<ProtectedRoute allowedRoles={ADMIN_ONLY}><AuditlogHome /></ProtectedRoute>}>

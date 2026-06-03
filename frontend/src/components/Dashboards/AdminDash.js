@@ -44,32 +44,24 @@ export default function AdminDash() {
       {
         label: "Total Users",
         value: totalUsers,
-        change: "+3 this week",
-        pos: true,
         icon: "👤",
         color: "primary",
       },
       {
         label: "Active Patients",
         value: totalPatients,
-        change: "+8 since yesterday",
-        pos: true,
         icon: "🏥",
         color: "success",
       },
       {
         label: "Beds Occupied",
         value: totalBeds,
-        change: "-5 available",
-        pos: false,
         icon: "🛏️",
         color: "warning",
       },
       {
         label: "Pending Invoices",
         value: "17",
-        change: "+2 since yesterday",
-        pos: false,
         icon: "🧾",
         color: "danger",
       },
@@ -192,9 +184,9 @@ export default function AdminDash() {
                       {s.label}
                     </p>
                     <h5 className="fw-bold mb-1">{s.value}</h5>
-                    <span className={`small text-${s.pos ? "success" : "danger"}`}>
+                    {/* <span className={`small text-${s.pos ? "success" : "danger"}`}>
                       {s.pos ? "▲" : "▼"} {s.change}
-                    </span>
+                    </span> */}
                   </div>
 
                 </div>

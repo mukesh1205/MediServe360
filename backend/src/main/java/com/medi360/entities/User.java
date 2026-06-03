@@ -28,6 +28,9 @@ public class User {
 	private String email;
 	private String phoneNumber;
 	private String password;
+	
+	
+	private String status="PENDING";
 	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
 	@JsonIgnore
 	private List<AuditLog> auditsLogs;
@@ -56,13 +59,15 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public User(String userName, String userRole, String userEmail, String userPhone,String password) {
+	public User(String userName, String userRole, String userEmail, String userPhone,String password,String status) {
 		super();
 		this.userName = userName;
 		this.role = userRole;
 		this.email = userEmail;
 		this.phoneNumber = userPhone;
 		this.password=password;
+		this.status=status;
+				
 	}
 	public User() {
 		super();
@@ -72,6 +77,13 @@ public class User {
 	}
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	public String getUserName() {
 		return userName;

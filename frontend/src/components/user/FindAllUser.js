@@ -44,6 +44,7 @@ export default function FindAllUser() {
                                 <th>Role</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Status</th>
                                 <th>Update</th>
                                 <th>Delete</th>
                             </tr>
@@ -57,7 +58,7 @@ export default function FindAllUser() {
                                     <td>{m.role}</td>
                                     <td>{m.email}</td>
                                     <td>{m.phoneNumber}</td>
-
+                                    <td>{m.status}</td>
                                     <td className="text-center">
                                         <Link
                                             className="btn btn-warning btn-sm"
