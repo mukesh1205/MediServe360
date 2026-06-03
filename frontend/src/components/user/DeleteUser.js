@@ -5,10 +5,7 @@ import { toast } from "react-toastify";
 export default function DeleteUser(){
     const {id}=useParams();
     const navigate=useNavigate();
-    
-    // const idHandler=(event)=>{
-    //     setId(event.target.value)
-    // }
+
     const [data,setData]=useState(" ");
     async function submitHandler(){
         let url=`http://localhost:9002/user/deleteuser/${id}`;
@@ -19,14 +16,15 @@ export default function DeleteUser(){
                     }
                 });
             setData(res.data);
-            toast.success("Successfully deleted")
+            toast.success("Successfully deleted");
+            navigate("/user/findall");
         }catch(err){
             toast.error(err.response.data.errorMessage)
         }
     }
     useEffect(()=>{
         submitHandler();
-        navigate("/user/findall")
+        
     },[])
     return(
         <div>

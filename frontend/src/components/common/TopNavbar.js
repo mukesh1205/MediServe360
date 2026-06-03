@@ -49,7 +49,6 @@ export default function TopNavbar() {
       }}
     >
 
-      {/* ✅ LEFT → Logo */}
       <Link
         to={getDashboardRoute()}
         className="text-decoration-none d-flex align-items-center gap-2"
@@ -73,7 +72,6 @@ export default function TopNavbar() {
         </div>
       </Link>
 
-      {/* ✅ CENTER → Search */}
       <div className="flex-grow-1 d-flex justify-content-center">
         <input
           className="form-control form-control-sm"
@@ -84,19 +82,17 @@ export default function TopNavbar() {
         />
       </div>
 
-      {/* ✅ RIGHT → Actions */}
       <div className="d-flex align-items-center gap-3">
 
-        {/* 🔔 Notification */}
         <button
           className="btn text-white"
           style={{ background: "rgba(255,255,255,0.07)" }}
           title="Notifications"
+          onClick={(()=>navigate("/notification/findall"))}
         >
           <i className="bi bi-bell"></i>
         </button>
 
-        {/* 🌙 Theme Toggle */}
         <button
           className="btn text-white"
           style={{ background: "rgba(255,255,255,0.07)" }}
@@ -106,7 +102,6 @@ export default function TopNavbar() {
           <i className="bi bi-moon-stars"></i>
         </button>
 
-        {/* 👤 Profile Dropdown */}
         <div className="position-relative" ref={dropdownRef}>
 
           <button
