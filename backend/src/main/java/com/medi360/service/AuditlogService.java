@@ -17,8 +17,6 @@ import com.medi360.db.UserRepository;
 import com.medi360.entities.AuditLog;
 import com.medi360.exception.AuditNotFoundException;
 import com.medi360.exception.ResourceNotFoundException;
-//import com.medi360.entities.User;
-import com.medi360.exception.UserNotFoundException;
 
 @Service
 public class AuditlogService {

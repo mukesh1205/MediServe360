@@ -3,102 +3,126 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function AddDoctor() {
-    const [name, setName] = useState("");
-    const [department, setDepartment] = useState("");
-    const [availabilitySchedule, setAvailabilitySchedule] = useState("");
 
-    const nameHandler = (event) => setName(event.target.value);
-    const departmentHandler = (event) => setDepartment(event.target.value);
-    const availabilityHandler = (event) => setAvailabilitySchedule(event.target.value);
+  const [name, setName] = useState("");
+  const [department, setDepartment] = useState("");
+  const [availabilitySchedule, setAvailabilitySchedule] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    const buttonHandler = () => {
-        let url = "http://localhost:9002/api/doctors/add";
+  const buttonHandler = () => {
+    if (loading) return;
 
-        if (!name.trim() || !department.trim() || !availabilitySchedule.trim()) {
-            toast.warning("Please fill all fields");
-            return;
-        }
+    if (!name || !department || !availabilitySchedule) {
+      toast.warning("Please fill all fields");
+      return;
+    }
 
-        const regex = /^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)$/;
-        if (!regex.test(availabilitySchedule)) {
-            toast.warning("Enter availability in 24-hour format HH:mm-HH:mm (e.g., 08:00-20:00)");
-            return;
-        }
+    setLoading(true);
 
-        const [start, end] = availabilitySchedule.split("-");
-        if (start >= end) {
-            toast.warning("Start time must be earlier than end time");
-            return;
-        }
+    const url = "http://localhost:9002/api/doctor/add";
 
-        let data = {
-            doctor: {
-                name,
-                department,
-                availabilitySchedule
-            }
-        };
-
-        axios.post(url, data, {
-            headers: {
-                Authorization: "Bearer " + localStorage.getItem("token")
-            }
-        })
-        .then((response) => {
-            toast.success("Doctor added successfully");
-            setName("");
-            setDepartment("");
-            setAvailabilitySchedule("");
-        })
-        .catch((error) => {
-            toast.error(error.response?.data?.message || "Error adding doctor");
-        });
+    const data = {
+      doctor: {
+        name: name.trim(),
+        department: department.trim(),
+        availabilitySchedule: availabilitySchedule.trim()
+      }
     };
 
-    return (
-        <div className="container mt-4">
-            <h3 className="mb-4">Add Doctor</h3>
+    axios.post(url, data, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    })
+    .then(() => {
+      toast.success("Doctor added successfully");
 
-            <div className="mb-3">
-                <label className="form-label">Doctor Name</label>
-                <input
-                    className="form-control"
-                    type="text"
-                    value={name}
-                    placeholder="Enter doctor name"
-                    onChange={nameHandler}
-                    required
-                />
-            </div>
+      setName("");
+      setDepartment("");
+      setAvailabilitySchedule("");
 
-            <div className="mb-3">
-                <label className="form-label">Department</label>
-                <input
-                    className="form-control"
-                    type="text"
-                    value={department}
-                    placeholder="Enter department"
-                    onChange={departmentHandler}
-                    required
-                />
-            </div>
+      setLoading(false);
+    })
+    .catch((error) => {
+      toast.error(error.response?.data?.message || "Error adding doctor");
+      setLoading(false);
+    });
+  };
 
-            <div className="mb-3">
-                <label className="form-label">Availability Schedule</label>
-                <input
-                    className="form-control"
-                    type="text"
-                    value={availabilitySchedule}
-                    placeholder="08:00-20:00"
-                    onChange={availabilityHandler}
-                    required
-                />
-                <small className="text-muted">Format: HH:mm-HH:mm (24‑hour)</small>
-            </div>
+  return (
+    <div className="container mt-4">
 
-            <button className="btn btn-primary w-100" onClick={buttonHandler}>
-                Add Doctor
-            </button>
+      <h3 className="mb-4">Add Doctor</h3>
+
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        buttonHandler();
+      }}>
+
+        {/* Name */}
+        <div className="mb-3">
+          <label className="form-label">
+            Doctor Name <span className="text-danger">*</span>
+          </label>
+          <input
+            className="form-control"
+            type="text"
+            value={name}
+            placeholder="Enter doctor name"
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
         </div>
-    );
+
+        {/* Department */}
+        <div className="mb-3">
+          <label className="form-label">
+            Department <span className="text-danger">*</span>
+          </label>
+          <input
+            className="form-control"
+            type="text"
+            value={department}
+            placeholder="Enter department"
+            onChange={(e) => setDepartment(e.target.value)}
+            required
+          />
+        </div>
+
+        {/* Availability */}
+        <div className="mb-3">
+          <label className="form-label">
+            Availability (HH:mm-HH:mm) <span className="text-danger">*</span>
+          </label>
+          <input
+            className="form-control"
+            type="text"
+            placeholder="08:00-20:00"
+            value={availabilitySchedule}
+            onChange={(e) => setAvailabilitySchedule(e.target.value)}
+            pattern="^([01]\d|2[0-3]):[0-5]\d-([01]\d|2[0-3]):[0-5]\d$"
+            title="Enter time range like 08:00-20:00"
+            required
+          />
+        </div>
+
+        {/* Submit */}
+        <button
+          className="btn btn-primary w-100"
+          type="submit"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2"></span>
+              Submitting...
+            </>
+          ) : (
+            "Add Doctor"
+          )}
+        </button>
+
+      </form>
+    </div>
+  );
 }

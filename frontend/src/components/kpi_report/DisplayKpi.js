@@ -1,68 +1,99 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router";
 
-export default function DisplayKPIReport(){
+export default function DisplayKpi() {
 
-    const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+  useEffect(() => {
 
-        let url = "http://localhost:9002/api/kpi-reports/fetchAllKPIReports";
+    const fetchKpis = async () => {
+      try {
+        const url = "http://localhost:9002/api/kpi-report/fetchAllKPIReports";
 
-        axios.get(url,{
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token") 
-                    }
-                })
-        .then((res) => {
-            setRecords(res.data);
-        })
-        .catch((err) => {
-            console.error(err);
+        const res = await axios.get(url, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
         });
 
-    }, []);
+        console.log("✅ API Response:", res.data);
 
-    return(
-        <div>
-            <h3>This is Display KPI Report</h3>
+        setRecords(res.data || []);
 
-            {records.length > 0 && (
-                <table border="1">
-                    <thead>
-                        <tr>
-                            <th>KPI ID</th>
-                            <th>Scope</th>
-                            <th>Metrics</th>
-                            <th>Date</th>
-                            <th>Compliance Report ID</th>
-                            
-                        </tr>
-                    </thead>
+      } catch (err) {
+        console.error("❌ Error fetching KPI data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-                    <tbody>
-                        {
-                            records.map((e) => {
-                                return(
-                                    <tr key={e.kpiId}>
-                                        <td>{e.kpiId}</td>
-                                        <td>{e.kpiReportScope}</td>
-                                        <td>{e.kpiMetrics}</td>
-                                        <td>{e.kpiGeneratedDate}</td>
-                                        <td>
-                                            {e.complianceReport
-                                                ? e.complianceReport.reportId
-                                                : "N/A"}
-                                        </td>
-                                        
-                                    </tr>
-                                );
-                            })
-                        }
-                    </tbody>
-                </table>
-            )}
+    fetchKpis();
+
+  }, []);
+
+  return (
+    <div className="container mt-4">
+      <h2>KPI Reports</h2>
+
+      {/* ✅ Loading */}
+      {loading && <p>Loading...</p>}
+
+      {/* ✅ No Data */}
+      {!loading && records.length === 0 && (
+        <div className="alert alert-warning mt-3">
+          No Data Found
         </div>
-    );
+      )}
+
+      {/* ✅ Table */}
+      {!loading && records.length > 0 && (
+        <table className="table table-bordered table-striped mt-3">
+          <thead className="table-dark">
+            <tr>
+              <th>KPI ID</th>
+              <th>Scope</th>
+              <th>Metrics</th>
+              <th>Date</th>
+              <th>Compliance Report ID</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {records.map((e) => {
+
+              console.log("🔍 Row Data:", e); // DEBUG
+
+              return (
+                <tr key={e.kpiId}>
+                  <td>{e.kpiId}</td>
+                  <td>{e.kpiReportScope}</td>
+                  <td>{e.kpiMetrics}</td>
+
+                  <td>
+                    {e.kpiGeneratedDate
+                      ? new Date(e.kpiGeneratedDate).toLocaleDateString()
+                      : "N/A"}
+                  </td>
+
+                  {/* ✅ FINAL FIX (handles ALL cases) */}
+                  <td>
+                    {
+                      e.complianceReport?.reportId ??
+                      e.complianceReport?.id ??
+                      e.complianceReportId ??
+                      "N/A"
+                    }
+                  </td>
+
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
+
+    </div>
+  );
 }

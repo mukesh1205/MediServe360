@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 export default function AddUser(){
 
@@ -8,6 +10,9 @@ export default function AddUser(){
     let [phone,setPhone]=useState("");
     let [email,setEmail]=useState("");
     let [password,setPassword]=useState("");
+    let [error,setError]=useState("");
+    const navigate=useNavigate();
+
     const nameHandler=(event)=>{
         setName(event.target.value)
     }
@@ -28,6 +33,10 @@ export default function AddUser(){
     }
 
     async function submitHandler(){
+        if(phone.length!==10){
+            setError("Please enter correct phone number");
+            return;
+        }
         let data={
                 
                     "userName": name,
@@ -47,26 +56,32 @@ export default function AddUser(){
                     }
                 }
             );
-            alert("Successfully added");
+            toast.success("Successfully added");
+            navigate("/user");
         }
         catch(err){
-            alert(err.message);
+            toast.error(err.response.data.errorMessage);
         }
     }
     return(
         <div className="container mt-4">
+            {error && (
+                        <div className="alert alert-danger py-2 small border-danger-subtle" role="alert">
+                            {error}
+                        </div>
+                    )}
             <div className="mb-3">
                 <label className="form-label">Name</label>
                 <input className="form-control" type="text" placeholder="Enter name" onChange={nameHandler} />
             </div>
 
-            <div>
+            <div className="mb-3">
                 <label className="form-label">Role</label>
-                <select onChange={roleHandler}>
-                    <option value="PATIENT">Patient</option>
+                <select className="form-select" onChange={roleHandler}>
+                    <option value="">--Select Role--</option>
+                    <option value="RECEPTIONIST">Receptionist</option>
                     <option value="DOCTOR">Doctor</option>
                     <option value="NURSE">Nurse</option>
-                    <option value="ADMIN">Admin</option>
                     <option value="FINANCEOFFICER">Finance Officer</option>
                     <option value="COMPLIANCE_OFFICER">Compilance officer</option>
                     
@@ -85,7 +100,7 @@ export default function AddUser(){
                 <input className="form-control" type="text" placeholder="Enter Password (min 6 Chars)" onChange={passwordHandler} />
             </div>
 
-                <button class="btn btn-secondary btn-sm dropdown-toggle" onClick={submitHandler} type="submit">Submit</button>
+                <button class="btn btn-primary w-100" onClick={submitHandler} type="submit">Submit</button>
            
         </div>
     )

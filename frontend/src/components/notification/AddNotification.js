@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-
+import { toast } from "react-toastify";
 export default function AddNotification() {
     let [message, setMessage] = useState("");
     let [category, setCategory] = useState("");
@@ -25,9 +25,9 @@ export default function AddNotification() {
                     }
                 }
             );
-            alert("Notification added: " + res.data.message);
+            toast.success("Notification added");
         } catch (err) {
-            alert(err.response?.data?.errorMessage || err.message);
+            toast.error(err.response?.data?.errorMessage || err.message);
         }
     }
 
@@ -70,9 +70,8 @@ export default function AddNotification() {
                 />
             </div>
 
-            {/* Fix: was onSubmit on a button, should be onClick */}
             <button
-                className="btn btn-secondary btn-sm"
+                className="btn btn-primary w-100"
                 onClick={submitHandler}
                 type="button"
             >

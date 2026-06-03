@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 
 export default function UpdateAppointment() {
-    const { aid } = useParams();   // ✅ get ID from URL
+    const { aid } = useParams();   // get ID from URL
     const navigate = useNavigate();
 
     let [date, setDate] = useState("");
@@ -13,7 +13,7 @@ export default function UpdateAppointment() {
     let [patientId, setPatientId] = useState("");
     let [doctorId, setDoctorId] = useState("");
 
-    // ✅ Load appointment automatically
+    // Load appointment automatically
     useEffect(() => {
         axios.get(`http://localhost:9002/api/appointment/get/${aid}`,{
                     headers: {

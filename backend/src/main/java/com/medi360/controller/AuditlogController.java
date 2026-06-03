@@ -10,13 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.medi360.DTO.AuditlogDTO;
 import com.medi360.DTO.AuditlogResponseDTO;
 import com.medi360.entities.AuditLog;
 import com.medi360.exception.AuditNotFoundException;
@@ -28,37 +25,6 @@ public class AuditlogController {
 	
 	@Autowired
 	private AuditlogService as;
-	
-//	@PostMapping("/insertauditlog")
-//	public ResponseEntity<AuditlogResponseDTO> addAuditlog(@RequestBody AuditlogDTO ald){
-//		AuditLog a=this.as.addAuditlog(ald);
-//		
-//		AuditlogResponseDTO dto=new AuditlogResponseDTO();
-//		
-//		dto.setAuditlog(a);
-//		dto.setMessage("Successfully added auditlog");
-//		dto.setStatusCode(201);
-//		
-//		return ResponseEntity.status(201).body(dto);
-//	}
-	
-//	@PutMapping("/updateauditlog")
-//	public ResponseEntity<AuditlogResponseDTO> updateAuditlog(@RequestBody AuditlogDTO ald){
-//		AuditLog a=this.as.addAuditlog(ald.getAuditLog());
-//		
-//		AuditlogResponseDTO dto=new AuditlogResponseDTO();
-//		
-//		dto.setAuditlog(a);
-//		dto.setMessage("Successfully updated auditlog");
-//		dto.setStatusCode(200);
-//		
-//		return ResponseEntity.status(200).body(dto);
-//	}
-//	
-//	@DeleteMapping("/deleteauditlog/{uid}")
-//	public String deleteAuditlog(@PathVariable int uid) {
-//		return this.deleteAuditlog(uid);
-//	}
 	
 	@GetMapping("/fetchallauditlog")
 	public ResponseEntity<List<AuditlogResponseDTO>> getAllAuditlog(){

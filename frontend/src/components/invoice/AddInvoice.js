@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { useState } from 'react';
-import {toast} from 'react-toastify';
+import axios from "axios";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function AddInvoice() {
 
@@ -11,27 +11,25 @@ export default function AddInvoice() {
     const [paymentMode, setPaymentMode] = useState("");
     const [adjustmentAmount, setAdjustmentAmount] = useState("");
     const [refundStatus, setRefundStatus] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const buttonHandler = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (loading) return;
+        setLoading(true);
 
         const url = "http://localhost:9002/api/invoice/addInvoice";
 
-        
-        if (!patientId || !amount || !invoiceDate || !paymentStatus || !paymentMode || 
-            !adjustmentAmount || !refundStatus) 
-        {
-            toast.warning("Please fill all fields");
-            return;
-        }
-
-        
         if (amount <= 0) {
-            toast.info("Amount must be greater than 0");
+            toast.warning("Amount must be greater than 0");
+            setLoading(false);
             return;
         }
 
         if (adjustmentAmount < 0) {
-            toast.info("Adjustment amount cannot be negative");
+            toast.warning("Adjustment amount cannot be negative");
+            setLoading(false);
             return;
         }
 
@@ -41,130 +39,175 @@ export default function AddInvoice() {
                     patientId: patientId
                 },
                 amount: Number(amount),
-                invoiceDate: invoiceDate,
-                paymentStatus: paymentStatus,
-                paymentMode: paymentMode,
-                adjustmentAmount: Number(adjustmentAmount),
-                refundStatus: refundStatus
+                invoiceDate,
+                paymentStatus,
+                paymentMode,
+                adjustmentAmount: adjustmentAmount === "" ? 0 : Number(adjustmentAmount),
+                refundStatus
             }
         };
 
-        axios.post(url, data,{
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token") 
-                    }
-                })
-            .then((res) => {
-                toast.success("Invoice added successfully");
-                setPatientId("");
-                setAmount("");
-                setInvoiceDate("");
-                setPaymentStatus("");
-                setPaymentMode("");
-                setAdjustmentAmount("");
-                setRefundStatus("");
-            })
-            .catch((err) => {
-                toast.error(err.message);
-            });
+        axios.post(url, data, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }
+        })
+        .then(() => {
+            toast.success("Invoice added successfully");
+
+            setPatientId("");
+            setAmount("");
+            setInvoiceDate("");
+            setPaymentStatus("");
+            setPaymentMode("");
+            setAdjustmentAmount("");
+            setRefundStatus("");
+
+            setLoading(false);
+        })
+        .catch((err) => {
+            toast.error(err.response?.data || err.message);
+            setLoading(false);
+        });
     };
 
     return (
-        <div className='container mt-4'>
-            <h3 className='mb-4'>Add Invoice</h3>
+        <div className="container mt-4">
+            <h3 className="mb-4">Add Invoice</h3>
 
-            <div className='mb-3'>
-                <label className='form-label'>Patient ID</label>
-                <input
-                type="number"
-                className='form-control'
-                placeholder="Enter patient ID"
-                value={patientId}
-                onChange={e => setPatientId(e.target.value ? Number(e.target.value) : "")}
-                />
-            </div>
+            <form onSubmit={handleSubmit}>
 
-            <div className='mb-3'>
-                <label className='form-label'>Amount</label>
-                <input
-                className="form-control"
-                type="number"
-                min='0'
-                step="0.01"
-                placeholder='Enter amount'
-                value={amount}
-                onChange={e => setAmount(e.target.value === "" ? "" : Number(e.target.value))}
-                />
-            </div>
+                <div className="mb-3">
+                    <label className="form-label">
+                        Patient ID <span className="text-danger"> *</span>
+                    </label>
+                    <input
+                        className="form-control"
+                        type="number"
+                        value={patientId}
+                        placeholder="Enter patient ID"
+                        onChange={(e) =>
+                            setPatientId(e.target.value === "" ? "" : Number(e.target.value))
+                        }
+                        required
+                    />
+                </div>
 
-            <div className='mb-3'>
-                <label className='form-label'>Invoice Date</label>
-                <input
-                className="form-control"
-                type="date"
-                value={invoiceDate}
-                onChange={e => setInvoiceDate(e.target.value)}
-                />
-            </div>
+                <div className="mb-3">
+                    <label className="form-label">
+                        Amount <span className="text-danger"> *</span>
+                    </label>
+                    <input
+                        className="form-control"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={amount}
+                        placeholder="Enter amount"
+                        onChange={(e) =>
+                            setAmount(e.target.value === "" ? "" : Number(e.target.value))
+                        }
+                        required
+                    />
+                </div>
 
-            <div className='mb-3'>
-                <label className='form-label'>Payment Status</label>
-                <select
-                className="form-select"
-                value={paymentStatus}
-                onChange={e => setPaymentStatus(e.target.value)}
+                <div className="mb-3">
+                    <label className="form-label">
+                        Invoice Date <span className="text-danger"> *</span>
+                    </label>
+                    <input
+                        className="form-control"
+                        type="date"
+                        value={invoiceDate}
+                        onChange={(e) => setInvoiceDate(e.target.value)}
+                        max={new Date().toISOString().split("T")[0]}
+                        required
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">
+                        Payment Status <span className="text-danger"> *</span>
+                    </label>
+                    <select
+                        className="form-select"
+                        value={paymentStatus}
+                        onChange={(e) => setPaymentStatus(e.target.value)}
+                        required
+                    >
+                        <option value="">--Select--</option>
+                        <option value="PAID">PAID</option>
+                        <option value="PENDING">PENDING</option>
+                    </select>
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">
+                        Payment Mode <span className="text-danger"> *</span>
+                    </label>
+                    <select
+                        className="form-select"
+                        value={paymentMode}
+                        onChange={(e) => setPaymentMode(e.target.value)}
+                        required
+                    >
+                        <option value="">--Select--</option>
+                        <option value="CASH">CASH</option>
+                        <option value="CARD">CARD</option>
+                        <option value="UPI">UPI</option>
+                    </select>
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">
+                        Adjustment Amount
+                    </label>
+                    <input
+                        className="form-control"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={adjustmentAmount}
+                        placeholder="Enter adjustment amount"
+                        onChange={(e) =>
+                            setAdjustmentAmount(e.target.value === "" ? "" : Number(e.target.value))
+                        }
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">
+                        Refund Status <span className="text-danger"> *</span>
+                    </label>
+                    <select
+                        className="form-select"
+                        value={refundStatus}
+                        onChange={(e) => setRefundStatus(e.target.value)}
+                        required
+                    >
+                        <option value="">--Select--</option>
+                        <option value="NONE">NONE</option>
+                        <option value="PENDING">PENDING</option>
+                        <option value="PROCESSED">PROCESSED</option>
+                    </select>
+                </div>
+
+                <button
+                    className="btn btn-primary w-100"
+                    type="submit"
+                    disabled={loading}
                 >
-                <option value="">--Select--</option>
-                <option value="Paid">Paid</option>
-                <option value="Pending">Pending</option>
-                </select>
-            </div>
+                    {loading ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2"></span>
+                            Submitting...
+                        </>
+                    ) : (
+                        "Add Invoice"
+                    )}
+                </button>
 
-            <div className='mb-3'>
-                <label className='form-label'>Payment Mode</label>
-                <select
-                className="form-select"
-                value={paymentMode}
-                onChange={e => setPaymentMode(e.target.value)}
-                >
-                <option value="">--Select--</option>
-                <option value="Cash">Cash</option>
-                <option value="Card">Card</option>
-                <option value="UPI">UPI</option>
-                </select>
-            </div>
-
-            <div className='mb-3'>
-                <label className='form-label'>Adjustment Amount</label>
-                <input
-                className="form-control"
-                type="number"
-                min='0'
-                step="0.01"
-                placeholder='Enter adjusted amount'
-                value={adjustmentAmount}
-                onChange={e => setAdjustmentAmount(e.target.value === "" ? "" : Number(e.target.value))}
-                />
-            </div>
-
-            
-            <div className='mb-3'>
-                <label className='form-label'>Refund Status</label>
-                <select
-                className="form-select"
-                value={refundStatus}
-                onChange={e => setRefundStatus(e.target.value)}
-                >
-                <option value="">--Select--</option>
-                <option value="None">None</option>
-                <option value="Processed">Processed</option>
-                <option value="Pending">Pending</option>
-                </select>
-            </div>
-
-            <button className='btn btn-primary w-100' onClick={buttonHandler}>
-                Add Invoice
-            </button>
+            </form>
         </div>
     );
 }

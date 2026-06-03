@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router";
 import axios from "axios";
 
 export default function DeleteDoctor() {
-    const { id } = useParams();   // route param
+    const { id } = useParams(); 
     const navigate = useNavigate();
 
     let deleteHandler = () => {
@@ -13,7 +13,7 @@ export default function DeleteDoctor() {
                 })
             .then((res) => {
                 alert(res.data); // "Doctor deleted successfully"
-                navigate("/doctor/display"); // back to list
+                navigate("/doctor/display");
             })
             .catch((err) => {
                 console.error(err);

@@ -25,8 +25,14 @@ public class KPIReportService {
 
     public KPIReport addKPIReport(KPIReport kpiReport) {
 
+        // ✅ Validate complianceReport is provided
+        if (kpiReport.getComplianceReport() == null) {
+            throw new RuntimeException("ComplianceReport must be provided");
+        }
+
         int reportId = kpiReport.getComplianceReport().getReportId();
 
+        // ✅ Fetch the real ComplianceReport from DB (don't trust the passed object)
         ComplianceReport complianceReport =
                 complianceReportRepository.findById(reportId)
                         .orElseThrow(() ->
@@ -40,16 +46,13 @@ public class KPIReportService {
     public List<KPIReport> getAllKPIReports() {
         return kpiReportRepository.findAll();
     }
-    
 
     public Page<KPIReport> getKPIReportsWithPagination(Pageable pageable) {
-         return kpiReportRepository.findAll(pageable);
-     }
-
+        return kpiReportRepository.findAll(pageable);
+    }
 
     public String deleteKPIReport(int id) {
         kpiReportRepository.deleteById(id);
         return "KPI report deleted successfully";
     }
 }
-

@@ -1,67 +1,115 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function DisplayDoctors() {
 
-    let [doctors, setDoctors] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [search, setSearch] = useState("");
 
-    useEffect(() => {
-        let url = "http://localhost:9002/api/doctor/getAll"; // ✅ use correct endpoint
+  useEffect(() => {
+    axios
+      .get("http://localhost:9002/api/doctor/getAll", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setDoctors(res.data);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  }, []);
 
-        axios.get(url,{
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token") 
-                    }
-                })
-            .then((response) => {
-                // If backend returns array directly:
-                setDoctors(response.data);
+  // Search filter
+  const filteredDoctors = doctors.filter((d) =>
+    d.name.toLowerCase().includes(search.toLowerCase()) ||
+    d.department.toLowerCase().includes(search.toLowerCase())
+  );
 
-                // If backend wraps in DTO:
-                // setDoctors(response.data.doctors);
-            })
-            .catch((error) => {
-                console.error("Error fetching doctors", error);
-            });
+  return (
+    <div>
 
-    }, []);
+      {/* Header + Search */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
 
-    return (
-        <div>
-            <h2>Doctors List</h2>
+        <h2 className="mb-0">All Doctors</h2>
 
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Department</th>
-                        <th>Availability</th>
-                        <th>Delete</th>
-                        <th>Edit</th>
-                    </tr>
-                </thead>
+        <div className="d-flex">
+          <input
+            type="text"
+            className="form-control me-2"
+            placeholder="Search by name / department..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ width: "250px" }}
+          />
 
-                <tbody>
-                    {
-                        doctors.map((d) => (
-                            <tr key={d.id}>
-                                <td>{d.id}</td>
-                                <td>{d.name}</td>
-                                <td>{d.department}</td>
-                                <td>{d.availabilitySchedule}</td>
-                                <td>
-                                    <Link to={`/doctor/delete/${d.id}`}>Delete</Link>
-                                </td>
-                                <td>
-                                    <Link to={`/doctor/update/${d.id}`}>Edit</Link>
-                                </td>
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </table>
+          <button className="btn btn-primary">
+            <i className="bi bi-search"></i>
+          </button>
         </div>
-    );
+
+      </div>
+
+      {filteredDoctors.length === 0 ? (
+        <p className="text-danger">No doctors found</p>
+      ) : (
+
+        <div className="table-responsive">
+
+          <table className="table table-bordered table-hover table-striped">
+
+            <thead className="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Availability</th>
+                <th>Update</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {filteredDoctors.map((d) => (
+                <tr key={d.id}>
+                  <td>{d.id}</td>
+                  <td>{d.name}</td>
+                  <td>{d.department}</td>
+                  <td>{d.availabilitySchedule}</td>
+
+                  <td className="text-center">
+                    <Link
+                      className="btn btn-warning btn-sm"
+                      to={`/doctor/update/${d.id}`}
+                    >
+                      Update
+                    </Link>
+                  </td>
+
+                  <td className="text-center">
+                    <Link
+                      className="btn btn-danger btn-sm"
+                      to={`/doctor/delete/${d.id}`}
+                    >
+                      Delete
+                    </Link>
+                  </td>
+
+                </tr>
+              ))}
+            </tbody>
+
+          </table>
+
+        </div>
+
+      )}
+
+    </div>
+  );
 }
+

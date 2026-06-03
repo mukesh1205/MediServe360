@@ -1,5 +1,5 @@
 package com.medi360.config;
-
+ 
 import com.medi360.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,15 +15,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+ 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class Security {
-
+ 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-
+ 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -32,22 +32,27 @@ public class Security {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-
+ 
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 //                        .requestMatchers("/user/insertuserdata").permitAll()
 //                        .requestMatchers("/api/compliance-reports/**").permitAll()
 //                        .requestMatchers("/api/kpi-reports/**").permitAll()
 //                        .requestMatchers("/user/findbyid/{id}").permitAll()
+ 
 
-                        .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "PATIENT")
-                        .requestMatchers("/user/**").hasAnyRole("ADMIN","PATIENT","DOCTOR")
-                        .requestMatchers("/api/doctor/**").hasAnyRole("ADMIN", "DOCTOR")
+                        .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "RECEPTIONIST","NURSE")
+                        .requestMatchers("/user/**").hasAnyRole("ADMIN","DOCTOR","RECEPTIONIST")
+                        .requestMatchers("/api/doctor/**").hasAnyRole("ADMIN", "DOCTOR","RECEPTIONIST")
+
                         .requestMatchers("/api/ward/**").hasAnyRole("ADMIN", "NURSE")	
                         .requestMatchers("/api/beds/**").hasAnyRole("ADMIN", "NURSE")
-                        .requestMatchers("/api/appointment/**").hasAnyRole("ADMIN", "DOCTOR","PATIENT")
+                        .requestMatchers("/api/appointment/**").hasAnyRole("ADMIN", "DOCTOR","RECEPTIONIST")
                         .requestMatchers("/api/compliance-reports/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
-                        .requestMatchers("/api/kpi-reports/**").hasRole("ADMIN")
+                        .requestMatchers("/api/vitals/**").hasAnyRole("ADMIN", "NURSE")               // ✅ add this new line
+                        .requestMatchers("/api/care-notes/**").hasAnyRole("ADMIN", "NURSE") 
+                        .requestMatchers("/api/kpi-report/**").hasRole("ADMIN")
+
                         .requestMatchers("/api/invoice/**").hasAnyRole("ADMIN","FINANCEOFFICER")
                         .requestMatchers("/api/patientbilling/**").hasAnyRole("ADMIN","FINANCEOFFICER")
                         .requestMatchers("/notification/**").authenticated()
@@ -55,26 +60,27 @@ public class Security {
                         .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN","FINANCEOFFICER")
 //                         audit-logs — GET allowed, POST blocked
                         .requestMatchers(HttpMethod.GET, "/auditlog/**")
-                        .hasAnyRole("ADMIN")
+                        .hasAnyRole("ADMIN","COMPLIANCE_OFFICER")
                         .requestMatchers(HttpMethod.POST, "/auditlog/**")
                         .denyAll()
-
+ 
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class);
-
+ 
         return http.build();
     }
-
+ 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+ 
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 }
+ 

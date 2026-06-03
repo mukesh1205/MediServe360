@@ -29,7 +29,7 @@ export default function UpdateDoctor() {
     let updateHandler = () => {
         let url = "http://localhost:9002/api/doctor/update";
 
-        // ✅ backend expects DoctorDTO with "doctor" wrapper
+        // backend expects DoctorDTO with "doctor" wrapper
         let data = {
             doctor: {
                 id: parseInt(id),

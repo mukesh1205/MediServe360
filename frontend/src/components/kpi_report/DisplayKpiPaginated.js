@@ -1,119 +1,150 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-export default function DisplayKpiPaginated(){
+export default function DisplayKpiPaginated() {
 
-    const [records, setRecords] = useState([]);
-    const [page, setPage] = useState(0);
-    const [size, setSize] = useState(3);   // ✅ default fixed
-    const [sortBy, setSortBy] = useState("kpiId");
-    const [asc, setAsc] = useState(true);
+  const [records, setRecords] = useState([]);
+  const [pgno, setPgno] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const size = 10;
 
-    const buttonHandler = async () => {
-        try {
+  const [sorting, setSorting] = useState("kpiId");
+  const [asc, setAsc] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-            if (size <= 0) {
-                alert("Size must be greater than 0");
-                return;
-            }
+  const fetchKpis = async (page = pgno, sortCol = sorting, order = asc) => {
+    try {
+      setLoading(true);
 
-            let url = "http://localhost:9002/api/kpi-reports/fetchAllKPIReports/paginated";
+      const token = localStorage.getItem("token");
 
-            let res = await axios.get(url, {
-                params: {
-                    page: page,
-                    size: size,
-                    sortBy: sortBy,
-                    asc: asc
-            },
-            headers: {
-                Authorization: "Bearer " + localStorage.getItem("token")
-            }});
-            
+      if (!token) {
+        toast.error("Please login first");
+        return;
+      }
 
-            console.log(res.data);  // ✅ debug
+      const url = "http://localhost:9002/api/kpi-report/fetchAllKPIReports/paginated";
 
-            setRecords(res.data.content);
-
-        } catch (err) {
-            console.error(err);
-            alert("Error fetching KPI reports");
+      const res = await axios.get(url, {
+        params: {
+          page: page,
+          size: size,
+          sortBy: sortCol,
+          asc: order
+        },
+        headers: {
+          Authorization: "Bearer " + token
         }
-    };
+      });
 
-    return(
-        <div>
+      // Correct response handling
+      setRecords(res.data.content || []);
+      setPgno(res.data.number);         // current page from backend
+      setTotalPages(res.data.totalPages); // total pages
 
-            <label>Enter Page NO</label>
-            <input type="number" onChange={e => setPage(Number(e.target.value))}/>
-            <br />
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data || "Error fetching KPI reports");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            <label>Enter size of Page</label>
-            <input type="number" onChange={e => setSize(Number(e.target.value))}/>
-            <br />
+  useEffect(() => {
+    fetchKpis(0);
+  }, []);
 
-            <label>Select sorting column</label>
-            <select onChange={e => setSortBy(e.target.value)}>
-                <option value="kpiId">KPI ID</option>
-                <option value="kpiReportScope">Scope</option>
-                <option value="kpiMetrics">Metrics</option>
-                <option value="kpiGeneratedDate">Date</option>
-            </select>
-            <br />
+  const handleSort = (column) => {
+    if (sorting === column) {
+      const newAsc = !asc;   // fix toggle bug
+      setAsc(newAsc);
+      fetchKpis(pgno, column, newAsc);
+    } else {
+      setSorting(column);
+      setAsc(true);
+      fetchKpis(pgno, column, true);
+    }
+  };
 
-            <label>Order</label>
+  const sortArrow = (column) => {
+    if (sorting !== column) return "";
+    return asc ? " ↑" : " ↓";
+  };
 
-            <input
-                type="radio"
-                name="sortOrder"
-                checked={asc === true}
-                onChange={() => setAsc(true)}
-            />
-            <label>Ascending</label>
+  return (
+    <div className="container mt-4">
+      <h3 className="mb-4">KPI Reports (Paginated)</h3>
 
-            <input
-                type="radio"
-                name="sortOrder"
-                checked={asc === false}
-                onChange={() => setAsc(false)}
-            />
-            <label>Descending</label>
-            <br />
+      {loading && <p>Loading...</p>}
 
-            <button onClick={buttonHandler}>Get KPI Reports</button>
+      {!loading && records.length === 0 && (
+        <p className="text-danger">No KPI reports found</p>
+      )}
 
-            {records.length > 0 && (
-                <table border="1">
-                    <thead>
-                        <tr>
-                            <th>KPI ID</th>
-                            <th>Scope</th>
-                            <th>Metrics</th>
-                            <th>Date</th>
-                            <th>Compliance Report ID</th>
-                        </tr>
-                    </thead>
+      {records.length > 0 && (
+        <>
+          <div className="table-responsive">
+            <table className="table table-bordered table-hover table-striped">
+              <thead className="table-dark">
+                <tr>
+                  <th onClick={() => handleSort("kpiId")} style={{ cursor: "pointer" }}>
+                    KPI ID{sortArrow("kpiId")}
+                  </th>
 
-                    <tbody>
-                        {
-                            records.map((e) => (
-                                <tr key={e.kpiId}>
-                                    <td>{e.kpiId}</td>
-                                    <td>{e.kpiReportScope}</td>
-                                    <td>{e.kpiMetrics}</td>
-                                    <td>{e.kpiGeneratedDate}</td>
-                                    <td>
-                                        {e.complianceReport
-                                            ? e.complianceReport.reportId
-                                            : "N/A"}
-                                    </td>
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
-            )}
+                  <th onClick={() => handleSort("kpiReportScope")} style={{ cursor: "pointer" }}>
+                    Scope{sortArrow("kpiReportScope")}
+                  </th>
 
-        </div>
-    );
+                  <th onClick={() => handleSort("kpiMetrics")} style={{ cursor: "pointer" }}>
+                    Metrics{sortArrow("kpiMetrics")}
+                  </th>
+
+                  <th onClick={() => handleSort("kpiGeneratedDate")} style={{ cursor: "pointer" }}>
+                    Date{sortArrow("kpiGeneratedDate")}
+                  </th>
+
+                  <th>Compliance Report ID</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {records.map((e) => (
+                  <tr key={e.kpiId}>
+                    <td>{e.kpiId}</td>
+                    <td>{e.kpiReportScope}</td>
+                    <td>{e.kpiMetrics}</td>
+                    <td>{new Date(e.kpiGeneratedDate).toLocaleDateString()}</td>
+                    <td>{e.complianceReportId || "N/A"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="d-flex justify-content-between mt-3">
+            <button
+              className="btn btn-secondary"
+              disabled={pgno === 0 || loading}
+              onClick={() => fetchKpis(pgno - 1)}
+            >
+              Prev
+            </button>
+
+            <span className="align-self-center">
+              Page {pgno + 1} of {totalPages}
+            </span>
+
+            <button
+              className="btn btn-secondary"
+              disabled={pgno >= totalPages - 1 || loading}
+              onClick={() => fetchKpis(pgno + 1)}
+            >
+              Next
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
 }

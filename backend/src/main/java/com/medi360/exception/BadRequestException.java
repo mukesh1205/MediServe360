@@ -1,7 +1,14 @@
 package com.medi360.exception;
 
 public class BadRequestException extends RuntimeException {
-    public BadRequestException(String message) {
+	
+	private static final long serialVersionUID = 1L;
+
+	public BadRequestException() {
+		super();
+	}
+
+	public BadRequestException(String message) {
         super(message);
     }
 }

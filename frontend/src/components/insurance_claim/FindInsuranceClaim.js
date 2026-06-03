@@ -42,11 +42,15 @@ export default function FindInsuranceClaim() {
             <h3 className="mb-4">Find Insurance Claim</h3>
 
             <div className="mb-3">
-                <label className="form-label">Enter Insurance Claim ID</label>
+                <label className="form-label">
+                    Claim ID
+                    <span className="text-danger"> *</span>
+                </label>
                 <input
                     className="form-control"
                     type="number"
                     value={claimId}
+                    placeholder="Enter Insurance Claim ID"
                     onChange={(e) => setClaimId(e.target.value)}
                     onKeyDown={(e) => {
                             if (e.key === "Enter") {

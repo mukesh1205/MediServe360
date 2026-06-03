@@ -1,57 +1,87 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import TopNavbar from "../common/TopNavbar";
+
+const navLinks = [
+  { to: "add", label: "Add Invoice", icon: "➕" },
+  { to: "find", label: "Find Invoice", icon: "🔍" },
+  { to: "display", label: "Display", icon: "📋" },
+  { to: "displayPaginated", label: "Paginated", icon: "📄" },
+];
 
 export default function InvoiceHome() {
-    return (
-        <div>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                <div className="container-fluid">
 
-                    <Link className="navbar-brand" to="/invoice">
-                        Invoice
-                    </Link>
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
+  const location = useLocation();
 
-                    <div className="collapse navbar-collapse" id="navbarNav">
-                        <ul className="navbar-nav">
+  return (
+    <div className="min-vh-100 bg-light">
 
-                            <li className="nav-item">
-                                <Link className="nav-link" to="add">
-                                    Add
-                                </Link>
-                            </li>
+      {/* ✅ Global Navbar */}
+      <TopNavbar />
 
-                            <li className="nav-item">
-                                <Link className="nav-link" to="find">
-                                    Find
-                                </Link>
-                            </li>
+      <div className="container-fluid px-4 py-4">
 
-                            <li className="nav-item">
-                                <Link className="nav-link" to="display">
-                                    Display
-                                </Link>
-                            </li>
+        {/* ✅ Header (Clickable) */}
+        <div className="mb-4">
+          <Link to="/invoice" className="text-decoration-none">
+            <h4 className="fw-bold text-dark mb-1">
+              Invoice Management
+            </h4>
+          </Link>
 
-                            <li className="nav-item">
-                                <Link className="nav-link" to="displayPaginated">
-                                    Display Paginated
-                                </Link>
-                            </li>
-
-                        </ul>
-                    </div>
-
-                </div>
-            </nav>
-
-            <Outlet />
+          <p className="text-muted small mb-0">
+            Manage invoices · Billing · Payments
+          </p>
         </div>
-    );
+
+        {/* ✅ Cards */}
+        <div className="row g-3 mb-4">
+
+          {navLinks.map((link) => (
+            <div className="col-6 col-sm-4 col-md-3" key={link.to}>
+
+              <Link
+                to={link.to}
+                className="btn btn-outline-dark w-100 py-4 d-flex flex-column align-items-center gap-2 text-decoration-none hover-card"
+                style={{
+                  borderRadius: "12px",
+                  minHeight: "100px"
+                }}
+              >
+                <span style={{ fontSize: "1.8rem" }}>
+                  {link.icon}
+                </span>
+
+                <span className="fw-semibold small">
+                  {link.label}
+                </span>
+              </Link>
+
+            </div>
+          ))}
+
+        </div>
+
+        {/* ✅ Content Area (FIXED like insurance) */}
+        {!location.pathname.startsWith("/invoice/") ? (
+
+          <div className="card shadow-sm p-4 text-muted text-center">
+            <h6 className="mb-2">Welcome to Invoice Module</h6>
+            <p className="mb-0">
+              Select an option above to continue
+            </p>
+          </div>
+
+        ) : (
+
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <Outlet />
+            </div>
+          </div>
+
+        )}
+
+      </div>
+    </div>
+  );
 }
