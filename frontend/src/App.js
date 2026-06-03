@@ -25,7 +25,6 @@ import DisplayDoctorsPaginated from './components/doctor/DisplayDoctorsPaginated
 
 // Patient
 import PatientHome from './components/patient/PatientHome';
-import PatientHomeNav from './components/patient/PatientHomeNav'
 import AddPatient from './components/patient/AddPatient';
 import DeletePatient from './components/patient/DeletePatient';
 import UpdatePatient from './components/patient/UpdatePatient';
@@ -129,7 +128,6 @@ import Home from './components/Auth/Home';
 // Nurse
 import NurseHome from './components/Nurse/NurseHome';
 import NurseDashboard from './components/Nurse/NurseDashboard';
-import PatientSearch from './components/Nurse/PatientSearch';
 import AddVitals from './components/Nurse/Vitals/AddVitals';
 import ViewVitals from './components/Nurse/Vitals/ViewVitals';
 import AddCareNote from './components/Nurse/CareNotes/AddCareNote';

@@ -74,7 +74,6 @@ export default function FindUser() {
                 <p className="mt-3 text-danger">No records found</p>
             )}
 
-            {/* Display user */}
             {data.userId && (
                 <div className="table-responsive">
                     <table className="table table-bordered table-striped mt-4">
