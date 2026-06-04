@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import TopNavbar from "../common/TopNavbar";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const navLinks = [
   { to: "/user", label: "Users", icon: "👤" },
@@ -60,6 +62,111 @@ const recentActivity = [
 ];
 
 export default function AdminDash() {
+
+    const [totalUsers,setTotalUsers]=useState(0);
+    const [totalPatients,setTotalPatients]=useState(0);
+    const [totalBeds,setTotalBeds]=useState(0);
+
+    const stats = [
+      {
+        label: "Total Users",
+        value: totalUsers,
+        icon: "👤",
+        color: "primary",
+      },
+      {
+        label: "Active Patients",
+        value: totalPatients,
+        icon: "🏥",
+        color: "success",
+      },
+      {
+        label: "Beds Occupied",
+        value: totalBeds,
+        icon: "🛏️",
+        color: "warning",
+      },
+      {
+        label: "Pending Invoices",
+        value: "17",
+        icon: "🧾",
+        color: "danger",
+      },
+    ];
+    const [userData,setUserData]=useState([]);
+    const [patientData,setPatientData]=useState([]);
+    async function getUsers(){
+      try{
+        let url="http://localhost:9002/user/fetchallusers";
+        let res=await axios.get(url,{
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }
+            });
+
+        setUserData(res.data);
+        setTotalUsers(res.data.length);
+
+      }catch(err){
+        alert(err.message)
+      }
+    }
+
+    async function getpatient(){
+      try{
+        let url="http://localhost:9002/api/patient/fetchAllPatients";
+        let res=await axios.get(url,{
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }
+            });
+        setPatientData(res.data);
+
+        let count=0;
+        for(let i=0;i<(res.data.length);i++){
+          if(res.data[i].patientStatus==="Admitted"){
+            count++;
+          }
+        }
+
+        setTotalPatients(count);
+      }
+      catch(err){
+        alert(err.message);
+      }
+    }
+    const [bedData,setBedData]=useState([]);
+    async function getBeds(){
+      try{
+
+        let url="http://localhost:9002/api/beds/getAllBeds"
+
+        let res=await axios.get(url,{
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }
+            });
+
+        setBedData(res.data);
+        let count=0;
+        for(let i=0;i<(res.data.length);i++){
+          if(res.data[i].bedStatus==="OCCUPIED"){
+            count++;
+          }
+        }
+
+        setTotalBeds(count);
+
+      }catch(err){
+        alert(err.message);
+      }
+    }
+
+    useEffect(()=>{
+      getUsers();
+      getpatient();
+      getBeds();
+    },[])
   return (
     <div className="min-vh-100 bg-light">
 
@@ -91,11 +198,13 @@ export default function AdminDash() {
                   </div>
 
                   <div>
-                    <p className="text-muted small mb-1">{s.label}</p>
-                    <h5 className="fw-bold mb-0">{s.value}</h5>
-                    <small className={`text-${s.pos ? "success" : "danger"}`}>
+                    <p className="text-muted small mb-1 text-uppercase fw-semibold" style={{ fontSize: "0.7rem" }}>
+                      {s.label}
+                    </p>
+                    <h5 className="fw-bold mb-1">{s.value}</h5>
+                    {/* <span className={`small text-${s.pos ? "success" : "danger"}`}>
                       {s.pos ? "▲" : "▼"} {s.change}
-                    </small>
+                    </span> */}
                   </div>
 
                 </div>

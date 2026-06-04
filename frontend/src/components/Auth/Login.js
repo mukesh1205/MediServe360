@@ -19,7 +19,7 @@ export default function Login() {
         }
 
         setLoading(true);
-
+        
         axios.post("http://localhost:9002/api/auth/login", { email, password })
         .then((res) => {
             localStorage.setItem("token", res.data.token);
@@ -35,8 +35,13 @@ export default function Login() {
             else if (role === "FINANCEOFFICER")     navigate("/financedd");
             else if (role === "COMPLIANCE_OFFICER") navigate("/compilancedd");
         })
-        .catch(() => {
-            setError("Invalid email or password. Please try again.");
+        .catch((err) => {
+            if(err.response.data.httpStatusCode==404){
+                setError("Your account is pending admin approval");
+            }
+            else{
+                setError("Invalid email or password. Please try again.");
+            }
             setLoading(false);
         });
     };
@@ -121,7 +126,7 @@ export default function Login() {
                                     <input
                                         type="email"
                                         className="form-control"
-                                        placeholder="jane@hospital.com"
+                                        placeholder="jane@gmail.com"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         style={{ borderColor: "#b0cfe0", borderRadius: "8px" }}

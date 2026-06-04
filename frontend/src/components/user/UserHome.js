@@ -6,6 +6,7 @@ const navLinks = [
   { to: "find",      label: "Find User",      icon: "🔍" },
   { to: "findall",   label: "All Users",      icon: "👥" },
   { to: "paginated", label: "Paginated View", icon: "📄" },
+  { to: "approval",  label: "User Approval",  icon: "✅" }
 ];
 
 export default function UserHome() {
@@ -14,12 +15,10 @@ export default function UserHome() {
   return (
     <div className="min-vh-100 bg-light">
 
-      {/* ✅ Global Navbar */}
       <TopNavbar />
 
       <div className="container-fluid px-4 py-4">
 
-        {/* ✅ Header */}
         <div className="mb-4">
           <Link to="/user" className="text-decoration-none">
             <h4 className="fw-bold text-dark mb-1">
@@ -31,10 +30,9 @@ export default function UserHome() {
           </p>
         </div>
 
-        {/* ✅ Cards */}
-        <div className="row g-3 mb-4">
+        <div className="row g-3 mb-4 flex-nowrap">
           {navLinks.map((link) => (
-            <div className="col-6 col-sm-4 col-md-3" key={link.to}>
+            <div className="col" key={link.to}>
               <Link
                 to={link.to}
                 className="btn btn-outline-dark w-100 py-4 d-flex flex-column align-items-center gap-2 text-decoration-none"
@@ -50,7 +48,6 @@ export default function UserHome() {
           ))}
         </div>
 
-        {/* ✅ Content Area */}
         {!location.pathname.startsWith("/user/") ? (
 
           <div className="card shadow-sm p-4 text-muted text-center">

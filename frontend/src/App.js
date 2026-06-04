@@ -136,6 +136,7 @@ import AddVitals from './components/Nurse/Vitals/AddVitals';
 import ViewVitals from './components/Nurse/Vitals/ViewVitals';
 import AddCareNote from './components/Nurse/CareNotes/AddCareNote';
 import ViewCareNotes from './components/Nurse/CareNotes/ViewCareNotes';
+import UserApproval from './components/user/UserApproval';
 
 function App() {
  
@@ -203,6 +204,7 @@ function ProtectedRoute({ children, allowedRoles }) {
           <Route path="find" element={<FindUser />} />
           <Route path="findall" element={<FindAllUser />} />
           <Route path="paginated" element={<UserPage />} />
+          <Route path="approval" element={<UserApproval />} />
         </Route>
         
         {/* Auditlog */}

@@ -50,7 +50,7 @@ public class Security {
                         .requestMatchers("/api/beds/**").hasAnyRole("ADMIN", "NURSE")
                         .requestMatchers("/api/appointment/**").hasAnyRole("ADMIN", "DOCTOR","RECEPTIONIST")
                         .requestMatchers("/api/compliance-reports/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
-                        .requestMatchers("/api/vitals/**").hasAnyRole("ADMIN", "NURSE")               // ✅ add this new line
+                        .requestMatchers("/api/vitals/**").hasAnyRole("ADMIN", "NURSE")               
                         .requestMatchers("/api/care-notes/**").hasAnyRole("ADMIN", "NURSE") 
                         .requestMatchers("/api/kpi-report/**").hasRole("ADMIN")
 
