@@ -66,6 +66,28 @@ public class UserService {
 //		return u;
 	}
 	
+	public UserResponseDTO userApproval(String a,int id) {
+		User user = userrepo.findById(id)
+		        .orElseThrow(() -> new ResourceNotFoundException(
+		                "User not found with ID: " + id));
+		
+		String before="Name: "+user.getUserName()
+					+" | Status: "+user.getStatus();
+		
+		try {
+			user.setStatus(a);
+			UserResponseDTO result = mapToDTO(userrepo.save(user));
+			auditservice.log("User.Approval | UserID: " + id
+		            + " | Before: " + before
+		            + " | Status: " + a);
+			return result;
+		
+		}catch (Exception ex) {
+		    auditservice.logFailure("User.UPDATE", ex.getMessage());
+		    throw ex;
+		}
+	}
+	
 	public UserResponseDTO updateUser(int id,UserDTO dto){
 		User user = userrepo.findById(id)
 		        .orElseThrow(() -> new ResourceNotFoundException(
@@ -165,6 +187,7 @@ public class UserService {
 	    dto.setRole(u.getUserRole());
 	    dto.setEmail(u.getUserEmail());
 	    dto.setPhoneNumber(u.getUserPhone());
+	    dto.setStatus(u.getStatus());
 	    return dto;
 	}
 	

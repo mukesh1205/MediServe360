@@ -10,23 +10,19 @@ import com.medi360.entities.Invoice;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
-	List<Invoice> findByPatientPatientId(int patientId);
 
-	List<Invoice> findByPaymentStatus(String paymentStatus);
+    List<Invoice> findByPatient_PatientId(int patientId);
 
-	@Query("SELECT SUM(i.amount) FROM Invoice i")
-	Double getTotalBilledAmount();
+    List<Invoice> findByPaymentStatus(String paymentStatus);
 
-	@Query("SELECT SUM(i.amount) FROM Invoice i WHERE i.paymentStatus = 'PAID'")
-	Double getTotalPaidAmount();
+    long countByPaymentStatus(String paymentStatus);
 
-	@Query("SELECT COUNT(i) FROM Invoice i")
-	long getTotalInvoiceCount();
+    @Query("SELECT COALESCE(SUM(i.amount), 0) FROM Invoice i")
+    Double getTotalBilledAmount();
 
-	@Query("SELECT COUNT(i) FROM Invoice i WHERE i.paymentStatus = 'PAID'")
-	long getPaidInvoiceCount();
+    @Query("SELECT COALESCE(SUM(i.amount), 0) FROM Invoice i WHERE i.paymentStatus = :status")
+    Double getTotalAmountByStatus(String status);
 
-	@Query("SELECT COUNT(i) FROM Invoice i WHERE i.paymentStatus = 'UNPAID'")
-	long getUnpaidInvoiceCount();
+    long count();
 
 }

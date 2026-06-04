@@ -34,6 +34,7 @@ public class AuthService {
                     "AUTH.REGISTER_FAILED | Error: Email already registered: " + dto.getEmail());
             throw new BadRequestException("Email already registered: " + dto.getEmail());
         }
+        
 
         User user = new User();
         user.setUserName(dto.getUserName());
@@ -70,7 +71,16 @@ public class AuthService {
                     "AUTH.LOGIN_FAILED | Error: No account found for email: " + dto.getEmail());
             throw new BadRequestException("Invalid email or password");
         }
-
+        if(user.getStatus().equals("REJECT")) {
+        		auditLogService.log("AUTH.LOGIN_FAILED | Error: Account not approved for email: "+dto.getEmail());
+        		throw new BadRequestException("Admin not Approved");
+        }
+        
+        if (user.getStatus().equals("PENDING")) {
+            auditLogService.log(
+                "AUTH.LOGIN_FAILED | Error: Account pending approval for email: " + dto.getEmail());
+            throw new BadRequestException("Your account is pending admin approval");
+        }
 
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             auditLogService.logFailure(
@@ -92,6 +102,7 @@ public class AuthService {
         response.setEmail(user.getUserEmail());
         response.setRole(user.getUserRole());
         response.setUserName(user.getUserName());
+        response.setUserId(user.getUserId());
         return response;
     }
 }

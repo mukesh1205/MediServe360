@@ -100,4 +100,8 @@ public class PatientController {
 		Pageable pageable = PageRequest.of(pgno, size, sort);
 		return this.patientService.getAllPatientsWithPagination(pageable);
 	}
+	@GetMapping("/search")
+	public ResponseEntity<List<Patient>> searchByName(@RequestParam String name) {
+	    return ResponseEntity.ok(patientService.searchByName(name));
+	}
 }

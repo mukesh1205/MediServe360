@@ -69,12 +69,10 @@ export default function FindAuditlog() {
                 </button>
             </form>
 
-            {/* No records */}
             {searched && !data.auditId && (
                 <p className="mt-3 text-danger">No records found</p>
             )}
 
-            {/* Display audit log */}
             {data.auditId && (
                 <div className="table-responsive">
                     <table className="table table-bordered table-striped mt-4">

@@ -40,16 +40,24 @@ public class Security {
 //                        .requestMatchers("/api/kpi-reports/**").permitAll()
 //                        .requestMatchers("/user/findbyid/{id}").permitAll()
  
-                        .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "RECEPTIONIST")
+
+                        .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "RECEPTIONIST","NURSE")
                         .requestMatchers("/user/**").hasAnyRole("ADMIN","DOCTOR","RECEPTIONIST")
                         .requestMatchers("/api/doctor/**").hasAnyRole("ADMIN", "DOCTOR","RECEPTIONIST")
-
+                        .requestMatchers("/api/dashboard/**").permitAll()
+                        
                         .requestMatchers("/api/ward/**").hasAnyRole("ADMIN", "NURSE")	
                         .requestMatchers("/api/beds/**").hasAnyRole("ADMIN", "NURSE")
                         .requestMatchers("/api/appointment/**").hasAnyRole("ADMIN", "DOCTOR","RECEPTIONIST")
                         .requestMatchers("/api/compliance-reports/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
 
+
                         .requestMatchers("/api/kpi-report/**").hasAnyRole("ADMIN","COMPLIANCE_OFFICER")
+
+                        .requestMatchers("/api/vitals/**").hasAnyRole("ADMIN", "NURSE")               
+                        .requestMatchers("/api/care-notes/**").hasAnyRole("ADMIN", "NURSE") 
+                        
+
 
                         .requestMatchers("/api/invoice/**").hasAnyRole("ADMIN","FINANCEOFFICER")
                         .requestMatchers("/api/patientbilling/**").hasAnyRole("ADMIN","FINANCEOFFICER")
@@ -58,7 +66,7 @@ public class Security {
                         .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN","FINANCEOFFICER","COMPLIANCE_OFFICER")
 //                         audit-logs — GET allowed, POST blocked
                         .requestMatchers(HttpMethod.GET, "/auditlog/**")
-                        .hasAnyRole("ADMIN,COMPLIANCE_OFFICER")
+                        .hasAnyRole("ADMIN","COMPLIANCE_OFFICER")
                         .requestMatchers(HttpMethod.POST, "/auditlog/**")
                         .denyAll()
  
