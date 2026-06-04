@@ -1,6 +1,6 @@
 // src/components/Nurse/NurseHome.jsx
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import Signout from '../Auth/Signout';
+import TopNavbar from '../common/TopNavbar';
 
 export default function NurseHome() {
     const location = useLocation();
@@ -18,23 +18,7 @@ export default function NurseHome() {
     return (
         <div style={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
             {/* Top Header Bar */}
-            <div style={{ backgroundColor: "#0d6efd", padding: "10px 0" }}>
-                <div className="container-fluid px-4 d-flex justify-content-between align-items-center">
-                    <div className="d-flex align-items-center gap-2">
-                        <span style={{ fontSize: "1.5rem" }}>🏥</span>
-                        <span style={{ color: "white", fontWeight: "700", fontSize: "1.3rem", letterSpacing: "0.5px" }}>
-                            MediServe <span style={{ color: "#cfe2ff" }}>360</span>
-                        </span>
-                        <span style={{ color: "#cfe2ff", marginLeft: "8px", fontSize: "0.85rem" }}>| Nurse Console</span>
-                    </div>
-                    <div className="d-flex align-items-center gap-3">
-                        <span style={{ color: "#cfe2ff", fontSize: "0.85rem" }}>
-                            👤 {localStorage.getItem("userName")}
-                        </span>
-                        <Signout />
-                    </div>
-                </div>
-            </div>
+            <TopNavbar />
 
             {/* Navigation Bar */}
             <div style={{ backgroundColor: "white", borderBottom: "2px solid #e9ecef", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>

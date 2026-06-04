@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.medi360.DTO.VitalsRequestDTO;
 import com.medi360.DTO.VitalsResponseDTO;
-import com.medi360.entities.Vitals;
 import com.medi360.service.VitalsService;
 
 import java.util.List;

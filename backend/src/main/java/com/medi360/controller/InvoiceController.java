@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.medi360.DTO.FinancialReportDTO;
 import com.medi360.DTO.InvoiceDTO;
 import com.medi360.DTO.InvoiceResponseDTO;
 import com.medi360.entities.Invoice;
@@ -120,13 +119,7 @@ public class InvoiceController {
 		return invoiceService.getInvoicesByPaymentStatus(status);
 	}
 
-	@GetMapping("/financialReport")
-	public ResponseEntity<FinancialReportDTO> getFinancialReport() {
-
-		FinancialReportDTO report = invoiceService.getFinancialReport();
-
-		return ResponseEntity.ok(report);
-	}
+	
 
 	@GetMapping("/fetchAllInvoicesPaginated")
 	public Page<Invoice> f6(@RequestParam(name = "pgno") int pgno, @RequestParam(name = "size") int size,

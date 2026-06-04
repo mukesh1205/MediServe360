@@ -26,7 +26,7 @@ const stats = [
     color: "primary",
   },
   {
-    label: "Active Doctors",
+    label: "Total Doctors",
     value: "12",
     change: "+2 this week",
     pos: true,

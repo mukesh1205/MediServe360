@@ -62,7 +62,7 @@ export default function NurseDashboard() {
             >
                 <h4 className="mb-1">👋 Welcome back, {userName}!</h4>
                 <p className="mb-0" style={{ opacity: 0.85 }}>
-                    Nurse Console — MediServe 360
+                    Nurse Dashboard — MediServe 360
                 </p>
             </div>
 
