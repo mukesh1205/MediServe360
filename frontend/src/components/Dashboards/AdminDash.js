@@ -66,7 +66,7 @@ export default function AdminDash() {
     const [totalUsers,setTotalUsers]=useState(0);
     const [totalPatients,setTotalPatients]=useState(0);
     const [totalBeds,setTotalBeds]=useState(0);
-
+    const userName=localStorage.getItem("userName");
     const stats = [
       {
         label: "Total Users",
@@ -183,6 +183,22 @@ export default function AdminDash() {
           </p>
         </div>
 
+        <div
+          className="rounded-3 p-4 mb-4 text-white position-relative"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(13,110,253,0.85), rgba(10,88,202,0.85))",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            border: "1px solid rgba(255,255,255,0.2)",
+            boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
+          }}
+        >
+          <h4 className="mb-1">👋 Welcome back, {userName}!</h4>
+          <p className="mb-0" style={{ opacity: 0.9 }}>
+            Admin Dashboard · MediServe 360
+          </p>
+        </div>
         {/* ✅ Stats Cards */}
         <div className="row g-3 mb-4">
           {stats.map((s) => (
