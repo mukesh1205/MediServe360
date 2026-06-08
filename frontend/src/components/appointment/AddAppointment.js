@@ -17,65 +17,152 @@ export default function AddAppointment() {
 
   // Load dropdown data
   useEffect(() => {
-    axios.get("http://localhost:9002/api/patient/fetchAllPatients", {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token")
-      }
-    })
-    .then(res => setPatients(res.data))
-    .catch(() => toast.error("Failed to load patients"));
-
-    axios.get("http://localhost:9002/api/doctor/getAll", {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token")
-      }
-    })
-    .then(res => setDoctors(res.data))
-    .catch(() => toast.error("Failed to load doctors"));
+    fetchPatients();
+    fetchDoctors();
   }, []);
 
-  const buttonHandler = () => {
+  const fetchPatients = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:9002/api/patient/fetchAllPatients",
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        }
+      );
+      setPatients(res.data || []);
+    } catch {
+      toast.error("Unable to load patients. Please try again.");
+    }
+  };
+
+  const fetchDoctors = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:9002/api/doctor/getAll",
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        }
+      );
+      setDoctors(res.data || []);
+    } catch {
+      toast.error("Unable to load doctors. Please try again.");
+    }
+  };
+
+  const validateDoctorAvailability = () => {
+    const selectedDoctor = doctors.find(
+      (doc) => doc.id === parseInt(doctorId)
+    );
+
+    if (!selectedDoctor) {
+      toast.error("Invalid doctor selection");
+      return false;
+    }
+
+    const schedule = selectedDoctor.availabilitySchedule;
+
+    if (!schedule || !schedule.includes("-")) {
+      toast.error("Doctor availability not configured");
+      return false;
+    }
+
+    const [start, end] = schedule.split("-");
+
+    const formattedTime = time.length === 5 ? time + ":00" : time;
+
+    if (formattedTime < start || formattedTime > end) {
+      toast.error(
+        `Doctor is available only between ${start} and ${end}`
+      );
+      return false;
+    }
+
+    return true;
+  };
+
+  const buttonHandler = async () => {
     if (loading) return;
 
+    //Basic validation
     if (!date || !time || !durationMinutes || !patientId || !doctorId) {
-      toast.warning("Please fill all fields");
+      toast.warning("All fields are required");
       return;
     }
 
+    //Duration validation
+    if (durationMinutes < 5) {
+      toast.error("Minimum appointment duration is 5 minutes");
+      return;
+    }
+
+    //Availability validation
+    if (!validateDoctorAvailability()) return;
+
     setLoading(true);
 
-    const url = "http://localhost:9002/api/appointment/add";
+    try {
+      //Format time
+      const formattedTime =
+        time.length === 5 ? time + ":00" : time;
 
-    const data = {
-      appointment: {
-        date: date,
-        time: time,
-        durationMinutes: parseInt(durationMinutes),
-        patient: { patientId: parseInt(patientId) },
-        doctor: { id: parseInt(doctorId) }
-      }
-    };
+      const data = {
+        appointment: {
+          date: date,
+          time: formattedTime,
+          durationMinutes: parseInt(durationMinutes),
+          status: "BOOKED",
+          patient: { patientId: parseInt(patientId) },
+          doctor: { id: parseInt(doctorId) }
+        }
+      };
 
-    axios.post(url, data, {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token")
-      }
-    })
-    .then(() => {
-      toast.success("Appointment created successfully");
+      const res = await axios.post(
+        "http://localhost:9002/api/appointment/add",
+        data,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        }
+      );
 
+      //Success message
+      const message =
+        res.data?.message ||
+        "Appointment created successfully";
+
+      toast.success(message);
+
+      //Reset form
       setDate("");
       setTime("");
       setDurationMinutes(30);
       setPatientId("");
       setDoctorId("");
 
+    } catch (error) {
+      console.log("ERROR:", error);
+
+      let message =
+        error.response?.data?.errorMessage ||
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        "Failed to create appointment";
+
+      if (typeof message === "object") {
+        message = JSON.stringify(message);
+      }
+
+      toast.error(message);
+
+    } finally {
       setLoading(false);
-    })
-    .catch((error) => {
-      toast.error(error.response?.data?.message || "Error creating appointment");
-      setLoading(false);
-    });
+    }
   };
 
   return (
@@ -120,13 +207,16 @@ export default function AddAppointment() {
         {/* Duration */}
         <div className="mb-3">
           <label className="form-label">
-            Duration (minutes) <span className="text-danger">*</span>
+            Duration (minutes)
+            <span className="text-danger">*</span>
           </label>
           <input
             className="form-control"
             type="number"
             value={durationMinutes}
-            onChange={(e) => setDurationMinutes(e.target.value)}
+            onChange={(e) =>
+              setDurationMinutes(e.target.value)
+            }
             min="5"
             required
           />
@@ -144,7 +234,7 @@ export default function AddAppointment() {
             required
           >
             <option value="">-- Select Patient --</option>
-            {patients.map(p => (
+            {patients.map((p) => (
               <option key={p.patientId} value={p.patientId}>
                 {p.patientName} ({p.patientGender})
               </option>
@@ -164,7 +254,7 @@ export default function AddAppointment() {
             required
           >
             <option value="">-- Select Doctor --</option>
-            {doctors.map(doc => (
+            {doctors.map((doc) => (
               <option key={doc.id} value={doc.id}>
                 {doc.name} ({doc.department})
               </option>
@@ -191,4 +281,19 @@ export default function AddAppointment() {
       </form>
     </div>
   );
-}  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

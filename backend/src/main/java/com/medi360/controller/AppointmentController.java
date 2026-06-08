@@ -30,6 +30,7 @@ public class AppointmentController {
     }
 
     
+    //Add Appointment
     @PostMapping("/add")
     public ResponseEntity<AppointmentResponseDTO> addAppointment(@RequestBody AppointmentDTO appointmentDTO) 
         throws PatientNotFoundException,
@@ -69,6 +70,8 @@ public class AppointmentController {
     }
 
 
+    
+    //Update Appointment
     @PutMapping("/update")
     public ResponseEntity<AppointmentResponseDTO> updateAppointment(
             @RequestBody AppointmentDTO appointmentDTO)
@@ -107,6 +110,7 @@ public class AppointmentController {
         return ResponseEntity.ok(dto);
     }
 
+    
     //Delete appointment
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteAppointment(@PathVariable int id) throws AppointmentNotFoundException {
@@ -115,6 +119,7 @@ public class AppointmentController {
         return ResponseEntity.ok("Appointment deleted successfully");
     }
 
+    
     //Get appointment by ID
     @GetMapping("/get/{id}")
     public ResponseEntity<AppointmentResponseDTO> getAppointmentById(@PathVariable int id) throws AppointmentNotFoundException
@@ -130,12 +135,14 @@ public class AppointmentController {
         return ResponseEntity.ok(dto);
     }
 
+    
     //Get all appointments 
     @GetMapping("/getAll")
     public List<Appointment> getAllAppointments() {
         return appointmentService.getAllAppointments();
     }
 
+    
     
     //Get all appointments with pagination + sorting
     @GetMapping("/getAllPaginated")
@@ -154,6 +161,8 @@ public class AppointmentController {
         return appointmentService.getAllAppointmentsWithPagination(pageable);
     }
     
+    
+    
     @GetMapping("/doctor/{doctorId}")
     public ResponseEntity<List<Appointment>> getAppointmentsByDoctor(
             @PathVariable int doctorId)
@@ -164,6 +173,7 @@ public class AppointmentController {
 
         return ResponseEntity.ok(appointments);
     }
+    
     
     @GetMapping("/doctor/{doctorId}/date")
     public ResponseEntity<List<Appointment>> getAppointmentsByDoctorAndDate(
@@ -180,6 +190,7 @@ public class AppointmentController {
 
     
 }
+
 
 
 

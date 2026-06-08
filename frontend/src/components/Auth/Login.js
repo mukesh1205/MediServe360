@@ -30,7 +30,7 @@ export default function Login() {
             const role = res.data.role;
             if (role === "ADMIN")                   navigate("/admindd");
             else if (role === "NURSE")              navigate("/nursedd");
-            else if (role === "PATIENT")            navigate("/patientdd");
+            else if (role === "RECEPTIONIST")            navigate("/receptionistdd");
             else if (role === "DOCTOR")             navigate("/doctordd");
             else if (role === "FINANCEOFFICER")     navigate("/financedd");
             else if (role === "COMPLIANCE_OFFICER") navigate("/compilancedd");

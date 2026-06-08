@@ -41,7 +41,7 @@ public class Security {
 //                        .requestMatchers("/user/findbyid/{id}").permitAll()
  
 
-                        .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "RECEPTIONIST","NURSE")
+                        .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "RECEPTIONIST","NURSE", "DOCTOR")
                         .requestMatchers("/user/**").hasAnyRole("ADMIN","DOCTOR","RECEPTIONIST")
                         .requestMatchers("/api/doctor/**").hasAnyRole("ADMIN", "DOCTOR","RECEPTIONIST")
 

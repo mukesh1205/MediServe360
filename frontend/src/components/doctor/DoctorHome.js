@@ -20,7 +20,7 @@ export default function DoctorHome() {
 
       <div className="container-fluid px-4 py-4">
 
-        {/* Header (Clickable) */}
+        {/* Header */}
         <div className="mb-4">
           <Link to="/doctor" className="text-decoration-none">
             <h4 className="fw-bold text-dark mb-1">

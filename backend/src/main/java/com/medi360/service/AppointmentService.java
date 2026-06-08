@@ -36,6 +36,7 @@ public class AppointmentService {
         this.doctorRepository = doctorRepository;
     }
     
+    
     //Doctor Availability Management
     private boolean isDoctorAvailable(Doctor doctor, LocalTime appointmentTime) {
 
@@ -170,54 +171,7 @@ public class AppointmentService {
 
     
     
-    //UPDATE Appointment
-   /* @Transactional
-    public Appointment updateAppointment(Appointment updatedAppointment)
-            throws AppointmentNotFoundException,
-                   PatientNotFoundException,
-                   DoctorNotFoundException,
-                   SlotNotAvailableException {
-
-        Appointment existingAppointment =
-                appointmentRepository.findById(updatedAppointment.getId())
-                .orElseThrow(() ->
-                        new AppointmentNotFoundException(
-                                "Appointment not found with id "
-                                + updatedAppointment.getId()));
-
-        Patient patient = patientRepository
-                .findById(updatedAppointment.getPatient().getPatientId())
-                .orElseThrow(() ->
-                        new PatientNotFoundException(
-                                "Patient not found with id "
-                                + updatedAppointment.getPatient().getPatientId()));
-
-        Doctor doctor = doctorRepository
-                .findById(updatedAppointment.getDoctor().getId())
-                .orElseThrow(() ->
-                        new DoctorNotFoundException(
-                                "Doctor not found with id "
-                                + updatedAppointment.getDoctor().getId()));
-
-        if (!isDoctorAvailable(doctor, updatedAppointment.getTime())) {
-            throw new SlotNotAvailableException(
-                    "Doctor is not available at this time");
-        }
-
-        existingAppointment.setDate(updatedAppointment.getDate());
-        existingAppointment.setTime(updatedAppointment.getTime());
-        existingAppointment.setStatus(updatedAppointment.getStatus());
-        existingAppointment.setPatient(patient);
-        existingAppointment.setDoctor(doctor);
-
-        return appointmentRepository.save(existingAppointment);
-    }
-
-    public List<Appointment> getAllAppointments() {
-        return appointmentRepository.findAll();
-    }  
-    */
-    
+    //UPDATE Appointment    
     @Transactional
     public Appointment updateAppointment(Appointment updatedAppointment)
             throws AppointmentNotFoundException,
@@ -307,6 +261,7 @@ public class AppointmentService {
     }
 
     
+    
     //getAppointmentById
     public Appointment getAppointmentById(int id)
             throws AppointmentNotFoundException {
@@ -317,11 +272,13 @@ public class AppointmentService {
                                 "Appointment not found with id " + id));
     }
     
+    
     //getAllAppointments
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
     }
 
+    
     
     //getAllAppointmentsPaginated
     public Page<Appointment> getAllAppointmentsWithPagination(Pageable pageable) {
@@ -329,11 +286,11 @@ public class AppointmentService {
     }
     
     
+    
     //Appointments by Doctor Id 
     public List<Appointment> getAppointmentsByDoctorId(int doctorId)
             throws DoctorNotFoundException {
 
-        //Validate if doctor exists
         doctorRepository.findById(doctorId)
                 .orElseThrow(() ->
                         new DoctorNotFoundException(
@@ -350,19 +307,17 @@ public class AppointmentService {
             int doctorId, LocalDate date)
             throws DoctorNotFoundException {
 
-        //Validate if doctor exists
         doctorRepository.findById(doctorId)
                 .orElseThrow(() ->
                         new DoctorNotFoundException(
                                 "Doctor not found with id " + doctorId));
 
-        //Fetch appointments for that date
         return appointmentRepository
                 .findByDoctor_IdAndDateOrderByTimeAsc(doctorId, date);
-    }
-    
+    }   
     
 }
+
 
 
 
