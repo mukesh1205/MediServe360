@@ -1,6 +1,8 @@
 package com.medi360.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,22 +36,28 @@ public class OperationalDashboardController {
     private OperationalDashboardService dashboardService;
 
     @GetMapping("/operational-kpis")
-    public ResponseEntity<OperationalDashboardDTO> getOperationalKPIs() {
+    public ResponseEntity<?> getOperationalKPIs() {
+        try {
+            List<Bed> beds = bedService.getAllBeds();
+            List<Appointment> appointments = appointmentService.getAllAppointments();
+            List<InsuranceClaim> claims = insuranceClaimService.getAllInsuranceClaims();
 
-        List<Bed> beds = bedService.getAllBeds();
-        List<Appointment> appointments = appointmentService.getAllAppointments();
-        List<InsuranceClaim> claims = insuranceClaimService.getAllInsuranceClaims();
+            OperationalDashboardDTO dto = new OperationalDashboardDTO();
+            dto.setOccupancyRate(dashboardService.calculateOccupancyRate(beds));
+            dto.setAppointmentFulfillmentRate(dashboardService.calculateAppointmentFulfillmentRate(appointments));
+            dto.setClaimSuccessRate(dashboardService.calculateClaimSuccessRate(claims));
+            dto.setStatusCode(200);
+            dto.setMessage("Operational dashboard KPIs fetched successfully");
 
-        OperationalDashboardDTO dto = new OperationalDashboardDTO();
-        dto.setOccupancyRate(dashboardService.calculateOccupancyRate(beds));
-        dto.setAppointmentFulfillmentRate(
-                dashboardService.calculateAppointmentFulfillmentRate(appointments));
-        dto.setClaimSuccessRate(
-                dashboardService.calculateClaimSuccessRate(claims));
+            return ResponseEntity.ok(dto);
 
-        dto.setStatusCode(200);
-        dto.setMessage("Operational dashboard KPIs fetched successfully");
+        } catch (Exception e) {
+            e.printStackTrace();   // logs to Spring Boot console for debugging
 
-        return ResponseEntity.ok(dto);
+            Map<String, Object> error = new HashMap<>();
+            error.put("errorMessage", e.getMessage());
+            error.put("httpStatusCode", 500);
+            return ResponseEntity.status(500).body(error);
+        }
     }
 }

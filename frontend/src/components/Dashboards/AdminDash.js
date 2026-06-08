@@ -199,7 +199,7 @@ export default function AdminDash() {
             Admin Dashboard · MediServe 360
           </p>
         </div>
-        {/* ✅ Stats Cards */}
+        {/* Stats Cards */}
         <div className="row g-3 mb-4">
           {stats.map((s) => (
             <div className="col-12 col-sm-6 col-xl-3" key={s.label}>

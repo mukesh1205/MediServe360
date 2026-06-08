@@ -59,6 +59,7 @@ import FindCompliance from './components/compliance_report/FindCompliance';
 import DisplayCompliance from './components/compliance_report/DisplayCompliance';
 import DisplayCompliancePaginated from './components/compliance_report/DisplayCompliancePaginated';
 
+
 // KPI
 
 import KpiReportHome from './components/kpi_report/KpiReportHome';
@@ -147,7 +148,6 @@ const ADMIN_NURSE    = ["ADMIN","NURSE"];
 const ADMIN_COMPLIANCE = ["ADMIN","COMPLIANCE_OFFICER"];
 const ADMIN_FINANCE    = ["ADMIN","FINANCEOFFICER"];
 const ADMIN_RECEPTIONIST      = ["ADMIN","RECEPTIONIST"];
-const ADMIN_DOCTOR      = ["ADMIN","DOCTOR"];
 const FINANCE=["ADMIN","FINANCEOFFICER"];
 const RECEPTIONIST_ONLY=["RECEPTIONIST"];
 const DOCTOR_ONLY=["DOCTOR"];
@@ -315,6 +315,15 @@ function ProtectedRoute({ children, allowedRoles }) {
           <Route path="occupancy" element={<WardOccupancyReport />} />
           <Route path="pages" element={<PaginatedWard />} />
         </Route>
+
+        <Route path="/kpi_report" element={<ProtectedRoute allowedRoles={["ADMIN","FINANCEOFFICER","COMPLIANCE_OFFICER"]}><KpiReportHome /></ProtectedRoute>}>
+          <Route path="add" element={<AddKpi />} />
+          <Route path="find" element={<FindKpi />} />
+          <Route path="display" element={<DisplayKpi />} />
+
+
+          <Route path="displayPaginated" element={<DisplayKpiPaginated />} />
+          </Route>
 
         {/* Nurse */}
         <Route path="/nursedd" element={<ProtectedRoute allowedRoles={NURSE_ONLY}><NurseHome /></ProtectedRoute>}>
