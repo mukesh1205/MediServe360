@@ -26,6 +26,7 @@ export default function Login() {
             localStorage.setItem("role", res.data.role);
             localStorage.setItem("userName", res.data.userName);
             localStorage.setItem("userId", res.data.userId);
+            localStorage.setItem("email", res.data.email);
 
             const role = res.data.role;
             if (role === "ADMIN")                   navigate("/admindd");

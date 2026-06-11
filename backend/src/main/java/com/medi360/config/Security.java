@@ -58,6 +58,7 @@ public class Security {
                         .requestMatchers("/notification/**").authenticated()
                         .requestMatchers("/api/insurance/**").hasAnyRole("ADMIN","FINANCEOFFICER")
                         .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN","FINANCEOFFICER")
+                        .requestMatchers("/api/medical-notes/**").hasAnyRole("ADMIN", "DOCTOR")
 //                         audit-logs — GET allowed, POST blocked
                         .requestMatchers(HttpMethod.GET, "/auditlog/**")
                         .hasAnyRole("ADMIN","COMPLIANCE_OFFICER")
@@ -83,4 +84,11 @@ public class Security {
         return config.getAuthenticationManager();
     }
 }
- 
+
+
+
+
+
+
+
+

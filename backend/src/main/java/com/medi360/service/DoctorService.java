@@ -57,6 +57,11 @@ public class DoctorService {
 	public Page<Doctor> getAllDoctorsWithPagination (Pageable pageable){
 		return doctorRepository.findAll(pageable);
 	}
+	
+	public Doctor getDoctorByEmail(String email) throws DoctorNotFoundException {
+	    return doctorRepository.findByEmail(email)
+	        .orElseThrow(() -> new DoctorNotFoundException("Doctor not found"));
+	}
     
 }
 
