@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.medi360.DTO.FinancialReportDTO;
 import com.medi360.db.InvoiceRepository;
 import com.medi360.db.PatientRepository;
 import com.medi360.entities.Invoice;
@@ -135,7 +134,7 @@ public class InvoiceService {
 
 	public List<Invoice> getInvoicesByPatient(int patientId) throws InvoiceNotFoundException {
 
-		List<Invoice> invoices = invoiceRepository.findByPatientPatientId(patientId);
+		List<Invoice> invoices = invoiceRepository.findByPatient_PatientId(patientId);
 
 		if (invoices.isEmpty()) {
 			throw new InvoiceNotFoundException("No invoices found for patient " + patientId);
@@ -152,29 +151,6 @@ public class InvoiceService {
 		}
 
 		return invoices;
-	}
-	
-	public FinancialReportDTO getFinancialReport() {
-
-	    Double totalBilled = invoiceRepository.getTotalBilledAmount();
-	    Double totalPaid = invoiceRepository.getTotalPaidAmount();
-
-	    long totalInvoices = invoiceRepository.getTotalInvoiceCount();
-	    long paidInvoices = invoiceRepository.getPaidInvoiceCount();
-	    long unpaidInvoices = invoiceRepository.getUnpaidInvoiceCount();
-
-	    FinancialReportDTO report = new FinancialReportDTO();
-	    report.setTotalBilledAmount(totalBilled != null ? totalBilled : 0);
-	    report.setTotalPaidAmount(totalPaid != null ? totalPaid : 0);
-	    report.setTotalPendingAmount(
-	            (totalBilled != null ? totalBilled : 0)
-	            - (totalPaid != null ? totalPaid : 0));
-
-	    report.setTotalInvoices(totalInvoices);
-	    report.setPaidInvoices(paidInvoices);
-	    report.setUnpaidInvoices(unpaidInvoices);
-
-	    return report;
 	}
 	
 	public Page<Invoice> getAllInvoicesWithPagination(Pageable pageable) {

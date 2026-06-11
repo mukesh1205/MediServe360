@@ -137,7 +137,7 @@ export default function Register() {
                             <input
                                 type="email"
                                 className="form-control"
-                                placeholder="jane@hospital.com"
+                                placeholder="jane@gmail.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 style={{ borderColor: "#b0cfe0", borderRadius: "8px" }}

@@ -10,5 +10,7 @@ import com.medi360.entities.Patient;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Integer>{
 	List<Patient> findByPatientNameContainingIgnoreCase(String patientName);
-	
+	long count();
+	long countByPatientStatus(String status);
+	long countByPatientGender(String gender);
 }

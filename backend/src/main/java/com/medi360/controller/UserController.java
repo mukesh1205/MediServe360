@@ -37,6 +37,12 @@ public class UserController {
 		System.out.println(userDto.getPassword());
 		return ResponseEntity.ok(us.addUser(userDto));
 	}
+	
+	@GetMapping("approval/{a}/{id}")
+	public ResponseEntity<UserResponseDTO> userApproval(@PathVariable String a,@PathVariable int id){
+		System.out.println(id+" "+a);
+		return ResponseEntity.ok(us.userApproval(a,id));
+	}
 
 	@PutMapping("/updateuser/{id}")
 	public ResponseEntity<UserResponseDTO> updateUser(@PathVariable int id, @RequestBody UserDTO userDto) {
