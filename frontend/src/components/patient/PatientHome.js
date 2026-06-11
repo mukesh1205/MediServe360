@@ -10,9 +10,7 @@ const navLinks = [
 ];
 
 export default function PatientHome() {
-
   const location = useLocation();
-
   return (
     <div className="min-vh-100 bg-light">
       <TopNavbar />
