@@ -22,16 +22,21 @@ public class Notification {
 	private LocalDateTime createdDate;
 	
 	@ManyToOne
-	@JoinColumn(name="user_id")
-	private User user;
+	@JoinColumn(name="doctor_id")
+	private Doctor doctor;
+	
+	@ManyToOne
+	@JoinColumn(name="patient_id")
+	private Patient patient;
 
-	public Notification(String message, String category, String status, LocalDateTime createdDate, User user) {
+	public Notification(String message, String category, String status, LocalDateTime createdDate, Doctor doctor,Patient patient) {
 		super();
 		this.message = message;
 		this.category = category;
 		this.status = status;
 		this.createdDate = createdDate;
-		this.user = user;
+		this.doctor = doctor;
+		this.patient=patient;
 	}
 
 	public Notification() {
@@ -78,12 +83,20 @@ public class Notification {
 		this.createdDate = createdDate;
 	}
 
-	public User getUser() {
-		return user;
+	public Doctor getDoctor() {
+		return doctor;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setDoctor(Doctor doctor) {
+		this.doctor = doctor;
+	}
+	
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 	
 	

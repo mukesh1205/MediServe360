@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 public class NotificationResponseDTO {
 	
 	private String category;
-	private int userID;
+	private int patientId;
+	private int doctorId;
 	private int notificationID;
 	private LocalDateTime createdDate;
 	private String status;
@@ -23,11 +24,19 @@ public class NotificationResponseDTO {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	public int getUserID() {
-		return userID;
+	
+	public int getDoctorID() {
+		return doctorId;
 	}
-	public void setUserID(int userID) {
-		this.userID = userID;
+	public void setDoctorID(int doctorId) {
+		this.doctorId = doctorId;
+	}
+	
+	public int getPatientID() {
+		return patientId;
+	}
+	public void setPatientID(int patientId) {
+		this.patientId = patientId;
 	}
 	public int getNotificationID() {
 		return notificationID;

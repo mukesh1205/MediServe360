@@ -14,13 +14,9 @@ export default function AppointmentHome() {
 
   return (
     <div className="min-vh-100 bg-light">
-
-      {/* ✅ Global Navbar */}
       <TopNavbar />
 
       <div className="container-fluid px-4 py-4">
-
-        {/* ✅ Header */}
         <div className="mb-4">
           <Link to="/appointment" className="text-decoration-none">
             <h4 className="fw-bold text-dark mb-1">
@@ -32,8 +28,6 @@ export default function AppointmentHome() {
             Manage appointments · Scheduling · Patient visits
           </p>
         </div>
-
-        {/* ✅ Card Grid */}
         <div className="row g-3 mb-4">
 
           {navLinks.map((link) => (
@@ -62,7 +56,6 @@ export default function AppointmentHome() {
 
         </div>
 
-        {/* ✅ Content Area */}
         {!location.pathname.startsWith("/appointment/") ? (
 
           <div className="card shadow-sm p-4 text-muted text-center">
