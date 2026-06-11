@@ -4,18 +4,25 @@ import { toast } from "react-toastify";
 
 export default function AddDoctor() {
 
-  const [name, setName] = useState("");
-  const [department, setDepartment] = useState("");
+  const [doctorName, setDoctorName] = useState("");
+  const [doctorDepartment, setDoctorDepartment] = useState("");
   const [availabilitySchedule, setAvailabilitySchedule] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const doctorNameHandler = (event) => {
+    setDoctorName(event.target.value);
+  };
+
+  const doctorDepartmentHandler = (event) => {
+    setDoctorDepartment(event.target.value);
+  };
+
+  const availabilityHandler = (event) => {
+    setAvailabilitySchedule(event.target.value);
+  };
+
   const buttonHandler = () => {
     if (loading) return;
-
-    if (!name || !department || !availabilitySchedule) {
-      toast.warning("Please fill all fields");
-      return;
-    }
 
     setLoading(true);
 
@@ -23,8 +30,8 @@ export default function AddDoctor() {
 
     const data = {
       doctor: {
-        name: name.trim(),
-        department: department.trim(),
+        name: doctorName.trim(),
+        department: doctorDepartment.trim(),
         availabilitySchedule: availabilitySchedule.trim()
       }
     };
@@ -35,16 +42,16 @@ export default function AddDoctor() {
       }
     })
     .then(() => {
-      toast.success("Doctor added successfully");
+      toast.success("Doctor Added successfully");
 
-      setName("");
-      setDepartment("");
+      setDoctorName("");
+      setDoctorDepartment("");
       setAvailabilitySchedule("");
 
       setLoading(false);
     })
     .catch((error) => {
-      toast.error(error.response?.data?.message || "Error adding doctor");
+      toast.error(error.response?.data || error.message);
       setLoading(false);
     });
   };
@@ -59,17 +66,19 @@ export default function AddDoctor() {
         buttonHandler();
       }}>
 
-        {/* Name */}
+        {/* Doctor Name */}
         <div className="mb-3">
           <label className="form-label">
-            Doctor Name <span className="text-danger">*</span>
+            Doctor Name <span style={{ color: "red" }}> *</span>
           </label>
           <input
             className="form-control"
             type="text"
-            value={name}
+            value={doctorName}
             placeholder="Enter doctor name"
-            onChange={(e) => setName(e.target.value)}
+            onChange={doctorNameHandler}
+            pattern="[A-Za-z\s]+"
+            title="Only letters allowed"
             required
           />
         </div>
@@ -77,14 +86,16 @@ export default function AddDoctor() {
         {/* Department */}
         <div className="mb-3">
           <label className="form-label">
-            Department <span className="text-danger">*</span>
+            Department <span style={{ color: "red" }}> *</span>
           </label>
           <input
             className="form-control"
             type="text"
-            value={department}
+            value={doctorDepartment}
             placeholder="Enter department"
-            onChange={(e) => setDepartment(e.target.value)}
+            onChange={doctorDepartmentHandler}
+            pattern="[A-Za-z\s]+"
+            title="Only letters allowed"
             required
           />
         </div>
@@ -92,21 +103,21 @@ export default function AddDoctor() {
         {/* Availability */}
         <div className="mb-3">
           <label className="form-label">
-            Availability (HH:mm-HH:mm) <span className="text-danger">*</span>
+            Availability (HH:mm-HH:mm) <span style={{ color: "red" }}> *</span>
           </label>
           <input
             className="form-control"
             type="text"
-            placeholder="08:00-20:00"
             value={availabilitySchedule}
-            onChange={(e) => setAvailabilitySchedule(e.target.value)}
+            placeholder="08:00-20:00"
+            onChange={availabilityHandler}
             pattern="^([01]\d|2[0-3]):[0-5]\d-([01]\d|2[0-3]):[0-5]\d$"
             title="Enter time range like 08:00-20:00"
             required
           />
         </div>
 
-        {/* Submit */}
+        {/* Submit Button */}
         <button
           className="btn btn-primary w-100"
           type="submit"

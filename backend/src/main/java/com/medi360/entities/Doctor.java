@@ -30,6 +30,9 @@ public class Doctor {
 	@Column
 	private String availabilitySchedule;
 	
+	@Column(unique = true)
+	private String email;
+	
 	@OneToMany(mappedBy="doctor",cascade=CascadeType.ALL)
 	@JsonIgnore
 	private List<Appointment> appointments;
@@ -68,6 +71,16 @@ public class Doctor {
 		this.availabilitySchedule = availabilitySchedule;
 	}
 	
+	public String getEmail() 
+	{ 
+		return email; 
+	}
+	
+	public void setEmail(String email) 
+	{ 
+		this.email = email; 
+	}
+	
 	
 	public Doctor(String name, String department, String availabilitySchedule) {
 		super();
@@ -82,6 +95,8 @@ public class Doctor {
 	}
 	
 }
+
+
 
 
 

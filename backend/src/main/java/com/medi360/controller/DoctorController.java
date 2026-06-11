@@ -92,6 +92,13 @@ public class DoctorController {
 	return doctorService.getAllDoctorsWithPagination(pageable);
 	
 	} 	
+	
+	@GetMapping("/by-email")
+	public ResponseEntity<Doctor> getDoctorByEmail(@RequestParam String email) 
+	    throws DoctorNotFoundException {
+	    Doctor doctor = doctorService.getDoctorByEmail(email);
+	    return ResponseEntity.ok(doctor);
+	}
 }
 
 
