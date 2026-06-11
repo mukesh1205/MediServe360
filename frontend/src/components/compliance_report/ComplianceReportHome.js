@@ -1,64 +1,85 @@
-import { Link, Outlet } from "react-router-dom";
-import Signout from "../Auth/Signout";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import TopNavbar from "../common/TopNavbar";
+
+const navLinks = [
+  { to: "add", label: "Add Report", icon: "➕" },
+  { to: "find", label: "Find Report", icon: "🔍" },
+  { to: "display", label: "Display", icon: "📋" },
+  { to: "paginated", label: "Paginated", icon: "📄" },
+];
+
 export default function ComplianceReportHome() {
-    return (
-        <div>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                <div className="container-fluid">
+  const location = useLocation();
 
-                    <Link className="navbar-brand" to="/compliance_report">
-                        Compliance Report
-                    </Link>
+  return (
+    <div className="min-vh-100 bg-light">
+      
+      {/* ✅ Global Navbar (same as PatientHome) */}
+      <TopNavbar />
 
-                    {/*  Added navbar toggler like PatientHome */}
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
+      <div className="container-fluid px-4 py-4">
 
-                    {/* Added ID for collapse */}
-                    <div className="collapse navbar-collapse" id="navbarNav">
-                        <ul className="navbar-nav">
+        {/* ✅ Header */}
+        <div className="mb-4">
+          <Link to="/compliance_report" className="text-decoration-none">
+            <h4 className="fw-bold text-dark mb-1">
+              Compliance Report Management
+            </h4>
+          </Link>
 
-                            <li className="nav-item">
-                                <Link className="nav-link" to="add">
-                                    Add
-                                </Link>
-                            </li>
-
-                            <li className="nav-item">
-                                <Link className="nav-link" to="find">
-                                    Find
-                                </Link>
-                            </li>
-
-                            <li className="nav-item">
-                                <Link className="nav-link" to="display">
-                                    Display
-                                </Link>
-                            </li>
-
-                            <li className="nav-item">
-                                <Link className="nav-link" to="paginated">
-                                    Paginated
-                                </Link>
-                            </li>
-                            <ul className="navbar-nav ms-auto">
-                                    <li className="nav-item">
-                                    <Signout />
-                                    </li>
-                                </ul>
-                        </ul>
-                    </div>
-
-                </div>
-            </nav>
-
-            <Outlet />
+          <p className="text-muted small mb-0">
+            Manage compliance · Reports · Audits
+          </p>
         </div>
-    );
+
+        {/* ✅ Cards Navigation */}
+        <div className="row g-3 mb-4">
+          {navLinks.map((link) => (
+            <div className="col-6 col-sm-4 col-md-3" key={link.to}>
+              
+              <Link
+                to={link.to}
+                className="btn btn-outline-dark w-100 py-4 d-flex flex-column align-items-center gap-2 text-decoration-none hover-card"
+                style={{
+                  borderRadius: "12px",
+                  minHeight: "100px"
+                }}
+              >
+                <span style={{ fontSize: "1.8rem" }}>
+                  {link.icon}
+                </span>
+
+                <span className="fw-semibold small">
+                  {link.label}
+                </span>
+
+              </Link>
+
+            </div>
+          ))}
+        </div>
+
+        {/* ✅ Content Area */}
+        {!location.pathname.startsWith("/compliance_report/") ? (
+
+          <div className="card shadow-sm p-4 text-muted text-center">
+            <h6 className="mb-2">Welcome to Compliance Module</h6>
+            <p className="mb-0">
+              Select an option above to continue
+            </p>
+          </div>
+
+        ) : (
+
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <Outlet />
+            </div>
+          </div>
+
+        )}
+
+      </div>
+    </div>
+  );
 }
