@@ -72,7 +72,7 @@ export default function TopNavbar() {
         </div>
       </Link>
 
-      <div className="flex-grow-1 d-flex justify-content-center">
+      {/* <div className="flex-grow-1 d-flex justify-content-center">
         <input
           className="form-control form-control-sm"
           placeholder="Search modules..."
@@ -80,7 +80,7 @@ export default function TopNavbar() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-      </div>
+      </div> */}
 
       <div className="d-flex align-items-center gap-3">
 

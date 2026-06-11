@@ -1,50 +1,37 @@
 import axios from "axios";
+import { useNavigate, Link } from "react-router";
+import { toast } from "react-toastify";
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 
-export default function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+export default function Updatepassword() {
     const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [newPassword1, setNewPassword1] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const login = (event) => {
-        event.preventDefault();
-        setError("");
-
-        if (!email || !password) {
-            setError("Please fill in all fields.");
+    async function changePassword(e) {
+        e.preventDefault();
+        if (!email || !newPassword || !newPassword1) {
+            toast.error("Please fill in all fields.");
             return;
         }
-
-        setLoading(true);
-        
-        axios.post("http://localhost:9002/api/auth/login", { email, password })
-        .then((res) => {
-            localStorage.setItem("token", res.data.token);
-            localStorage.setItem("role", res.data.role);
-            localStorage.setItem("userName", res.data.userName);
-            localStorage.setItem("userId", res.data.userId);
-            
-            const role = res.data.role;
-            if (role === "ADMIN")                   navigate("/admindd");
-            else if (role === "NURSE")              navigate("/nursedd");
-            else if (role === "RECEPTIONIST")       navigate("/receptionistdd");
-            else if (role === "DOCTOR")             navigate("/doctordd");
-            else if (role === "FINANCEOFFICER")     navigate("/financedd");
-            else if (role === "COMPLIANCE_OFFICER") navigate("/compilancedd");
-        })
-        .catch((err) => {
-            if(err.response.data.errorMessage=="Your account is pending admin approval"){
-                setError("Your account is pending admin approval");
-            }
-            else{
-                setError("Invalid email or password. Please try again.");
-            }
+        if (newPassword !== newPassword1) {
+            toast.error("Passwords must match");
+            return;
+        }
+        try {
+            setLoading(true);
+            let url = `http://localhost:9002/api/auth/updatepassword/${email}/${newPassword}`;
+            await axios.put(url);
+            toast.success("Password successfully changed");
+            navigate("/login");
+        } catch (err) {
+            toast.error(err.message);
+        } finally {
             setLoading(false);
-        });
-    };
+        }
+    }
 
     return (
         <div
@@ -104,16 +91,10 @@ export default function Login() {
                                 <span className="fw-bold" style={{ color: "#1a3c5e" }}>MediServe</span>
                             </div>
 
-                            <h5 className="fw-bold mb-1" style={{ color: "#1a3c5e" }}>Welcome back</h5>
-                            <p className="small mb-4" style={{ color: "#5a8fa8" }}>Sign in to your hospital account</p>
+                            <h5 className="fw-bold mb-1" style={{ color: "#1a3c5e" }}>Reset Password</h5>
+                            <p className="small mb-4" style={{ color: "#5a8fa8" }}>Enter your email and choose a new password</p>
 
-                            {error && (
-                                <div className="alert alert-danger py-2 small" role="alert">
-                                    ⚠️ {error}
-                                </div>
-                            )}
-
-                            <form onSubmit={login}>
+                            <form onSubmit={changePassword}>
                                 <div className="mb-3">
                                     <label className="form-label small fw-semibold" style={{ color: "#1a3c5e" }}>
                                         Email Address
@@ -128,16 +109,30 @@ export default function Login() {
                                     />
                                 </div>
 
-                                <div className="mb-4">
+                                <div className="mb-3">
                                     <label className="form-label small fw-semibold" style={{ color: "#1a3c5e" }}>
-                                        Password
+                                        New Password
                                     </label>
                                     <input
                                         type="password"
                                         className="form-control"
                                         placeholder="••••••••"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        style={{ borderColor: "#b0cfe0", borderRadius: "8px" }}
+                                    />
+                                </div>
+
+                                <div className="mb-4">
+                                    <label className="form-label small fw-semibold" style={{ color: "#1a3c5e" }}>
+                                        Re-Enter New Password
+                                    </label>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        placeholder="••••••••"
+                                        value={newPassword1}
+                                        onChange={(e) => setNewPassword1(e.target.value)}
                                         style={{ borderColor: "#b0cfe0", borderRadius: "8px" }}
                                     />
                                 </div>
@@ -151,24 +146,18 @@ export default function Login() {
                                     {loading ? (
                                         <>
                                             <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                            Signing in...
+                                            Updating...
                                         </>
-                                    ) : "Sign In →"}
+                                    ) : "Change Password →"}
                                 </button>
                             </form>
 
                             <hr className="my-4" style={{ borderColor: "#c8dfe9" }} />
 
                             <p className="text-center small mb-0" style={{ color: "#5a8fa8" }}>
-                                Don't have an account?{" "}
-                                <Link to="/register" className="fw-semibold text-decoration-none" style={{ color: "#1a73a7" }}>
-                                    Register
-                                </Link>
-                            </p>
-                            <p className="text-center small mb-0" style={{ color: "#5a8fa8" }}>
-                                Forgot password?{" "}
-                                <Link to="/updatepass" className="fw-semibold text-decoration-none" style={{ color: "#1a73a7" }}>
-                                    Change
+                                Remembered your password?{" "}
+                                <Link to="/login" className="fw-semibold text-decoration-none" style={{ color: "#1a73a7" }}>
+                                    Sign In
                                 </Link>
                             </p>
 

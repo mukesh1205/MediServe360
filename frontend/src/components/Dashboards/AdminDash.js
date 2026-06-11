@@ -1,150 +1,95 @@
-import { Link } from "react-router";
+import { Link, Outlet, useLocation } from "react-router";
 import Signout from "../Auth/Signout";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const navLinks = [
-  { to: "/user", label: "User", icon: "👤" },
-  { to: "/patient", label: "Patient", icon: "🏥" },
-  { to: "/doctor", label: "Doctor", icon: "👨‍⚕️" },
-  { to: "/bed", label: "Bed", icon: "🛏️" },
-  { to: "/ward", label: "Ward", icon: "🏨" },
-  { to: "/insuranceClaim", label: "Insurance Claim", icon: "🛡️" },
-  { to: "/compliance_report", label: "Compliance Report", icon: "📋" },
-  { to: "/invoice", label: "Invoice", icon: "🧾" },
-  { to: "/auditlog", label: "Audit Log", icon: "🔍" },
-  { to: "/notification", label: "Notification", icon: "🔔" },
-  { to: "/kpi_report", label: "KPI Report", icon: "📊" },
-  { to: "/appointment", label: "Appointment", icon: "📅" },
-];
-
-
-
-const recentActivity = [
-  { icon: "👤", text: "New user account created for Dr. Sharma" },
-  { icon: "🛡️", text: "Insurance claim #88 submitted" },
-  { icon: "📋", text: "Compliance report generated for June" },
-  { icon: "🔍", text: "Audit log reviewed by Admin" },
-  { icon: "📊", text: "KPI report updated with latest metrics" },
-];
-
-const quickActions = [
-  { to: "/user/add", label: "Add User", icon: "➕", color: "primary" },
-  { to: "/invoice/add", label: "Create Invoice", icon: "🧾", color: "success" },
-  { to: "/kpi_report", label: "View KPI Report", icon: "📊", color: "dark" },
+  { to: "userp", label: "User", icon: "👤" },
+  { to: "patientp", label: "Patient", icon: "🏥" },
+  { to: "doctorp", label: "Doctor", icon: "👨‍⚕️" },
+  { to: "bedp", label: "Bed", icon: "🛏️" },
+  { to: "wardp", label: "Ward", icon: "🏨" },
+  { to: "adminp", label: "Audit Log", icon: "🔍" },
+  { to: "notificationp", label: "Notification", icon: "🔔" },
+  { to: "appointmentp", label: "Appointment", icon: "📅" },
+  { to: "userapproval", label: "User Approval", icon: "✅" },
 ];
 
 export default function AdminDash() {
+  const location = useLocation();
 
-    const [totalUsers,setTotalUsers]=useState(0);
-    const [totalPatients,setTotalPatients]=useState(0);
-    const [totalBeds,setTotalBeds]=useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalPatients, setTotalPatients] = useState(0);
+  const [totalBeds, setTotalBeds] = useState(0);
+  const [totalDoctors,setTotalDoctors]=useState(0);
+  const stats = [
+    { label: "Total Users", value: totalUsers, icon: "👤", color: "primary" },
+    { label: "Active Patients", value: totalPatients, icon: "🏥", color: "success" },
+    { label: "Beds Occupied", value: totalBeds, icon: "🛏️", color: "warning" },
+    { label: "Active Doctors", value: totalDoctors, icon: "🧾", color: "danger" },
+  ];
 
-    const stats = [
-      {
-        label: "Total Users",
-        value: totalUsers,
-        icon: "👤",
-        color: "primary",
-      },
-      {
-        label: "Active Patients",
-        value: totalPatients,
-        icon: "🏥",
-        color: "success",
-      },
-      {
-        label: "Beds Occupied",
-        value: totalBeds,
-        icon: "🛏️",
-        color: "warning",
-      },
-      {
-        label: "Pending Invoices",
-        value: "17",
-        icon: "🧾",
-        color: "danger",
-      },
-    ];
-    const [userData,setUserData]=useState([]);
-    const [patientData,setPatientData]=useState([]);
-    async function getUsers(){
-      try{
-        let url="http://localhost:9002/user/fetchallusers";
-        let res=await axios.get(url,{
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token")
-                }
-            });
-
-        setUserData(res.data);
-        setTotalUsers(res.data.length);
-
-      }catch(err){
-        alert(err.message)
-      }
+  async function getUsers() {
+    try {
+      const res = await axios.get("http://localhost:9002/user/fetchallusers", {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      });
+      setTotalUsers(res.data.length);
+    } catch (err) {
+      alert(err.message);
     }
+  }
 
-    async function getpatient(){
-      try{
-        let url="http://localhost:9002/api/patient/fetchAllPatients";
-        let res=await axios.get(url,{
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token")
-                }
-            });
-        setPatientData(res.data);
-
-        let count=0;
-        for(let i=0;i<(res.data.length);i++){
-          if(res.data[i].patientStatus==="Admitted"){
-            count++;
-          }
-        }
-
-        setTotalPatients(count);
-      }
-      catch(err){
-        alert(err.message);
-      }
+  async function getDoctors(){
+    try{
+      const res=await axios.get("http://localhost:9002/api/doctor/getAll",{
+        headers:{
+          Authorization:"Bearer "+localStorage.getItem("token")
+        },
+      })
+      setTotalDoctors(res.data.length);
+    }catch(err){
+      alert(err.message);
     }
-    const [bedData,setBedData]=useState([]);
-    async function getBeds(){
-      try{
+  }
 
-        let url="http://localhost:9002/api/beds/getAllBeds"
-
-        let res=await axios.get(url,{
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token")
-                }
-            });
-
-        setBedData(res.data);
-        let count=0;
-        for(let i=0;i<(res.data.length);i++){
-          if(res.data[i].bedStatus==="OCCUPIED"){
-            count++;
-          }
-        }
-
-        setTotalBeds(count);
-
-      }catch(err){
-        alert(err.message);
-      }
+  async function getPatient() {
+    try {
+      const res = await axios.get("http://localhost:9002/api/patient/fetchAllPatients", {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      });
+      const count = res.data.filter((p) => p.patientStatus === "Admitted").length;
+      setTotalPatients(count);
+    } catch (err) {
+      alert(err.message);
     }
+  }
 
-    useEffect(()=>{
-      getUsers();
-      getpatient();
-      getBeds();
-    },[])
+  async function getBeds() {
+    try {
+      const res = await axios.get("http://localhost:9002/api/beds/getAllBeds", {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      });
+      const count = res.data.filter((b) => b.bedStatus === "OCCUPIED").length;
+      setTotalBeds(count);
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  useEffect(() => {
+    getUsers();
+    getPatient();
+    getBeds();
+    getDoctors();
+  }, []);
+
+  const isSubRoute = navLinks.some((link) => location.pathname.startsWith(link.to));
+
   return (
-    <div className="min-vh-100 bg-light">
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", backgroundColor: "#f8f9fa" }}>
 
-      {/* Navbar */}
-      <nav className="navbar navbar-dark bg-dark shadow-sm">
+      <nav className="navbar navbar-dark bg-dark shadow-sm" style={{ flexShrink: 0 }}>
         <div className="container-fluid px-4">
           <span className="navbar-brand fw-bold fs-5">⚙️ Admin Portal</span>
           <ul className="navbar-nav ms-auto">
@@ -155,116 +100,96 @@ export default function AdminDash() {
         </div>
       </nav>
 
-      <div className="container-fluid px-4 py-4">
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
 
-        {/* Header */}
-        <div className="mb-4">
-          <h4 className="fw-bold text-dark mb-1">Admin Dashboard</h4>
-          <p className="text-muted small mb-0">
-            Overview · System management · Operations
-          </p>
-        </div>
-
-        {/* Stats */}
-        <div className="row g-3 mb-4">
-          {stats.map((s) => (
-            <div className="col-12 col-sm-6 col-xl-3" key={s.label}>
-              <div className={`card border-0 shadow-sm border-start border-4 border-${s.color}`}>
-                <div className="card-body d-flex align-items-center gap-3">
-
-                  <div
-                    className={`bg-${s.color} bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center`}
-                    style={{ width: "52px", height: "52px", fontSize: "1.4rem" }}
-                  >
-                    {s.icon}
-                  </div>
-
-                  <div>
-                    <p className="text-muted small mb-1 text-uppercase fw-semibold" style={{ fontSize: "0.7rem" }}>
-                      {s.label}
-                    </p>
-                    <h5 className="fw-bold mb-1">{s.value}</h5>
-                    {/* <span className={`small text-${s.pos ? "success" : "danger"}`}>
-                      {s.pos ? "▲" : "▼"} {s.change}
-                    </span> */}
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Modules + Activity */}
-        <div className="row g-3">
-
-          {/* Modules */}
-          <div className="col-12 col-lg-8">
-            <div className="card border-0 shadow-sm h-100">
-              <div className="card-header bg-white border-bottom py-3">
-                <h6 className="fw-bold mb-0">⬡ Modules</h6>
-              </div>
-
-              <div className="card-body">
-                <div className="row g-3">
-                  {navLinks.map((link) => (
-                    <div className="col-6 col-sm-4 col-md-3" key={link.to}>
-                      <Link
-                        to={link.to}
-                        className="btn btn-outline-dark w-100 py-3 d-flex flex-column align-items-center gap-2 text-decoration-none"
-                        style={{ borderRadius: "10px" }}
-                      >
-                        <span style={{ fontSize: "1.6rem" }}>{link.icon}</span>
-                        <span className="small fw-semibold" style={{ fontSize: "0.78rem" }}>{link.label}</span>
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+        <aside
+          style={{
+            width: "220px",
+            minWidth: "220px",
+            backgroundColor: "#fff",
+            borderRight: "1px solid #e5e7eb",
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div
+            style={{
+              padding: "14px 16px 10px",
+              fontSize: "11px",
+              fontWeight: 600,
+              color: "#9ca3af",
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              borderBottom: "1px solid #e5e7eb",
+            }}
+          >
+            Modules
           </div>
 
-          {/* Recent Activity */}
-          <div className="col-12 col-lg-4">
-            <div className="card border-0 shadow-sm h-100">
-              <div className="card-header bg-white border-bottom py-3">
-                <h6 className="fw-bold mb-0">🔔 Recent Activity</h6>
-              </div>
-
-              <div className="card-body p-0">
-                <ul className="list-group list-group-flush">
-                  {recentActivity.map((a, i) => (
-                    <li key={i} className="list-group-item border-0 py-3 px-3 d-flex gap-2">
-                      <span>{a.icon}</span>
-                      <span className="text-muted small">{a.text}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Quick Actions */}
-        <div className="card border-0 shadow-sm mt-4">
-          <div className="card-header bg-white border-bottom">
-            <h6 className="fw-bold mb-0">⚡ Quick Actions</h6>
-          </div>
-
-          <div className="card-body d-flex flex-wrap gap-2">
-            {quickActions.map((btn) => (
+          {navLinks.map((link) => {
+            const isActive = location.pathname.startsWith(link.to);
+            return (
               <Link
-                key={btn.to}
-                to={btn.to}
-                className={`btn btn-${btn.color}`}
+                key={link.to}
+                to={link.to}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "10px 16px",
+                  fontSize: "13px",
+                  color: isActive ? "#111827" : "#6b7280",
+                  textDecoration: "none",
+                  borderLeft: isActive ? "3px solid #3b82f6" : "3px solid transparent",
+                  backgroundColor: isActive ? "#eff6ff" : "transparent",
+                  fontWeight: isActive ? 600 : 400,
+                  transition: "background 0.15s",
+                }}
               >
-                {btn.icon} {btn.label}
+                <span style={{ fontSize: "15px", width: "18px", textAlign: "center" }}>{link.icon}</span>
+                <span>{link.label}</span>
               </Link>
-            ))}
-          </div>
-        </div>
+            );
+          })}
+        </aside>
 
+        <main style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
+
+          {!isSubRoute && (
+            <>
+              <div className="mb-3">
+                <h4 className="fw-bold text-dark mb-1">Admin Dashboard</h4>
+                <p className="text-muted small mb-0">Overview · System management · Operations</p>
+              </div>
+
+              <div className="row g-3 mb-3">
+                {stats.map((s) => (
+                  <div className="col-12 col-sm-6 col-xl-3" key={s.label}>
+                    <div className={`card border-0 shadow-sm border-start border-4 border-${s.color}`}>
+                      <div className="card-body d-flex align-items-center gap-3">
+                        <div
+                          className={`bg-${s.color} bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center`}
+                          style={{ width: "52px", height: "52px", fontSize: "1.4rem" }}
+                        >
+                          {s.icon}
+                        </div>
+                        <div>
+                          <p className="text-muted small mb-1 text-uppercase fw-semibold" style={{ fontSize: "0.7rem" }}>
+                            {s.label}
+                          </p>
+                          <h5 className="fw-bold mb-0">{s.value}</h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          <Outlet />
+        </main>
       </div>
     </div>
   );
