@@ -1,269 +1,218 @@
-import { Link } from "react-router-dom";
-import TopNavbar from "../common/TopNavbar";
+import { Link, Outlet, useLocation } from "react-router";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import TopNavbar from "../common/TopNavbar";
 
 const navLinks = [
-  { to: "/user", label: "Users", icon: "👤" },
-  { to: "/patient", label: "Patients", icon: "🏥" },
-  { to: "/doctor", label: "Doctors", icon: "👨‍⚕️" },
-  { to: "/bed", label: "Beds", icon: "🛏️" },
-  { to: "/ward", label: "Ward", icon: "🏨" },
-  { to: "/insuranceClaim", label: "Insurance", icon: "🛡️" },
-  { to: "/compliance_report", label: "Compliance", icon: "📋" },
-  { to: "/invoice", label: "Invoice", icon: "🧾" },
-  { to: "/auditlog", label: "Audit Log", icon: "🔍" },
-  { to: "/notification", label: "Notification", icon: "🔔" },
-  { to: "/kpi_report", label: "KPI Report", icon: "📊" },
-  { to: "/appointment", label: "Appointment", icon: "📅" },
-];
-
-const stats = [
-  {
-    label: "Total Users",
-    value: "56",
-    change: "+5 this week",
-    pos: true,
-    icon: "👤",
-    color: "primary",
-  },
-  {
-    label: "Total Doctors",
-    value: "12",
-    change: "+2 this week",
-    pos: true,
-    icon: "👨‍⚕️",
-    color: "success",
-  },
-  {
-    label: "Active Patients",
-    value: "180",
-    change: "+20 this month",
-    pos: true,
-    icon: "🏥",
-    color: "warning",
-  },
-  {
-    label: "System Alerts",
-    value: "4",
-    change: "-1 resolved",
-    pos: false,
-    icon: "🔔",
-    color: "danger",
-  },
-];
-
-const recentActivity = [
-  { icon: "✅", text: "New user created successfully" },
-  { icon: "🛏️", text: "Bed allocation updated" },
-  { icon: "📄", text: "Audit log generated" },
-  { icon: "⚠️", text: "Compliance issue flagged" },
-  { icon: "📊", text: "KPI report updated" },
+  { to: "userp",        label: "User",        icon: "👤" },
+  { to: "patientp",     label: "Patient",     icon: "🏥" },
+  { to: "doctorp",      label: "Doctor",      icon: "👨‍⚕️" },
+  { to: "bedp",         label: "Bed",         icon: "🛏️" },
+  { to: "wardp",        label: "Ward",        icon: "🏨" },
+  { to: "adminp",       label: "Audit Log",   icon: "🔍" },
+  { to: "notificationp",label: "Notification",icon: "🔔" },
+  { to: "appointmentp", label: "Appointment", icon: "📅" },
+  { to: "userapproval", label: "User Approval",icon: "✅" },
 ];
 
 export default function AdminDash() {
+  const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
-    const [totalUsers,setTotalUsers]=useState(0);
-    const [totalPatients,setTotalPatients]=useState(0);
-    const [totalBeds,setTotalBeds]=useState(0);
+  const [totalUsers,    setTotalUsers]    = useState(0);
+  const [totalPatients, setTotalPatients] = useState(0);
+  const [totalBeds,     setTotalBeds]     = useState(0);
+  const [totalDoctors,  setTotalDoctors]  = useState(0);
 
-    const stats = [
-      {
-        label: "Total Users",
-        value: totalUsers,
-        icon: "👤",
-        color: "primary",
-      },
-      {
-        label: "Active Patients",
-        value: totalPatients,
-        icon: "🏥",
-        color: "success",
-      },
-      {
-        label: "Beds Occupied",
-        value: totalBeds,
-        icon: "🛏️",
-        color: "warning",
-      },
-      {
-        label: "Pending Invoices",
-        value: "17",
-        icon: "🧾",
-        color: "danger",
-      },
-    ];
-    const [userData,setUserData]=useState([]);
-    const [patientData,setPatientData]=useState([]);
-    async function getUsers(){
-      try{
-        let url="http://localhost:9002/user/fetchallusers";
-        let res=await axios.get(url,{
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token")
-                }
-            });
+  const stats = [
+    { label: "Total Users",     value: totalUsers,    icon: "👤", color: "#3b82f6", bg: "#dbeafe" },
+    { label: "Active Patients", value: totalPatients, icon: "🏥", color: "#10b981", bg: "#d1fae5" },
+    { label: "Beds Occupied",   value: totalBeds,     icon: "🛏️", color: "#f59e0b", bg: "#fef3c7" },
+    { label: "Active Doctors",  value: totalDoctors,  icon: "👨‍⚕️", color: "#ef4444", bg: "#fee2e2" },
+  ];
 
-        setUserData(res.data);
-        setTotalUsers(res.data.length);
+  async function getUsers() {
+    try {
+      const res = await axios.get("http://localhost:9002/user/fetchallusers", {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      });
+      setTotalUsers(res.data.length);
+    } catch (err) { console.error(err.message); }
+  }
 
-      }catch(err){
-        alert(err.message)
-      }
-    }
+  async function getDoctors() {
+    try {
+      const res = await axios.get("http://localhost:9002/api/doctor/getAll", {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      });
+      setTotalDoctors(res.data.length);
+    } catch (err) { console.error(err.message); }
+  }
 
-    async function getpatient(){
-      try{
-        let url="http://localhost:9002/api/patient/fetchAllPatients";
-        let res=await axios.get(url,{
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token")
-                }
-            });
-        setPatientData(res.data);
+  async function getPatient() {
+    try {
+      const res = await axios.get("http://localhost:9002/api/patient/fetchAllPatients", {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      });
+      setTotalPatients(res.data.filter((p) => p.patientStatus === "Admitted").length);
+    } catch (err) { console.error(err.message); }
+  }
 
-        let count=0;
-        for(let i=0;i<(res.data.length);i++){
-          if(res.data[i].patientStatus==="Admitted"){
-            count++;
-          }
-        }
+  async function getBeds() {
+    try {
+      const res = await axios.get("http://localhost:9002/api/beds/getAllBeds", {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      });
+      setTotalBeds(res.data.filter((b) => b.bedStatus === "OCCUPIED").length);
+    } catch (err) { console.error(err.message); }
+  }
 
-        setTotalPatients(count);
-      }
-      catch(err){
-        alert(err.message);
-      }
-    }
-    const [bedData,setBedData]=useState([]);
-    async function getBeds(){
-      try{
+  useEffect(() => {
+    getUsers();
+    getPatient();
+    getBeds();
+    getDoctors();
+  }, []);
 
-        let url="http://localhost:9002/api/beds/getAllBeds"
+  const isSubRoute = navLinks.some((link) => location.pathname.includes(link.to));
+  const userName = localStorage.getItem("userName") || "Admin";
 
-        let res=await axios.get(url,{
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token")
-                }
-            });
-
-        setBedData(res.data);
-        let count=0;
-        for(let i=0;i<(res.data.length);i++){
-          if(res.data[i].bedStatus==="OCCUPIED"){
-            count++;
-          }
-        }
-
-        setTotalBeds(count);
-
-      }catch(err){
-        alert(err.message);
-      }
-    }
-
-    useEffect(()=>{
-      getUsers();
-      getpatient();
-      getBeds();
-    },[])
   return (
-    <div className="min-vh-100 bg-light">
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", backgroundColor: "#f0f2f5" }}>
 
-      {/* ✅ Global Navbar */}
       <TopNavbar />
 
-      <div className="container-fluid px-4 py-4">
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
 
-        {/* ✅ Header */}
-        <div className="mb-4">
-          <h4 className="fw-bold text-dark mb-1">Admin Dashboard</h4>
-          <p className="text-muted small mb-0">
-            Full system control · Manage all modules
-          </p>
-        </div>
+        <aside style={{
+          width: sidebarOpen ? "240px" : "0px",
+          minWidth: sidebarOpen ? "240px" : "0px",
+          backgroundColor: "#0f172a",
+          overflowY: "auto",
+          overflowX: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          transition: "width 0.2s, min-width 0.2s",
+        }}>
 
-        {/* ✅ Stats Cards */}
-        <div className="row g-3 mb-4">
-          {stats.map((s) => (
-            <div className="col-12 col-sm-6 col-xl-3" key={s.label}>
-              <div className={`card border-0 shadow-sm border-start border-4 border-${s.color}`}>
-                <div className="card-body d-flex align-items-center gap-3">
+          <div style={{
+            padding: "20px 16px 12px",
+            borderBottom: "1px solid rgba(255,255,255,0.08)",
+            whiteSpace: "nowrap",
+          }}>
+            <div style={{ fontSize: "10px", fontWeight: 700, color: "#64748b", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              Navigation
+            </div>
+          </div>
 
-                  <div
-                    className={`bg-${s.color} bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center`}
-                    style={{ width: 50, height: 50, fontSize: "1.5rem" }}
-                  >
-                    {s.icon}
-                  </div>
+          {navLinks.map((link) => {
+            const isActive = location.pathname.includes(link.to);
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "11px 18px",
+                  fontSize: "13.5px",
+                  color: isActive ? "#fff" : "#94a3b8",
+                  textDecoration: "none",
+                  borderLeft: isActive ? "3px solid #3b82f6" : "3px solid transparent",
+                  backgroundColor: isActive ? "rgba(59,130,246,0.15)" : "transparent",
+                  fontWeight: isActive ? 600 : 400,
+                  transition: "all 0.15s",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <span style={{ fontSize: "16px", width: "20px", textAlign: "center" }}>{link.icon}</span>
+                <span>{link.label}</span>
+              </Link>
+            );
+          })}
 
-                  <div>
-                    <p className="text-muted small mb-1 text-uppercase fw-semibold" style={{ fontSize: "0.7rem" }}>
-                      {s.label}
-                    </p>
-                    <h5 className="fw-bold mb-1">{s.value}</h5>
-                    {/* <span className={`small text-${s.pos ? "success" : "danger"}`}>
-                      {s.pos ? "▲" : "▼"} {s.change}
-                    </span> */}
-                  </div>
-
-                </div>
+          <div style={{ marginTop: "auto", padding: "16px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div style={{
+                width: 34, height: 34, borderRadius: "50%",
+                background: "linear-gradient(135deg,#0ea5e9,#3b82f6)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontWeight: 700, color: "#fff", fontSize: 14, flexShrink: 0,
+              }}>
+                {userName.charAt(0).toUpperCase()}
+              </div>
+              <div style={{ overflow: "hidden" }}>
+                <div style={{ fontSize: "13px", color: "#e2e8f0", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{userName}</div>
+                <div style={{ fontSize: "11px", color: "#64748b" }}>Administrator</div>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
 
-        {/* ✅ Modules + Activity */}
-        <div className="row g-3">
+        </aside>
 
-          {/* ✅ Modules */}
-          <div className="col-12 col-lg-8">
-            <div className="card border-0 shadow-sm h-100">
-              <div className="card-header bg-white border-bottom py-3">
-                <h6 className="fw-bold mb-0">⬡ Modules</h6>
+        <main style={{ flex: 1, overflowY: "auto", padding: "28px 32px" }}>
+
+          {!isSubRoute && (
+            <>
+              <div
+                className="mb-4 p-4 rounded-4 text-white d-flex align-items-center justify-content-between"
+                style={{
+                  background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0f3460 100%)",
+                  minHeight: 100,
+                }}
+              >
+                <div>
+                  <h4 className="fw-bold mb-1">Welcome back, {userName} 👋</h4>
+                  <p className="mb-0 small" style={{ color: "#93c5fd" }}>
+                    Here's what's happening in your hospital today.
+                  </p>
+                </div>
+                <div style={{ fontSize: "3rem", opacity: 0.3 }}>🏥</div>
               </div>
-
-              <div className="card-body">
-                <div className="row g-3">
-                  {navLinks.map((link) => (
-                    <div className="col-6 col-sm-4 col-md-3" key={link.to}>
-                      <Link
-                        to={link.to}
-                        className="btn btn-outline-dark w-100 py-3 d-flex flex-column align-items-center gap-2"
-                        style={{ borderRadius: "10px" }}
-                      >
-                        <span style={{ fontSize: "1.6rem" }}>{link.icon}</span>
-                        <span className="small fw-semibold">{link.label}</span>
-                      </Link>
+              <div className="row g-3 mb-4">
+                {stats.map((s) => (
+                  <div className="col-12 col-sm-6 col-xl-3" key={s.label}>
+                    <div
+                      className="card border-0 shadow-sm h-100"
+                      style={{ borderRadius: "14px", overflow: "hidden" }}
+                    >
+                      <div className="card-body p-4">
+                        <div className="d-flex align-items-center justify-content-between mb-3">
+                          <div
+                            style={{
+                              width: 48, height: 48, borderRadius: "12px",
+                              background: s.bg,
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                              fontSize: "1.4rem",
+                            }}
+                          >
+                            {s.icon}
+                          </div>
+                          <span style={{
+                            fontSize: "11px", fontWeight: 700, color: s.color,
+                            background: s.bg, padding: "3px 10px", borderRadius: "20px",
+                            letterSpacing: "0.04em",
+                          }}>
+                            LIVE
+                          </span>
+                        </div>
+                        <h3 className="fw-bold mb-1" style={{ color: "#0f172a" }}>{s.value}</h3>
+                        <p className="mb-0 small fw-semibold" style={{ color: "#64748b", textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "0.06em" }}>
+                          {s.label}
+                        </p>
+                      </div>
+                      {/* bottom accent bar */}
+                      <div style={{ height: 4, background: s.color }} />
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-            </div>
-          </div>
+            </>
+          )}
 
-          {/* ✅ Activity */}
-          <div className="col-12 col-lg-4">
-            <div className="card border-0 shadow-sm h-100">
-              <div className="card-header bg-white border-bottom py-3">
-                <h6 className="fw-bold mb-0">🔔 Recent Activity</h6>
-              </div>
-
-              <div className="card-body p-0">
-                <ul className="list-group list-group-flush">
-                  {recentActivity.map((a, i) => (
-                    <li key={i} className="list-group-item border-0 py-3 px-3 d-flex gap-2">
-                      <span>{a.icon}</span>
-                      <span className="text-muted small">{a.text}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
+          <Outlet />
+        </main>
       </div>
     </div>
   );

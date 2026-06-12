@@ -41,8 +41,10 @@ public class Security {
 //                        .requestMatchers("/user/findbyid/{id}").permitAll()
  
 
+
+                        .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "RECEPTIONIST","NURSE", "DOCTOR")
-                        .requestMatchers("/user/**").hasAnyRole("ADMIN","DOCTOR","RECEPTIONIST")
+                        
                         .requestMatchers("/api/doctor/**").hasAnyRole("ADMIN", "DOCTOR","RECEPTIONIST")
                         .requestMatchers("/api/dashboard/**").permitAll()
                         
@@ -65,7 +67,7 @@ public class Security {
                         .requestMatchers("/notification/**").authenticated()
                         .requestMatchers("/api/insurance/**").hasAnyRole("ADMIN","FINANCEOFFICER")
 
-                        .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN","FINANCEOFFICER")
+
                         .requestMatchers("/api/medical-notes/**").hasAnyRole("ADMIN", "DOCTOR")
 
 //                         audit-logs — GET allowed, POST blocked

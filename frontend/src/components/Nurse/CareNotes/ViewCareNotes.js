@@ -1,5 +1,6 @@
 // src/components/Nurse/CareNotes/ViewCareNotes.jsx
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import PatientSearch from "../PatientSearch";
 
@@ -30,7 +31,36 @@ export default function ViewCareNotes() {
 
     return (
         <div>
-            <h5 className="mb-4">📄 View Care Notes</h5>
+
+            {/* Header */}
+            <div className="d-flex align-items-start justify-content-between mb-4">
+                <div>
+                    <h4 className="fw-bold text-dark mb-1">
+                        <i className="bi bi-journal-text text-success me-2"></i>
+                        View Care Notes
+                    </h4>
+                    <p className="text-muted small mb-0">Search a patient to view their care notes</p>
+                </div>
+                <div className="d-flex gap-2">
+                    <Link
+                        to="/nursedd/carenotes/add"
+                        className="btn btn-outline-success d-flex align-items-center gap-2 px-3 py-2"
+                        style={{ borderRadius: "10px", fontSize: "0.875rem", fontWeight: "500" }}
+                    >
+                        <i className="bi bi-pencil-fill"></i>
+                        Add Note
+                    </Link>
+                    <Link
+                        to="/nursedd/dashboard"
+                        className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 shadow-sm"
+                        style={{ borderRadius: "10px", fontSize: "0.875rem", fontWeight: "500" }}
+                    >
+                        <i className="bi bi-grid-fill"></i>
+                        Nurse Dashboard
+                        <i className="bi bi-arrow-right" style={{ fontSize: "0.85rem" }}></i>
+                    </Link>
+                </div>
+            </div>
 
             {/* Step 1 - Search Patient */}
             <div className="card mb-4">
@@ -88,9 +118,10 @@ export default function ViewCareNotes() {
                                 className="card-header d-flex justify-content-between align-items-center"
                                 style={{ backgroundColor: "#f8f9fa" }}
                             >
-                                <span className="fw-semibold text-primary">Note #{notes.length - index}</span>
+                                <span className="fw-semibold text-success">Note #{notes.length - index}</span>
                                 <small className="text-muted">
-                                    🕐 {new Date(n.createdAt).toLocaleString()}
+                                    <i className="bi bi-clock me-1"></i>
+                                    {new Date(n.createdAt).toLocaleString()}
                                 </small>
                             </div>
                             <div className="card-body">
@@ -99,6 +130,7 @@ export default function ViewCareNotes() {
                                 </p>
                             </div>
                             <div className="card-footer text-muted" style={{ fontSize: "0.8rem" }}>
+                                <i className="bi bi-person-fill me-1"></i>
                                 Recorded by Nurse ID: {n.nurseId}
                             </div>
                         </div>

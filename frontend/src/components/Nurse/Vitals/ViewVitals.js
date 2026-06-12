@@ -1,5 +1,6 @@
 // src/components/Nurse/Vitals/ViewVitals.jsx
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import PatientSearch from "../PatientSearch";
 
@@ -30,7 +31,36 @@ export default function ViewVitals() {
 
     return (
         <div>
-            <h5 className="mb-4">📋 View Patient Vitals</h5>
+
+            {/* Header */}
+            <div className="d-flex align-items-start justify-content-between mb-4">
+                <div>
+                    <h4 className="fw-bold text-dark mb-1">
+                        <i className="bi bi-heart-pulse-fill text-danger me-2"></i>
+                        View Patient Vitals
+                    </h4>
+                    <p className="text-muted small mb-0">Search a patient to view their vitals history</p>
+                </div>
+                <div className="d-flex gap-2">
+                    <Link
+                        to="/nursedd/vitals/add"
+                        className="btn btn-outline-danger d-flex align-items-center gap-2 px-3 py-2"
+                        style={{ borderRadius: "10px", fontSize: "0.875rem", fontWeight: "500" }}
+                    >
+                        <i className="bi bi-plus-circle-fill"></i>
+                        Add Vitals
+                    </Link>
+                    <Link
+                        to="/nursedd/dashboard"
+                        className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 shadow-sm"
+                        style={{ borderRadius: "10px", fontSize: "0.875rem", fontWeight: "500" }}
+                    >
+                        <i className="bi bi-grid-fill"></i>
+                        Nurse Dashboard
+                        <i className="bi bi-arrow-right" style={{ fontSize: "0.85rem" }}></i>
+                    </Link>
+                </div>
+            </div>
 
             {/* Step 1 - Search Patient */}
             <div className="card mb-4">
