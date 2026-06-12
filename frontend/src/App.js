@@ -59,6 +59,7 @@ import FindCompliance from './components/compliance_report/FindCompliance';
 import DisplayCompliance from './components/compliance_report/DisplayCompliance';
 import DisplayCompliancePaginated from './components/compliance_report/DisplayCompliancePaginated';
 
+
 // KPI
 
 import KpiReportHome from './components/kpi_report/KpiReportHome';
@@ -68,24 +69,33 @@ import DisplayKpi from './components/kpi_report/DisplayKpi';
 import DisplayKpiPaginated from './components/kpi_report/DisplayKpiPaginated';
 
 
-// Other Modules
+// User
 import UserHome from './components/user/UserHome';
 import AddUser from './components/user/AddUser';
 import DeleteUser from './components/user/DeleteUser';
 import UpdateUser from './components/user/UpdateUser';
 import FindUser from './components/user/FindUser';
 import MyProfile from './components/user/MyProfile';
+import FindAllUser from './components/user/FindAllUser';
+import UserPage from './components/user/UserPage';
 
+// Auditlog
 import AuditlogHome from './components/auditlog/AuditlogHome';
 import FindAuditlog from './components/auditlog/FindAuditlog';
 import AddAuditlog from './components/auditlog/AddAuditlog';
+import FindAllAuditlog from './components/auditlog/FindAllAuditlog';
+import AuditLogPage from './components/auditlog/AuditLogPage';
 
+// Notification
 import NotificationHome from './components/notification/NotificationHome';
 import AddNotification from './components/notification/AddNotification';
 import DeleteNotification from './components/notification/DeleteNotification';
 import FindNotification from './components/notification/FindNotification';
+import UpdateNotification from './components/notification/UpdateNotification';
+import FindAllNotification from './components/notification/FindAllNotification';
+import NotificationPage from './components/notification/NotificationPage'
 
-
+// Bed
 import BedHome from './components/bed/BedHome';
 import AddBed from './components/bed/AddBed';
 import DeleteBed from './components/bed/DeleteBed';
@@ -96,6 +106,7 @@ import AssignBed from './components/bed/AssignBed';
 import DischargeBed from './components/bed/DischargeBed';
 import PaginatedBed from './components/bed/PaginatedBed';
 
+// Ward
 import WardHome from './components/ward/WardHome';
 import AddWard from './components/ward/AddWard';
 import UpdateWard from './components/ward/UpdateWard';
@@ -105,25 +116,19 @@ import FindAllWard from './components/ward/FindAllWard';
 import WardOccupancyReport from './components/ward/WardOccupancyReport';
 import PaginatedWard from './components/ward/PaginatedWard';
 
-import UpdateNotification from './components/notification/UpdateNotification';
-import FindAllNotification from './components/notification/FindAllNotification';
-import FindAllUser from './components/user/FindAllUser';
-
-import FindAllAuditlog from './components/auditlog/FindAllAuditlog';
-
-
-import AuditLogPage from './components/auditlog/AuditLogPage';
-import UserPage from './components/user/UserPage';
-import NotificationPage from './components/notification/NotificationPage'
+// Authentication
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import Home from './components/Auth/Home';
+
+// Dashboards
 import AdminDash from './components/Dashboards/AdminDash';
 import ReceptionistDD from './components/Dashboards/ReceptionistDD';
 import DoctorDD from './components/Dashboards/DoctorDD';
 import NurseDD from './components/Dashboards/NurseDD';
 import FinanceDD from './components/Dashboards/FinanceDD';
 import ComplianceDD from './components/Dashboards/ComplianceDD';
-import Home from './components/Auth/Home';
+
 
 // Nurse
 import NurseHome from './components/Nurse/NurseHome';
@@ -154,7 +159,7 @@ const ADMIN_DR  = ["ADMIN","DOCTOR","RECEPTIONIST"];
 const ADMIN_NURSE    = ["ADMIN","NURSE"];
 const ADMIN_COMPLIANCE = ["ADMIN","COMPLIANCE_OFFICER"];
 const ADMIN_FINANCE    = ["ADMIN","FINANCEOFFICER"];
-const ADMIN_RECEPTIONIST      = ["ADMIN","RECEPTIONIST"];
+const ADMIN_RECEPTIONIST      = ["ADMIN","RECEPTIONIST", "DOCTOR"];
 const ADMIN_DOCTOR      = ["ADMIN","DOCTOR"];
 const FINANCE=["ADMIN","FINANCEOFFICER"];
 const RECEPTIONIST_ONLY=["RECEPTIONIST"];
@@ -163,7 +168,7 @@ const NURSE_ONLY=["NURSE"];
 const FINANCEOFFICER_ONLY=["FINANCEOFFICER"];
 const COMPLIANCE_ONLY=["COMPLIANCE_OFFICER"]
  
- 
+
 function ProtectedRoute({ children, allowedRoles }) {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
@@ -194,6 +199,8 @@ function ProtectedRoute({ children, allowedRoles }) {
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/login" element={<Login />} />
         <Route path="/updatepass" element={<Updatepassword />} />
+        <Route path="/editprofile" element={<UpdateUser />} />
+        <Route path="/notifications" element={<FindAllNotification />} />
         
         <Route  path="/admindd" element={<ProtectedRoute allowedRoles={ADMIN_ONLY}><AdminDash /></ProtectedRoute>}>
           <Route path="userp" element={<Userpage />}/>
@@ -215,6 +222,36 @@ function ProtectedRoute({ children, allowedRoles }) {
         
         <Route path="/profile" element={<ProtectedRoute allowedRoles={ALL_ROLES}><MyProfile /></ProtectedRoute>} />
 
+        {/* User */}
+        <Route path="/user" element={<ProtectedRoute allowedRoles={ADMIN_ONLY}><UserHome /></ProtectedRoute>}>
+          <Route path="add" element={<AddUser />} />
+          <Route path="delete/:id" element={<DeleteUser />} />
+          <Route path="update/:id" element={<UpdateUser />} />
+          <Route path="find" element={<FindUser />} />
+          <Route path="findall" element={<FindAllUser />} />
+          <Route path="paginated" element={<UserPage />} />
+          <Route path="approval" element={<UserApproval />} />
+        </Route>
+        
+        {/* Auditlog */}
+        <Route path="/auditlog" element={<ProtectedRoute allowedRoles={ADMIN_ONLY}><AuditlogHome /></ProtectedRoute>}>
+          <Route path="add" element={<AddAuditlog />} />
+          <Route path="find" element={<FindAuditlog />} />
+          <Route path="findall" element={<FindAllAuditlog />} />
+          <Route path="paginated" element={<AuditLogPage />} />
+        </Route>
+
+        {/* Notification */}
+        <Route path="/notification" element={<ProtectedRoute allowedRoles={ALL_ROLES}><NotificationHome /></ProtectedRoute>}>
+          <Route path="add" element={<AddNotification />} />
+          <Route path="update/:id" element={<UpdateNotification />} />
+          <Route path="delete/:id" element={<DeleteNotification />} />
+          <Route path="find" element={<FindNotification />} />
+          <Route path="findall" element={<FindAllNotification />} />
+          <Route path="paginated" element={<NotificationPage />} />
+        </Route>
+        
+        {/* Appointment */}
         <Route path="/appointment" element={<ProtectedRoute allowedRoles={ADMIN_DR}><AppointmentHome /></ProtectedRoute>}>
             <Route path="add" element={<AddAppointment/>}></Route>
             <Route path="delete/:aid" element={<DeleteAppointment/>}></Route>
@@ -279,7 +316,6 @@ function ProtectedRoute({ children, allowedRoles }) {
         <Route path="/user" element={<ProtectedRoute allowedRoles={ADMIN_ONLY}><UserHome /></ProtectedRoute>}>
           <Route path="add" element={<AddUser />} />
           <Route path="delete/:id" element={<DeleteUser />} />
-          <Route path="update/:id" element={<UpdateUser />} />
           <Route path="find" element={<FindUser />} />
           <Route path="findall" element={<FindAllUser />} />
           <Route path="paginated" element={<UserPage />} />
@@ -301,6 +337,7 @@ function ProtectedRoute({ children, allowedRoles }) {
           <Route path="paginated" element={<NotificationPage />} />
         </Route>
 
+        {/* Bed */}
         <Route path="/bed" element={<ProtectedRoute allowedRoles={ADMIN_NURSE}><BedHome /></ProtectedRoute>}>
           <Route path="add" element={<AddBed />} />
           <Route path="update/:bedId" element={<UpdateBed />} />
@@ -311,6 +348,8 @@ function ProtectedRoute({ children, allowedRoles }) {
           <Route path="dischargeBed" element={<DischargeBed />} />
           <Route path="pages" element={<PaginatedBed />} />
         </Route>
+
+        {/* Ward */}
         <Route path="/ward" element={<ProtectedRoute allowedRoles={ADMIN_NURSE}><WardHome /></ProtectedRoute>}>
           <Route path="add" element={<AddWard />} />
           <Route path="update/:wardId" element={<UpdateWard />} />
@@ -319,8 +358,17 @@ function ProtectedRoute({ children, allowedRoles }) {
           <Route path="findAll" element={<FindAllWard />} />
           <Route path="occupancy" element={<WardOccupancyReport />} />
           <Route path="pages" element={<PaginatedWard />} />
-
         </Route>
+
+        <Route path="/kpi_report" element={<ProtectedRoute allowedRoles={["ADMIN","FINANCEOFFICER","COMPLIANCE_OFFICER"]}><KpiReportHome /></ProtectedRoute>}>
+          <Route path="add" element={<AddKpi />} />
+          <Route path="find" element={<FindKpi />} />
+          <Route path="display" element={<DisplayKpi />} />
+
+
+          <Route path="displayPaginated" element={<DisplayKpiPaginated />} />
+          </Route>
+
         {/* Nurse */}
         <Route path="/nursedd" element={<ProtectedRoute allowedRoles={NURSE_ONLY}><NurseHome /></ProtectedRoute>}>
           <Route index element={<NurseDashboard />} />
@@ -331,16 +379,6 @@ function ProtectedRoute({ children, allowedRoles }) {
           <Route path="carenotes/view" element={<ViewCareNotes />} />
         </Route>
 
-        <Route path="/kpi_report" element={<ProtectedRoute allowedRoles={ADMIN_FINANCE}><KpiReportHome /></ProtectedRoute>}>
-          <Route path="add" element={<AddKpi />} />
-          <Route path="find" element={<FindKpi />} />
-          <Route path="display" element={<DisplayKpi />} />
-
-
-          <Route path="displayPaginated" element={<DisplayKpiPaginated />} />
-
-        </Route>
-        
       </Routes>
 
     </Router>

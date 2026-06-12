@@ -24,9 +24,11 @@ public class DoctorService {
 		return doctorRepository.save(doctor);
 	}
 	
+	
 	public Doctor updateDoctor(Doctor doctor) {
 		return doctorRepository.save(doctor);
 	}
+	
 	
 	public void deleteDoctor(int doctorId) throws DoctorNotFoundException {
 
@@ -38,19 +40,27 @@ public class DoctorService {
 	    doctorRepository.deleteById(doctorId);
 	}
 	
+	
 	public Doctor getDoctorById(int id) throws DoctorNotFoundException {
 	    return doctorRepository.findById(id)
 	            .orElseThrow(() ->
 	                    new DoctorNotFoundException(
 	                            "Doctor not found with id " + id));
 	}
+	
     
 	public List<Doctor> getAllDoctors() {
 		return doctorRepository.findAll();
 	}
 	
+	
 	public Page<Doctor> getAllDoctorsWithPagination (Pageable pageable){
 		return doctorRepository.findAll(pageable);
+	}
+	
+	public Doctor getDoctorByEmail(String email) throws DoctorNotFoundException {
+	    return doctorRepository.findByEmail(email)
+	        .orElseThrow(() -> new DoctorNotFoundException("Doctor not found"));
 	}
     
 }

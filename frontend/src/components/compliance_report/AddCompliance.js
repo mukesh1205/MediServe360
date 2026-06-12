@@ -7,12 +7,22 @@ export default function AddCompliance() {
     const [scope, setScope] = useState("");
     const [metrics, setMetrics] = useState("");
     const [date, setDate] = useState("");
+    const [kpiCategory, setKpiCategory] = useState("");
 
-    
+    const KPI_OPTIONS = [
+        { value: "OCCUPANCY_RATE",             label: "Occupancy Rate" },
+        { value: "APPOINTMENT_FULFILLMENT",    label: "Appointment Fulfillment" },
+        { value: "CLAIM_SUCCESS_RATE",         label: "Claim Success Rate" },
+        { value: "PATIENT_REGISTRATION_RATE",  label: "Patient Registration Rate" },
+        { value: "BILLING_COLLECTION_RATE",    label: "Billing Collection Rate" },
+        { value: "DISCHARGE_TURNAROUND_TIME",  label: "Discharge Turnaround Time" },
+        { value: "AUDIT_COMPLIANCE_SCORE",     label: "Audit Compliance Score" },
+        { value: "NOTIFICATION_RESPONSE_RATE", label: "Notification Response Rate" }
+    ];
+
     const scopeHandler = (e) => {
         const value = e.target.value;
 
-        
         if (/^[A-Za-z ]*$/.test(value)) {
             setScope(value);
         }
@@ -26,17 +36,19 @@ export default function AddCompliance() {
         setDate(e.target.value);
     };
 
+    const kpiCategoryHandler = (e) => {
+        setKpiCategory(e.target.value);
+    };
+
     const buttonHandler = () => {
 
         let url = "http://localhost:9002/api/compliance-reports/addComplianceReport";
 
-        
-        if (!scope.trim() || !metrics.trim() || !date) {
-            toast.warning("Please fill all required fields");
+        if (!scope.trim() || !metrics.trim() || !date || !kpiCategory) {
+            toast.warning("Please fill all required fields including KPI category");
             return;
         }
 
-    
         const scopeRegex = /^[A-Za-z ]+$/;
         if (!scopeRegex.test(scope)) {
             toast.warning("Scope should contain only letters");
@@ -56,7 +68,8 @@ export default function AddCompliance() {
             complianceReport: {
                 reportScope: scope,
                 reportMetrics: metrics,
-                reportGeneratedDate: date
+                reportGeneratedDate: date,
+                kpiCategory: kpiCategory
             }
         };
 
@@ -66,12 +79,12 @@ export default function AddCompliance() {
             }
         })
         .then(() => {
-            toast.success("Compliance Report Added Successfully");
+            toast.success("Compliance Report Added & KPI Auto-Generated");
 
-            
             setScope("");
             setMetrics("");
             setDate("");
+            setKpiCategory("");
         })
         .catch((error) => {
             toast.error(error.response?.data?.message || error.message);
@@ -123,6 +136,25 @@ export default function AddCompliance() {
                     onChange={dateHandler}
                     max={new Date().toISOString().split("T")[0]}
                 />
+            </div>
+
+            {/* KPI Category */}
+            <div className="mb-3">
+                <label className="form-label">
+                    KPI Category <span style={{ color: "red" }}>*</span>
+                </label>
+                <select
+                    className="form-select"
+                    value={kpiCategory}
+                    onChange={kpiCategoryHandler}
+                >
+                    <option value="">-- Select KPI category --</option>
+                    {KPI_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                        </option>
+                    ))}
+                </select>
             </div>
 
             <button className="btn btn-primary w-100" onClick={buttonHandler}>

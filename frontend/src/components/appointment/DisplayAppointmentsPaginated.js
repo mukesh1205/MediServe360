@@ -123,7 +123,7 @@ export default function DisplayAppointmentsPaginated() {
 
           </div>
 
-          {/* ✅ Pagination Controls */}
+          {/* Pagination Controls */}
           <div className="d-flex justify-content-between mt-3">
 
             <button

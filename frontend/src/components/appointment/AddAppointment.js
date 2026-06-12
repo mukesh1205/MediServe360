@@ -9,102 +9,156 @@ export default function AddAppointment() {
   const [durationMinutes, setDurationMinutes] = useState(30);
   const [patientId, setPatientId] = useState("");
   const [doctorId, setDoctorId] = useState("");
-  const [doctorname, setDoctorname] = useState("");
-  const [patientname, setPatientname] = useState("");
   const [patients, setPatients] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:9002/api/patient/fetchAllPatients", {
-      headers: { Authorization: "Bearer " + localStorage.getItem("token") }
-    })
-    .then(res => setPatients(res.data))
-    .catch(() => toast.error("Failed to load patients"));
-
-    axios.get("http://localhost:9002/api/doctor/getAll", {
-      headers: { Authorization: "Bearer " + localStorage.getItem("token") }
-    })
-    .then(res => setDoctors(res.data))
-    .catch(() => toast.error("Failed to load doctors"));
+    fetchPatients();
+    fetchDoctors();
   }, []);
 
-  function handlePatientChange(event) {
-    const selectedId = event.target.value;
-    const selectedPatient = patients.find(p => String(p.patientId) === selectedId);
-    setPatientId(selectedId);
-    setPatientname(selectedPatient ? selectedPatient.patientName : "");
-    localStorage.setItem("patientId", selectedId);
-  }
-
-  function handleDoctorChange(event) {
-    const selectedId = event.target.value;
-    const selectedDoctor = doctors.find(d => String(d.id) === selectedId);
-    setDoctorId(selectedId);
-    setDoctorname(selectedDoctor ? selectedDoctor.name : "");
-    localStorage.setItem("doctorId", selectedId);
-  }
-
-  async function addnotificationHandler() {
+  const fetchPatients = async () => {
     try {
-      const url = "http://localhost:9002/notification/insertnotificationdata";
-      const message = "Patient " + patientname + " is appointed to " + doctorname + " at " + time;
-      const data = {
-        patientID: parseInt(patientId),  
-        doctorID: parseInt(doctorId),
-        message: message,
-        category: "APPOINTMENT",
-        status: "UNREAD",
-      };
-
-      await axios.post(url, data, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
-      });
-      toast.success("Notification added");
-    } catch (err) {
-      toast.error("Notification error: " + err.message);
+      const res = await axios.get(
+        "http://localhost:9002/api/patient/fetchAllPatients",
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        }
+      );
+      setPatients(res.data || []);
+    } catch {
+      toast.error("Unable to load patients. Please try again.");
     }
-  }
+  };
 
-  async function handleSubmit(e) {
+  const fetchDoctors = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:9002/api/doctor/getAll",
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        }
+      );
+      setDoctors(res.data || []);
+    } catch {
+      toast.error("Unable to load doctors. Please try again.");
+    }
+  };
+
+  const validateDoctorAvailability = () => {
+    const selectedDoctor = doctors.find(
+      (doc) => doc.id === parseInt(doctorId)
+    );
+
+    if (!selectedDoctor) {
+      toast.error("Invalid doctor selection");
+      return false;
+    }
+
+    const schedule = selectedDoctor.availabilitySchedule;
+
+    if (!schedule || !schedule.includes("-")) {
+      toast.error("Doctor availability not configured");
+      return false;
+    }
+
+    const [start, end] = schedule.split("-");
+    const formattedTime = time.length === 5 ? time + ":00" : time;
+
+    if (formattedTime < start || formattedTime > end) {
+      toast.error(`Doctor is available only between ${start} and ${end}`);
+      return false;
+    }
+
+    return true;
+  };
+
+  const handlePatientChange = (e) => {
+    setPatientId(e.target.value);
+  };
+
+  const handleDoctorChange = (e) => {
+    setDoctorId(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (loading) return;
+
+    // Basic validation
     if (!date || !time || !durationMinutes || !patientId || !doctorId) {
-      toast.warning("Please fill all fields");
+      toast.warning("All fields are required");
       return;
     }
 
+    // Duration validation
+    if (durationMinutes < 5) {
+      toast.error("Minimum appointment duration is 5 minutes");
+      return;
+    }
+
+    // Availability validation
+    if (!validateDoctorAvailability()) return;
+
     setLoading(true);
     try {
-      await axios.post("http://localhost:9002/api/appointment/add", {
+      const formattedTime = time.length === 5 ? time + ":00" : time;
+
+      const data = {
         appointment: {
-          date,
-          time,
+          date: date,
+          time: formattedTime,
           durationMinutes: parseInt(durationMinutes),
+          status: "BOOKED",
           patient: { patientId: parseInt(patientId) },
           doctor: { id: parseInt(doctorId) }
         }
-      }, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
-      });
+      };
 
-      toast.success("Appointment created successfully");
-      await addnotificationHandler();
+      const res = await axios.post(
+        "http://localhost:9002/api/appointment/add",
+        data,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        }
+      );
 
+      const message = res.data?.message || "Appointment created successfully";
+      toast.success(message);
+
+      // Reset form
       setDate("");
       setTime("");
       setDurationMinutes(30);
       setPatientId("");
       setDoctorId("");
-      setPatientname("");
-      setDoctorname("");
+
     } catch (error) {
-      toast.error(error.response?.data?.message || "Error creating appointment");
+      let message =
+        error.response?.data?.errorMessage ||
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        "Failed to create appointment";
+
+      if (typeof message === "object") {
+        message = JSON.stringify(message);
+      }
+
+      toast.error(message);
+
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="container mt-4">
@@ -136,7 +190,9 @@ export default function AddAppointment() {
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Duration (minutes) <span className="text-danger">*</span></label>
+          <label className="form-label">
+            Duration (minutes) <span className="text-danger">*</span>
+          </label>
           <input
             className="form-control"
             type="number"
@@ -152,11 +208,11 @@ export default function AddAppointment() {
           <select
             className="form-select"
             value={patientId}
-            onChange={handlePatientChange}  // FIX 2
+            onChange={handlePatientChange}
             required
           >
             <option value="">-- Select Patient --</option>
-            {patients.map(p => (
+            {patients.map((p) => (
               <option key={p.patientId} value={p.patientId}>
                 {p.patientName} ({p.patientGender})
               </option>
@@ -169,11 +225,11 @@ export default function AddAppointment() {
           <select
             className="form-select"
             value={doctorId}
-            onChange={handleDoctorChange}  // FIX 2
+            onChange={handleDoctorChange}
             required
           >
             <option value="">-- Select Doctor --</option>
-            {doctors.map(doc => (
+            {doctors.map((doc) => (
               <option key={doc.id} value={doc.id}>
                 {doc.name} ({doc.department})
               </option>

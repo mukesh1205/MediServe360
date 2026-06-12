@@ -11,4 +11,5 @@ import com.medi360.entities.Notification;
 public interface NotificationRepository extends JpaRepository<Notification,Integer>{
 	List<Notification> findByPatientPatientId(int patientId);
 	List<Notification> findByDoctorId(int doctorId);
+
 }
