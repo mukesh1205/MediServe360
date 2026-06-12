@@ -56,7 +56,8 @@ public class Security {
 
                         .requestMatchers("/api/kpi-report/**").hasAnyRole("ADMIN","COMPLIANCE_OFFICER")
 
-                        .requestMatchers("/api/vitals/**").hasAnyRole("ADMIN", "NURSE")               
+//                        .requestMatchers("/api/vitals/**").hasAnyRole("ADMIN", "NURSE") 
+                        .requestMatchers(HttpMethod.GET, "/api/vitals/**").hasAnyRole("NURSE", "DOCTOR", "ADMIN")
                         .requestMatchers("/api/care-notes/**").hasAnyRole("ADMIN", "NURSE") 
                         
 

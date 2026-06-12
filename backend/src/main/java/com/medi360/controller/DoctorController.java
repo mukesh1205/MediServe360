@@ -99,9 +99,12 @@ public class DoctorController {
 	    Doctor doctor = doctorService.getDoctorByEmail(email);
 	    return ResponseEntity.ok(doctor);
 	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<List<Doctor>> searchByName(@RequestParam String name) {
+	    return ResponseEntity.ok(doctorService.getDoctorsByName(name));
+	}
 }
-
-
 
 
 

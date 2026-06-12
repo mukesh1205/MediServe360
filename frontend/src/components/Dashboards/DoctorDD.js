@@ -53,7 +53,7 @@ function InfoRow({ label, value }) {
   );
 }
 
-// ── Toast notification ─────────────────────────────────
+// Toast notification
 const TOAST_ICONS = {
   success: { icon: "bi-check-circle-fill", color: "#10b981", bg: "#d1fae5" },
   error:   { icon: "bi-x-circle-fill",     color: "#ef4444", bg: "#fee2e2" },
@@ -117,6 +117,7 @@ export default function DoctorDD() {
   const [rescheduleTime, setRescheduleTime] = useState("");
 
   const [toasts, setToasts] = useState([]);
+  const [vitals, setVitals] = useState(null);
 
   function showToast(message, type = "success") {
     const id = Date.now();
@@ -129,17 +130,34 @@ export default function DoctorDD() {
   const headers = { Authorization: "Bearer " + token };
 
   useEffect(() => {
-    if (!email) { setLoading(false); return; }
-    axios.get(`${BASE}/api/doctor/by-email?email=${encodeURIComponent(email)}`, { headers })
-      .then((res) => {
-        setDoctor(res.data);
-        setEditForm({ id: res.data.id, name: res.data.name || "", department: res.data.department || "", availabilitySchedule: res.data.availabilitySchedule || "", email: res.data.email || "" });
-        return axios.get(`${BASE}/api/appointment/doctor/${res.data.id}`, { headers });
-      })
-      .then((res) => setAppointments(res.data || []))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+  if (!email) { setLoading(false); return; }
+
+  axios.get(`${BASE}/api/doctor/by-email?email=${encodeURIComponent(email)}`, { headers })
+    .then((res) => {
+      const doctorData = res.data;
+
+      //if profile is incomplete — redirect to complete profile page
+      if (!doctorData.department || !doctorData.availabilitySchedule) {
+        navigate("/complete-profile");
+        return;
+      }
+
+      setDoctor(doctorData);
+      setEditForm({
+        id:                   doctorData.id,
+        name:                 doctorData.name || "",
+        department:           doctorData.department || "",
+        availabilitySchedule: doctorData.availabilitySchedule || "",
+        email:                doctorData.email || "",
+      });
+      return axios.get(`${BASE}/api/appointment/doctor/${doctorData.id}`, { headers });
+    })
+    .then((res) => {
+      if (res) setAppointments(res.data || []);
+    })
+    .catch(console.error)
+    .finally(() => setLoading(false));
+}, []);
 
   const today         = new Date().toISOString().split("T")[0];
   const todayAppts    = appointments.filter((a) => a.date === today);
@@ -191,9 +209,7 @@ export default function DoctorDD() {
       .then(() => { refreshNotes(notesModal.patient.patientId); showToast("Note deleted", "info"); }).catch(() => showToast("Failed to delete note", "error"));
   }
 
-  // function openManage(appt) { setApptModal(appt); setApptStatus(appt.status); }
-
-  // ── Replace your openManage function with this ───────────────────
+  //openManage function
 function openManage(appt) {
   setApptModal(appt);
   setApptStatus(appt.status);
@@ -202,21 +218,7 @@ function openManage(appt) {
   setRescheduleTime(appt.time?.slice(0, 5) ?? "");
 }
 
-  // function updateAppointment() {
-  //   if (!apptModal) return;
-  //   setApptUpdating(true);
-  //   axios.put(`${BASE}/api/appointment/update`, { appointment: { ...apptModal, status: apptStatus } }, { headers })
-  //     .then((res) => {
-  //       const updated = res.data.appointment;
-  //       setAppointments((prev) => prev.map((a) => a.id === updated.id ? updated : a));
-  //       setApptModal(null);
-  //       showToast(`Appointment status updated to ${updated.status}`);
-  //     })
-  //     .catch(() => showToast("Failed to update appointment", "error")).finally(() => setApptUpdating(false));
-  // }
-
-  
-// ── Replace your updateAppointment function with this ────────────
+//updateAppointment function
 function updateAppointment() {
   if (!apptModal) return;
   setApptUpdating(true);
@@ -225,7 +227,7 @@ function updateAppointment() {
     ...apptModal,
     status: apptStatus,
     reason: apptReason || null,
-    // For RESCHEDULED use new date/time, otherwise keep original
+    // For RESCHEDULED use new date/time
     date: apptStatus === "RESCHEDULED" ? rescheduleDate : apptModal.date,
     time: apptStatus === "RESCHEDULED"
       ? rescheduleTime + ":00"   // backend expects HH:mm:ss
@@ -245,7 +247,6 @@ function updateAppointment() {
     })
     .finally(() => setApptUpdating(false));
 }
-
 
   function saveProfile() {
     setEditSaving(true); setEditError("");
@@ -418,7 +419,16 @@ function updateAppointment() {
                         <td><StatusBadge status={a.status} /></td>
                         <td>
                           <div className="d-flex gap-1">
-                            <button onClick={() => setPatientModal(a)} className="btn btn-sm btn-outline-primary" style={{ fontSize: 12 }}>
+
+                      <button onClick={() => {
+                          setPatientModal(a);
+                          setVitals(null);
+                          axios.get(`${BASE}/api/vitals/patient/${a.patient.patientId}`, { headers })
+                          .then((res) => setVitals(res.data || []))
+                          .catch(() => setVitals([]));
+                           }} className="btn btn-sm btn-outline-primary" style={{ fontSize: 12 }}>                           
+                            
+
                               <i className="bi bi-person me-1"></i>Record
                             </button>
                             <button onClick={() => openNotes(a)} className="btn btn-sm btn-outline-success" style={{ fontSize: 12 }}>
@@ -493,35 +503,98 @@ function updateAppointment() {
         </Modal>
       )}
 
+
       {/* Patient Record Modal */}
-      {patientModal && (
-        <Modal title="Patient Record" onClose={() => setPatientModal(null)}>
-          {patientModal.patient ? (
-            <>
-              <div className="d-flex align-items-center gap-3 mb-4">
-                <div style={{ width: 52, height: 52, borderRadius: "50%", background: "#dbeafe", display: "flex", alignItems: "center", justifyContent: "center", color: "#3b82f6", fontWeight: 700, fontSize: 20, flexShrink: 0 }}>
-                  {patientModal.patient.patientName?.charAt(0)}
+{patientModal && (
+  <Modal title="Patient Record" onClose={() => setPatientModal(null)} maxWidth={640}>
+    {patientModal.patient ? (
+      <>
+        <div className="d-flex align-items-center gap-3 mb-4">
+          <div style={{ width: 52, height: 52, borderRadius: "50%", background: "#dbeafe",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            color: "#3b82f6", fontWeight: 700, fontSize: 20, flexShrink: 0 }}>
+            {patientModal.patient.patientName?.charAt(0)}
+          </div>
+          <div>
+            <div className="fw-bold" style={{ fontSize: 18 }}>{patientModal.patient.patientName}</div>
+            <div className="text-muted" style={{ fontSize: 13 }}>Patient ID: #{patientModal.patient.patientId}</div>
+          </div>
+        </div>
+
+        <div className="row g-3 mb-3">
+          <div className="col-6"><InfoRow label="Date of Birth" value={patientModal.patient.patientDOB} /></div>
+          <div className="col-6"><InfoRow label="Gender"        value={patientModal.patient.patientGender} /></div>
+          <div className="col-6"><InfoRow label="Phone"         value={patientModal.patient.patientPhoneNumber} /></div>
+          <div className="col-6"><InfoRow label="Status"        value={patientModal.patient.patientStatus} /></div>
+          <div className="col-12"><InfoRow label="Medical History" value={patientModal.patient.patientMedicalHistory ?? "None recorded"} /></div>
+        </div>
+
+        <div className="bg-body-secondary p-3 rounded-3 mb-4">
+          <div className="text-muted mb-1" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 0.5 }}>Appointment Info</div>
+          <div style={{ fontSize: 13 }}>{patientModal.date} · {patientModal.time?.slice(0, 5)} · {patientModal.durationMinutes} min</div>
+        </div>
+
+        {/* Vitals Section */}
+        <div className="fw-semibold mb-3" style={{ fontSize: 14 }}>
+          <i className="bi bi-heart-pulse me-2 text-danger"></i>Patient Vitals
+        </div>
+
+        {vitals === null ? (
+          <div className="text-center text-muted py-3">
+            <span className="spinner-border spinner-border-sm me-2"></span>Loading vitals...
+          </div>
+        ) : vitals.length === 0 ? (
+          <div className="text-center text-muted py-3 bg-body-secondary rounded-3">
+            <i className="bi bi-clipboard-x d-block fs-4 mb-1"></i>
+            No vitals recorded for this patient yet.
+          </div>
+        ) : (
+          <div className="d-flex flex-column gap-3">
+            {vitals.map((v) => (
+              <div key={v.vitalId} className="p-3 rounded-3 bg-body-secondary border-start border-danger border-3">
+                <div className="row g-2 mb-2">
+                  <div className="col-6 col-md-3">
+                    <div className="text-muted" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 0.5 }}>Blood Pressure</div>
+                    <div className="fw-semibold" style={{ fontSize: 14 }}>
+                      <i className="bi bi-droplet-fill text-danger me-1"></i>
+                      {v.bloodPressure ?? "—"}
+                    </div>
+                  </div>
+                  <div className="col-6 col-md-3">
+                    <div className="text-muted" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 0.5 }}>Temperature</div>
+                    <div className="fw-semibold" style={{ fontSize: 14 }}>
+                      <i className="bi bi-thermometer-half text-warning me-1"></i>
+                      {v.temperature != null ? `${v.temperature} °C` : "—"}
+                    </div>
+                  </div>
+                  <div className="col-6 col-md-3">
+                    <div className="text-muted" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 0.5 }}>Pulse Rate</div>
+                    <div className="fw-semibold" style={{ fontSize: 14 }}>
+                      <i className="bi bi-heart-pulse text-danger me-1"></i>
+                      {v.pulseRate != null ? `${v.pulseRate} bpm` : "—"}
+                    </div>
+                  </div>
+                  <div className="col-6 col-md-3">
+                    <div className="text-muted" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 0.5 }}>SpO2</div>
+                    <div className="fw-semibold" style={{ fontSize: 14 }}>
+                      <i className="bi bi-lungs text-primary me-1"></i>
+                      {v.spo2 != null ? `${v.spo2}%` : "—"}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <div className="fw-bold" style={{ fontSize: 18 }}>{patientModal.patient.patientName}</div>
-                  <div className="text-muted" style={{ fontSize: 13 }}>Patient ID: #{patientModal.patient.patientId}</div>
-                </div>
+                <small className="text-muted">
+                  <i className="bi bi-clock me-1"></i>
+                  Recorded: {v.recordedAt ? new Date(v.recordedAt).toLocaleString() : "—"}
+                </small>
               </div>
-              <div className="row g-3">
-                <div className="col-6"><InfoRow label="Date of Birth" value={patientModal.patient.patientDOB} /></div>
-                <div className="col-6"><InfoRow label="Gender"        value={patientModal.patient.patientGender} /></div>
-                <div className="col-6"><InfoRow label="Phone"         value={patientModal.patient.patientPhoneNumber} /></div>
-                <div className="col-6"><InfoRow label="Status"        value={patientModal.patient.patientStatus} /></div>
-                <div className="col-12"><InfoRow label="Medical History" value={patientModal.patient.patientMedicalHistory ?? "None recorded"} /></div>
-              </div>
-              <div className="mt-3 bg-body-secondary p-3 rounded-3">
-                <div className="text-muted mb-1" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 0.5 }}>Appointment Info</div>
-                <div style={{ fontSize: 13 }}>{patientModal.date} · {patientModal.time?.slice(0, 5)} · {patientModal.durationMinutes} min</div>
-              </div>
-            </>
-          ) : <p className="text-muted">No patient data.</p>}
-        </Modal>
-      )}
+            ))}
+          </div>
+        )}
+      </>
+    ) : <p className="text-muted">No patient data.</p>}
+  </Modal>
+)}
+
 
       {/* Medical Notes Modal */}
       {notesModal && (
@@ -585,31 +658,6 @@ function updateAppointment() {
       )}
 
       {/* Manage Appointment Modal */}
-      {/* {apptModal && (
-        <Modal title="Manage Appointment" onClose={() => setApptModal(null)}>
-          <div className="bg-body-secondary p-3 rounded-3 mb-4">
-            <div className="fw-semibold mb-1">{apptModal.patient?.patientName}</div>
-            <div className="text-muted" style={{ fontSize: 13 }}>
-              {apptModal.date} · {apptModal.time?.slice(0, 5)}
-            </div>
-            <div className="mt-2"><StatusBadge status={apptModal.status} /></div>
-          </div>
-          <label className="form-label fw-semibold" style={{ fontSize: 13 }}>Update Status</label>
-          <div className="d-flex gap-2 flex-wrap mb-4">
-            {["BOOKED", "COMPLETED", "CANCELLED", "RESCHEDULED"].map((s) => (
-              <button key={s} onClick={() => setApptStatus(s)}
-                className={`btn btn-sm fw-semibold ${apptStatus === s ? "btn-primary" : "btn-outline-secondary"}`}
-                style={{ borderRadius: 8, minWidth: 110 }}>
-                {s}
-              </button>
-            ))}
-          </div>
-          <button onClick={updateAppointment} disabled={apptUpdating} className="btn btn-primary w-100">
-            {apptUpdating ? <><span className="spinner-border spinner-border-sm me-2" />Updating...</> : "Update Appointment"}
-          </button>
-        </Modal>
-      )} */}
-
 {apptModal && (
   <Modal title="Manage Appointment" onClose={() => setApptModal(null)}>
 
@@ -654,7 +702,7 @@ function updateAppointment() {
       })}
     </div>
 
-    {/* New date/time — only for RESCHEDULED */}
+    {/* New date/time - only for RESCHEDULED */}
     {apptStatus === "RESCHEDULED" && (
       <div className="bg-body-secondary p-3 rounded-3 mb-3">
         <label className="form-label fw-semibold" style={{ fontSize: 13 }}>
@@ -729,11 +777,9 @@ function updateAppointment() {
 
   </Modal>
 )}
-
-
-
       <ToastContainer toasts={toasts} />
 
     </div>
   );
 }
+

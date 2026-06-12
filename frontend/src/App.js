@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CompleteProfile from './components/Dashboards/CompleteProfile';
 
 // Appointment
 import AppointmentHome from './components/appointment/AppointmentHome';
@@ -216,6 +217,7 @@ function ProtectedRoute({ children, allowedRoles }) {
         </Route>
         <Route path="/receptionistdd" element={<ProtectedRoute allowedRoles={RECEPTIONIST_ONLY}><ReceptionistDD /></ProtectedRoute>} />
         <Route path="/doctordd" element={<ProtectedRoute allowedRoles={DOCTOR_ONLY}><DoctorDD /></ProtectedRoute>} />
+        <Route path="/complete-profile" element={<ProtectedRoute allowedRoles={DOCTOR_ONLY}><CompleteProfile /></ProtectedRoute>} />
         <Route path="/nursedd" element={<ProtectedRoute allowedRoles={NURSE_ONLY}><NurseDD /></ProtectedRoute>} />
         <Route path="/financedd" element={<ProtectedRoute allowedRoles={FINANCEOFFICER_ONLY}><FinanceDD /></ProtectedRoute>} />
         <Route path="/compilancedd" element={<ProtectedRoute allowedRoles={COMPLIANCE_ONLY}><ComplianceDD /></ProtectedRoute>} />
