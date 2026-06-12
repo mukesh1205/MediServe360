@@ -37,9 +37,3 @@ export default function DeletePatient(){
         </div>
     )
 }
-
-// export default function DeletePatient(){
-//     return (
-//         <h1>Delete</h1>
-//     )
-// }

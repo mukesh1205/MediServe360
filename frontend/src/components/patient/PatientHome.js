@@ -26,7 +26,9 @@ export default function PatientHome() {
           </p>
         </div>
 
-        <div className="row g-3 mb-4 flex-nowrap">
+        {/* Cards */}
+        <div className="row g-3 mb-4">
+
           {navLinks.map((link) => (
             <div className="col" key={link.to}>
               <Link

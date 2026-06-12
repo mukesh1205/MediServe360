@@ -8,12 +8,12 @@ export default function FindPatient() {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Input handler
+  // Input handler 
   const nameHandler = (e) => {
     setName(e.target.value);
   };
 
-  // ✅ Search function
+  // Search function
   const buttonHandler = async () => {
     try {
       if (!name.trim()) {
