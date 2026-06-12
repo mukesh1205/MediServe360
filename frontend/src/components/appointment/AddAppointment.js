@@ -9,13 +9,10 @@ export default function AddAppointment() {
   const [durationMinutes, setDurationMinutes] = useState(30);
   const [patientId, setPatientId] = useState("");
   const [doctorId, setDoctorId] = useState("");
-
   const [patients, setPatients] = useState([]);
   const [doctors, setDoctors] = useState([]);
-
   const [loading, setLoading] = useState(false);
 
-  // Load dropdown data
   useEffect(() => {
     fetchPatients();
     fetchDoctors();
@@ -71,43 +68,47 @@ export default function AddAppointment() {
     }
 
     const [start, end] = schedule.split("-");
-
     const formattedTime = time.length === 5 ? time + ":00" : time;
 
     if (formattedTime < start || formattedTime > end) {
-      toast.error(
-        `Doctor is available only between ${start} and ${end}`
-      );
+      toast.error(`Doctor is available only between ${start} and ${end}`);
       return false;
     }
 
     return true;
   };
 
-  const buttonHandler = async () => {
+  const handlePatientChange = (e) => {
+    setPatientId(e.target.value);
+  };
+
+  const handleDoctorChange = (e) => {
+    setDoctorId(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (loading) return;
 
-    //Basic validation
+    // Basic validation
     if (!date || !time || !durationMinutes || !patientId || !doctorId) {
       toast.warning("All fields are required");
       return;
     }
 
-    //Duration validation
+    // Duration validation
     if (durationMinutes < 5) {
       toast.error("Minimum appointment duration is 5 minutes");
       return;
     }
 
-    //Availability validation
+    // Availability validation
     if (!validateDoctorAvailability()) return;
 
     setLoading(true);
-
     try {
-      //Format time
-      const formattedTime =
-        time.length === 5 ? time + ":00" : time;
+      const formattedTime = time.length === 5 ? time + ":00" : time;
 
       const data = {
         appointment: {
@@ -130,14 +131,10 @@ export default function AddAppointment() {
         }
       );
 
-      //Success message
-      const message =
-        res.data?.message ||
-        "Appointment created successfully";
-
+      const message = res.data?.message || "Appointment created successfully";
       toast.success(message);
 
-      //Reset form
+      // Reset form
       setDate("");
       setTime("");
       setDurationMinutes(30);
@@ -145,8 +142,6 @@ export default function AddAppointment() {
       setDoctorId("");
 
     } catch (error) {
-      console.log("ERROR:", error);
-
       let message =
         error.response?.data?.errorMessage ||
         error.response?.data?.message ||
@@ -167,19 +162,12 @@ export default function AddAppointment() {
 
   return (
     <div className="container mt-4">
-
       <h3 className="mb-4">Add Appointment</h3>
 
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        buttonHandler();
-      }}>
+      <form onSubmit={handleSubmit}>
 
-        {/* Date */}
         <div className="mb-3">
-          <label className="form-label">
-            Date <span className="text-danger">*</span>
-          </label>
+          <label className="form-label">Date <span className="text-danger">*</span></label>
           <input
             className="form-control"
             type="date"
@@ -190,11 +178,8 @@ export default function AddAppointment() {
           />
         </div>
 
-        {/* Time */}
         <div className="mb-3">
-          <label className="form-label">
-            Time <span className="text-danger">*</span>
-          </label>
+          <label className="form-label">Time <span className="text-danger">*</span></label>
           <input
             className="form-control"
             type="time"
@@ -204,33 +189,26 @@ export default function AddAppointment() {
           />
         </div>
 
-        {/* Duration */}
         <div className="mb-3">
           <label className="form-label">
-            Duration (minutes)
-            <span className="text-danger">*</span>
+            Duration (minutes) <span className="text-danger">*</span>
           </label>
           <input
             className="form-control"
             type="number"
             value={durationMinutes}
-            onChange={(e) =>
-              setDurationMinutes(e.target.value)
-            }
+            onChange={(e) => setDurationMinutes(e.target.value)}
             min="5"
             required
           />
         </div>
 
-        {/* Patient */}
         <div className="mb-3">
-          <label className="form-label">
-            Select Patient <span className="text-danger">*</span>
-          </label>
+          <label className="form-label">Select Patient <span className="text-danger">*</span></label>
           <select
             className="form-select"
             value={patientId}
-            onChange={(e) => setPatientId(e.target.value)}
+            onChange={handlePatientChange}
             required
           >
             <option value="">-- Select Patient --</option>
@@ -242,15 +220,12 @@ export default function AddAppointment() {
           </select>
         </div>
 
-        {/* Doctor */}
         <div className="mb-3">
-          <label className="form-label">
-            Select Doctor <span className="text-danger">*</span>
-          </label>
+          <label className="form-label">Select Doctor <span className="text-danger">*</span></label>
           <select
             className="form-select"
             value={doctorId}
-            onChange={(e) => setDoctorId(e.target.value)}
+            onChange={handleDoctorChange}
             required
           >
             <option value="">-- Select Doctor --</option>
@@ -262,38 +237,13 @@ export default function AddAppointment() {
           </select>
         </div>
 
-        {/* Submit */}
-        <button
-          className="btn btn-primary w-100"
-          type="submit"
-          disabled={loading}
-        >
+        <button className="btn btn-primary w-100" type="submit" disabled={loading}>
           {loading ? (
-            <>
-              <span className="spinner-border spinner-border-sm me-2"></span>
-              Submitting...
-            </>
-          ) : (
-            "Add Appointment"
-          )}
+            <><span className="spinner-border spinner-border-sm me-2"></span>Submitting...</>
+          ) : "Add Appointment"}
         </button>
 
       </form>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

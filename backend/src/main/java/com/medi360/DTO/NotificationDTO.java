@@ -2,13 +2,22 @@ package com.medi360.DTO;
 
 public class NotificationDTO {
 	
-	private int userID;
-	public int getUserID() {
-		return userID;
+	private int patientId;
+	private int doctorId;
+	public int getDoctorID() {
+		return doctorId;
 	}
-	public void setUserID(int userID) {
-		this.userID = userID;
+	public void setDoctorID(int doctorId) {
+		this.doctorId = doctorId;
 	}
+	
+	public int getPatientID() {
+		return patientId;
+	}
+	public void setPatientID(int patientId) {
+		this.patientId = patientId;
+	}
+	
 	private String message;
 	private String category;
 	private String status;

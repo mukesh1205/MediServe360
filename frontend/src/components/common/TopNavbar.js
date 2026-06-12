@@ -9,6 +9,8 @@ export default function TopNavbar({ onMyProfile, onEditProfile }) {
   const userName = localStorage.getItem("userName") || "User";
   const role     = localStorage.getItem("role") || "";
 
+  const showNotification = role === "RECEPTIONIST" || role === "DOCTOR";
+
   const getDashboardRoute = () => {
     switch (role) {
       case "ADMIN":             return "/admindd";
@@ -62,12 +64,15 @@ export default function TopNavbar({ onMyProfile, onEditProfile }) {
       {/* Right */}
       <div className="d-flex align-items-center gap-3">
 
-        <button className="btn text-white"
-          style={{ background: "rgba(255,255,255,0.07)" }}
-          title="Notifications"
-          onClick={() => navigate("/notification/findall")}>
-          <i className="bi bi-bell"></i>
-        </button>
+        {/* Notification — only for PATIENT and DOCTOR */}
+        {showNotification && (
+          <button className="btn text-white"
+            style={{ background: "rgba(255,255,255,0.07)" }}
+            title="Notifications"
+            onClick={() => navigate("/notifications")}>
+            <i className="bi bi-bell"></i>
+          </button>
+        )}
 
         <button className="btn text-white"
           style={{ background: "rgba(255,255,255,0.07)" }}
@@ -116,15 +121,15 @@ export default function TopNavbar({ onMyProfile, onEditProfile }) {
                 )}
               </li>
 
-              {/* Edit Profile - replaces Settings for doctor; falls back to Settings for others */}
+              {/* Edit Profile */}
               <li>
                 {onEditProfile ? (
                   <button className="dropdown-item" onClick={() => { setOpen(false); onEditProfile(); }}>
                     <i className="bi bi-pencil me-2"></i>Edit Profile
                   </button>
                 ) : (
-                  <Link className="dropdown-item" to="/settings" onClick={() => setOpen(false)}>
-                    <i className="bi bi-gear me-2"></i>Settings
+                  <Link className="dropdown-item" to="/editprofile" onClick={() => setOpen(false)}>
+                    <i className="bi bi-pencil me-2"></i>Edit Profile
                   </Link>
                 )}
               </li>
@@ -145,5 +150,3 @@ export default function TopNavbar({ onMyProfile, onEditProfile }) {
     </nav>
   );
 }
-
-

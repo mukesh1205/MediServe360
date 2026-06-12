@@ -49,7 +49,8 @@ public class AppointmentService {
     private void sendNotification(int userId, String message, String category) {
         try {
             NotificationDTO dto = new NotificationDTO();
-            dto.setUserID(userId);
+            dto.setDoctorID(userId);
+            dto.setPatientID(0);
             dto.setMessage(message);
             dto.setCategory(category);
             dto.setStatus("UNREAD");
