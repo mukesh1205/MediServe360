@@ -1,7 +1,7 @@
 import {useState,useEffect} from 'react';
 import axios from 'axios';
 
-export default function UserPage(){
+export default function Userpage(){
 
     const [data,setData]=useState([]);
     const [count,setCount]=useState(0);

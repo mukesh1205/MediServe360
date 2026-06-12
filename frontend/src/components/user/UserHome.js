@@ -6,7 +6,7 @@ const navLinks = [
   { to: "find",      label: "Find User",      icon: "🔍" },
   { to: "findall",   label: "All Users",      icon: "👥" },
   { to: "paginated", label: "Paginated View", icon: "📄" },
-  { to: "approval",  label: "User Approval",  icon: "✅" }
+  
 ];
 
 export default function UserHome() {

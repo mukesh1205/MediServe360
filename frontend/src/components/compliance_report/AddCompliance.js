@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState,useRef } from "react";
 import { toast } from "react-toastify";
 
 export default function AddCompliance() {
@@ -8,7 +8,10 @@ export default function AddCompliance() {
     const [metrics, setMetrics] = useState("");
     const [date, setDate] = useState("");
     const [kpiCategory, setKpiCategory] = useState("");
+    const isSubmitting = useRef(false);
 
+
+    
     const KPI_OPTIONS = [
         { value: "OCCUPANCY_RATE",             label: "Occupancy Rate" },
         { value: "APPOINTMENT_FULFILLMENT",    label: "Appointment Fulfillment" },
@@ -42,6 +45,9 @@ export default function AddCompliance() {
 
     const buttonHandler = () => {
 
+        // Prevent duplicate submissions while a request is in flight
+        if (isSubmitting.current) return;
+
         let url = "http://localhost:9002/api/compliance-reports/addComplianceReport";
 
         if (!scope.trim() || !metrics.trim() || !date || !kpiCategory) {
@@ -73,6 +79,9 @@ export default function AddCompliance() {
             }
         };
 
+        // Lock submissions before firing the request
+        isSubmitting.current = true;
+
         axios.post(url, data, {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem("token")
@@ -88,6 +97,10 @@ export default function AddCompliance() {
         })
         .catch((error) => {
             toast.error(error.response?.data?.message || error.message);
+        })
+        .finally(() => {
+            // Unlock once the request settles (success or error)
+            isSubmitting.current = false;
         });
     };
 
