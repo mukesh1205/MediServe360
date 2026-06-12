@@ -60,7 +60,7 @@ public class UserController {
 	public ResponseEntity<List<UserResponseDTO>> getAllUser() {
 		return ResponseEntity.ok(us.getAllUser());
 	}
-
+	
 	@GetMapping("/fetchAllUsersPaginated")
 	public Page<User> f6(@RequestParam(name = "pgno") int pgno, @RequestParam(name = "size") int size,
 			@RequestParam(name = "sorting") String sorting, @RequestParam(name = "asc") boolean asc) {

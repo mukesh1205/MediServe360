@@ -6,13 +6,14 @@ const navLinks = [
   { to: "find", label: "Find Doctor", icon: "🔍" },
   { to: "display", label: "Display", icon: "📋" },
   { to: "displayPaginated", label: "Paginated", icon: "📄" },
+  {to:"doctornotification",label:"Notification",icon:"📄"}
 ];
 
 export default function DoctorHome() {
 
   const location = useLocation();
 
-  return (
+  return (  
     <div className="min-vh-100 bg-light">
 
       {/* Top Navbar */}
