@@ -72,7 +72,7 @@ export default function UpdateInsuranceClaim() {
     })
     .then(() => {
       toast.success("Insurance Claim updated successfully");
-      navigate("/insurance/display");
+      navigate("/insuranceClaim/display");
     })
     .catch((err) => {
       toast.error(err.response?.data || err.message);

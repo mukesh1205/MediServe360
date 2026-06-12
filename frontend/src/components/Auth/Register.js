@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Register() {
@@ -12,40 +12,65 @@ export default function Register() {
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const isSubmitting = useRef(false); 
 
     const register = (event) => {
         event.preventDefault();
+
+        if (isSubmitting.current) return;
+        isSubmitting.current = true;
+
         setError("");
         setSuccess("");
-        if(phoneNumber.length!==10){
-            setError("Please enter correct phone number");
-            return;
-        }
-        if(password.length<6){
-            setError("Password must be at least 6 characters");
-            return;
-        }
+
+        // ✅ Validations
         if (!userName || !email || !password || !role || !phoneNumber) {
             setError("Please fill in all fields.");
+            isSubmitting.current = false;
             return;
         }
+        if (phoneNumber.length !== 10) {
+            setError("Please enter a valid 10-digit phone number.");
+            isSubmitting.current = false;
+            return;
+        }
+        if (password.length < 6) {
+            setError("Password must be at least 6 characters.");
+            isSubmitting.current = false;
+            return;
+        }
+
         setLoading(true);
+
         axios.post("http://localhost:9002/api/auth/register", {
             userName: userName.trim(),
             email: email.trim(),
-            password, role, phoneNumber,
+            password,
+            role,
+            phoneNumber,
         })
         .then(() => {
             setSuccess("Account created successfully! Redirecting to login...");
             setTimeout(() => navigate("/login"), 1000);
         })
         .catch((err) => {
-            if (err.response?.data.httpStatusCode === 404) {
+            const message = err.response?.data?.message || "";
+            const status = err.response?.status;
+
+            if (message.toLowerCase().includes("already registered")) {
+                // ✅ Fixed: was checking httpStatusCode === 404 which never matched
                 setError("Email already registered. Try a different one.");
+            } else if (status === 400) {
+                setError(message || "Invalid input. Please check your details.");
+            } else if (status === 500) {
+                setError("Server error. Please try again later.");
             } else {
                 setError("Registration failed. Please try again.");
             }
+        })
+        .finally(() => {
             setLoading(false);
+            isSubmitting.current = false; // ✅ Reset after request completes
         });
     };
 
@@ -66,7 +91,6 @@ export default function Register() {
                             className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
                             style={{ width: 64, height: 64, background: "#1a73a7" }}
                         >
-                            {/* Red Cross / Medical Icon */}
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
                                 <rect x="12" y="4" width="8" height="24" rx="2" fill="white"/>
                                 <rect x="4" y="12" width="24" height="8" rx="2" fill="white"/>
@@ -122,7 +146,7 @@ export default function Register() {
                                 <input
                                     type="tel"
                                     className="form-control"
-                                    placeholder="+91 00000 00000"
+                                    placeholder="10-digit number"
                                     value={phoneNumber}
                                     onChange={(e) => setPhoneNumber(e.target.value)}
                                     style={{ borderColor: "#b0cfe0", borderRadius: "8px" }}
