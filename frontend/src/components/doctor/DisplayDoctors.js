@@ -23,7 +23,7 @@ export default function DisplayDoctors() {
       });
   }, []);
 
-  // ✅ Search filter
+  // Search filter
   const filteredDoctors = doctors.filter((d) =>
     d.name.toLowerCase().includes(search.toLowerCase()) ||
     d.department.toLowerCase().includes(search.toLowerCase())
@@ -32,7 +32,7 @@ export default function DisplayDoctors() {
   return (
     <div>
 
-      {/* ✅ Header + Search */}
+      {/* Header + Search */}
       <div className="d-flex justify-content-between align-items-center mb-3">
 
         <h2 className="mb-0">All Doctors</h2>
@@ -54,7 +54,6 @@ export default function DisplayDoctors() {
 
       </div>
 
-      {/* ✅ No Data */}
       {filteredDoctors.length === 0 ? (
         <p className="text-danger">No doctors found</p>
       ) : (
@@ -113,3 +112,4 @@ export default function DisplayDoctors() {
     </div>
   );
 }
+

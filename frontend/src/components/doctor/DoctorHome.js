@@ -6,21 +6,22 @@ const navLinks = [
   { to: "find", label: "Find Doctor", icon: "🔍" },
   { to: "display", label: "Display", icon: "📋" },
   { to: "displayPaginated", label: "Paginated", icon: "📄" },
+  {to:"doctornotification",label:"Notification",icon:"📄"}
 ];
 
 export default function DoctorHome() {
 
   const location = useLocation();
 
-  return (
+  return (  
     <div className="min-vh-100 bg-light">
 
-      {/* ✅ Top Navbar */}
+      {/* Top Navbar */}
       <TopNavbar />
 
       <div className="container-fluid px-4 py-4">
 
-        {/* ✅ Header (Clickable) */}
+        {/* Header */}
         <div className="mb-4">
           <Link to="/doctor" className="text-decoration-none">
             <h4 className="fw-bold text-dark mb-1">
@@ -33,7 +34,7 @@ export default function DoctorHome() {
           </p>
         </div>
 
-        {/* ✅ Cards */}
+        {/* Cards */}
         <div className="row g-3 mb-4">
 
           {navLinks.map((link) => (
@@ -62,7 +63,7 @@ export default function DoctorHome() {
 
         </div>
 
-        {/* ✅ Content Area */}
+        {/* Content Area */}
         {!location.pathname.startsWith("/doctor/") ? (
 
           <div className="card shadow-sm p-4 text-muted text-center">

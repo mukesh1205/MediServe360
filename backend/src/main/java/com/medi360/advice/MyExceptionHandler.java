@@ -59,6 +59,7 @@ public class MyExceptionHandler {
 		response.setErrorMessage(e.getMessage());
 		return ResponseEntity.status(404).body(response);
 	}
+	
 	@ExceptionHandler(BedNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleBedNotFound(Exception e) {
 		ErrorResponse response = new ErrorResponse();
@@ -66,6 +67,7 @@ public class MyExceptionHandler {
 		response.setErrorMessage(e.getMessage());
 		return ResponseEntity.status(404).body(response);
 	}
+	
 	@ExceptionHandler(WardNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleWardNotFound(Exception e) {
 		ErrorResponse response = new ErrorResponse();
@@ -74,6 +76,21 @@ public class MyExceptionHandler {
 		return ResponseEntity.status(404).body(response);
 	}
 	
+	@ExceptionHandler({
+        AppointmentNotFoundException.class,
+        DoctorNotFoundException.class,
+        SlotNotAvailableException.class
+    })
+	
+    public ResponseEntity<ErrorResponse> handleAppointmentExceptions(Exception e) {
+
+    ErrorResponse response = new ErrorResponse();
+    response.setHttpStatusCode(404);
+    response.setErrorMessage(e.getMessage());
+
+    return ResponseEntity.status(404).body(response);
+  }
+
 	@ExceptionHandler(BadRequestException.class)
 	public ResponseEntity<ErrorResponse> handleBadRequest(Exception e){
 		ErrorResponse response=new ErrorResponse();
@@ -90,3 +107,8 @@ public class MyExceptionHandler {
 		return ResponseEntity.status(404).body(response);
 	}
 }
+
+
+
+
+

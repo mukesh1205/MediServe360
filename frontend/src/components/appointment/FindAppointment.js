@@ -1,73 +1,126 @@
 import axios from "axios";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function FindAppointment() {
 
-    let [id, setId] = useState("");
-    let [appointment, setAppointment] = useState(null);
+  const [id, setId] = useState("");
+  const [searched, setSearched] = useState(false);
+  const [appointment, setAppointment] = useState({});
 
-    let findHandler = () => {
+  const idHandler = (event) => {
+    setId(event.target.value);
+  };
 
-        if (!id) {
-            alert("Enter Appointment ID");
-            return;
+  const submitHandler = async (event) => {
+    event.preventDefault();
+
+    if (!id) {
+      toast.warning("Please enter appointment ID");
+      return;
+    }
+
+    const url = `http://localhost:9002/api/appointment/get/${id}`;
+
+    try {
+      const res = await axios.get(url, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token")
         }
+      });
 
-        let url = `http://localhost:9002/api/appointment/get/${id}`;
+      setAppointment(res.data.appointment || {});
 
-        axios.get(url,{
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token") 
-                    }
-                })
-            .then((res) => {
-                // ✅ Backend returns AppointmentResponseDTO with "appointment" field
-                setAppointment(res.data.appointment);
-            })
-            .catch((err) => {
-                console.error(err);
-                alert("Appointment not found");
-                setAppointment(null);
-            });
-    };
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        setAppointment({});
+      } else {
+        console.log(err.message);
+        toast.error("Something went wrong");
+      }
+    }
 
-    return (
-        <div>
+    setSearched(true);
+  };
 
-            <h3>Find Appointment</h3>
+  return (
+    <div className="container mt-4">
 
-            <input
-                placeholder="Enter Appointment ID"
-                value={id}
-                onChange={(e) => setId(e.target.value)}
-            />
+      <h3 className="mb-4">Find Appointment by ID</h3>
 
-            <button onClick={findHandler}>Search</button>
-
-            <br /><br />
-
-            {appointment && (
-                <div>
-                    <h4>Appointment Details</h4>
-
-                    <p><strong>ID:</strong> {appointment.id}</p>
-                    <p><strong>Date:</strong> {appointment.date}</p>
-                    <p><strong>Time:</strong> {appointment.time}</p>
-                    <p><strong>Status:</strong> {appointment.status}</p>
-                    <p><strong>Duration:</strong> {appointment.durationMinutes} mins</p>
-
-                    <p>
-                        <strong>Patient:</strong> {appointment.patient?.patientName} 
-                        {" "}({appointment.patient?.patientGender}) – ID: {appointment.patient?.patientId}
-                    </p>
-
-                    <p>
-                        <strong>Doctor:</strong> {appointment.doctor?.name} 
-                        {" "}({appointment.doctor?.department}) – ID: {appointment.doctor?.id}
-                    </p>
-                </div>
-            )}
-
+      <form onSubmit={submitHandler}>
+        <div className="mb-3">
+          <label className="form-label">Enter Appointment ID</label>
+          <input
+            className="form-control"
+            type="number"
+            value={id}
+            onChange={idHandler}
+            placeholder="Enter appointment ID"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") submitHandler(e);
+            }}
+          />
         </div>
-    );
+
+        <button
+          className="btn btn-primary w-100"
+          type="submit"
+          disabled={!id}
+        >
+          Find
+        </button>
+      </form>
+
+      {/* No record */}
+      {searched && !appointment.id && (
+        <p className="mt-3 text-danger">No records found</p>
+      )}
+
+      {/* Appointment Data */}
+      {appointment.id && (
+        <div className="table-responsive">
+          <table className="table table-bordered table-striped mt-4">
+            <thead className="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Duration</th>
+                <th>Patient</th>
+                <th>Doctor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{appointment.id}</td>
+                <td>{appointment.date}</td>
+                <td>{appointment.time}</td>
+                <td>{appointment.status}</td>
+                <td>{appointment.durationMinutes} mins</td>
+
+                {/* Patient Info */}
+                <td>
+                  {appointment.patient?.patientName} <br />
+                  <small>
+                    {appointment.patient?.patientGender} | ID: {appointment.patient?.patientId}
+                  </small>
+                </td>
+
+                {/* Doctor Info */}
+                <td>
+                  {appointment.doctor?.name} <br />
+                  <small>
+                    {appointment.doctor?.department} | ID: {appointment.doctor?.id}
+                  </small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
+
+    </div>
+  );
 }

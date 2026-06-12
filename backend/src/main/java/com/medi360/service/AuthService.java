@@ -6,6 +6,7 @@ import com.medi360.DTO.LoginResponseDTO;
 import com.medi360.DTO.RegisterRequestDTO;
 import com.medi360.DTO.UserResponseDTO;
 import com.medi360.exception.BadRequestException;
+import com.medi360.exception.ResourceNotFoundException;
 import com.medi360.entities.User;
 import com.medi360.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +80,7 @@ public class AuthService {
         if (user.getStatus().equals("PENDING")) {
             auditLogService.log(
                 "AUTH.LOGIN_FAILED | Error: Account pending approval for email: " + dto.getEmail());
-            throw new BadRequestException("Your account is pending admin approval");
+            throw new ResourceNotFoundException("Your account is pending admin approval");
         }
 
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
@@ -105,4 +106,19 @@ public class AuthService {
         response.setUserId(user.getUserId());
         return response;
     }
+    
+public String updatePassword(String email,String password) {
+		
+		User user=userRepository.findByEmail(email).orElseThrow(()->new ResourceNotFoundException("user not found with Email: "+email));
+		try {
+			String pass=passwordEncoder.encode(password);
+			user.setPassword(pass);
+			auditLogService.log("User with email "+email +" password has been changed");
+			return "Successfully Updated password";
+		}catch(Exception ex) {
+			auditLogService.logFailure("User. UPDATE", ex.getMessage());
+			throw ex;
+		}
+	}
+
 }

@@ -32,9 +32,18 @@ public class NotificationController {
 	
 	@PostMapping("/insertnotificationdata")
 	public ResponseEntity<NotificationResponseDTO> addNotification(@RequestBody NotificationDTO notificationDto) {
-		
-		
 		return ResponseEntity.ok(this.ns.addNotification(notificationDto));
+	}
+	
+	@GetMapping("/getpatientbyid/{id}")
+	public ResponseEntity<List<NotificationResponseDTO>> getPatient(@PathVariable int id){
+		System.out.println(id);
+		return ResponseEntity.ok(this.ns.getPatient(id));
+	}
+	
+	@GetMapping("/getdoctorbyid/{id}")
+	public ResponseEntity<List<NotificationResponseDTO>> getDoctor(@PathVariable int id){
+		return ResponseEntity.ok(this.ns.getDoctor(id));
 	}
 	
 //	@PutMapping("/updatenotification")
@@ -76,3 +85,10 @@ public class NotificationController {
 	}
 	
 }
+
+
+
+
+
+
+

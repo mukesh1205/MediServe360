@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function DisplayInvoicesPaginated() {
@@ -13,7 +13,7 @@ export default function DisplayInvoicesPaginated() {
     const [asc, setAsc] = useState(true);
     const [loading, setLoading] = useState(false);
 
-    const fetchInvoices = async (page = pgno, sortCol = sorting, order = asc) => {
+    const fetchInvoices = useCallback(async (page = pgno, sortCol = sorting, order = asc) => {
         try {
             setLoading(true);
 
@@ -40,11 +40,11 @@ export default function DisplayInvoicesPaginated() {
         } finally {
             setLoading(false);
         }
-    };
+    },[pgno,sorting,asc]);
 
     useEffect(() => {
         fetchInvoices(0);
-    }, []);
+    }, [fetchInvoices]);
 
     const handleSort = (column) => {
         if (sorting === column) {

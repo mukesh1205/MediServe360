@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 
 export default function DisplayPatientsPaginated() {
@@ -13,38 +13,38 @@ export default function DisplayPatientsPaginated() {
     const [asc, setAsc] = useState(true);
     const [loading, setLoading] = useState(false);
 
-    const fetchPatients = async (page = pgno, sortCol = sorting, order = asc) => {
-        try {
-            setLoading(true);
+    const fetchPatients = useCallback(async (page = pgno, sortCol = sorting, order = asc) => {
+    try {
+        setLoading(true);
 
-            const url = "http://localhost:9002/api/patient/fetchAllPatientsPaginated";
+        const url = "http://localhost:9002/api/patient/fetchAllPatientsPaginated";
 
-            const res = await axios.get(url, {
-                params: {
-                    pgno: page,
-                    size: size,
-                    sorting: sortCol,
-                    asc: order
-                },
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token")
-                }
-            });
+        const res = await axios.get(url, {
+            params: {
+                pgno: page,
+                size: size,
+                sorting: sortCol,
+                asc: order
+            },
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }
+        });
 
-            setRecords(res.data.content || []);
-            setPgno(res.data.number);
-            setTotalPages(res.data.totalPages);
+        setRecords(res.data.content || []);
+        setPgno(res.data.number);
+        setTotalPages(res.data.totalPages);
 
-        } catch (err) {
-            toast.error(err.response?.data || err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+    } catch (err) {
+        toast.error(err.response?.data || err.message);
+    } finally {
+        setLoading(false);
+    }
+}, [pgno, sorting, asc]);
 
     useEffect(() => {
         fetchPatients(0);
-    }, []);
+    }, [fetchPatients]);
 
     const handleSort = (column) => {
         if (sorting === column) {
@@ -85,6 +85,7 @@ export default function DisplayPatientsPaginated() {
                                     <th onClick={() => handleSort("patientName")} style={{ cursor: "pointer" }}>
                                         Name{sortArrow("patientName")}
                                     </th>
+                                
                                     <th onClick={() => handleSort("patientDOB")} style={{ cursor: "pointer" }}>
                                         DOB{sortArrow("patientDOB")}
                                     </th>

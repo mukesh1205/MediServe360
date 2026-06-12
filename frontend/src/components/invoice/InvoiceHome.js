@@ -15,7 +15,7 @@ export default function InvoiceHome() {
   return (
     <div className="min-vh-100 bg-light">
 
-      {/* ✅ Global Navbar */}
+      {/* Global Navbar */}
       <TopNavbar />
 
       <div className="container-fluid px-4 py-4">

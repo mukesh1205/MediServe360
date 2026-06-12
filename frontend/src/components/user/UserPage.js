@@ -78,9 +78,27 @@ export default function UserPage(){
                 </tbody>
 
             </table>
-            <button onClick={prevhandler}>Prev</button>
-            <span style={{margin:"0 10px"}}>Page {count+1} of {totalPages}</span>
-            <button onClick={nexthandler}>Next</button>
+            <div className="d-flex justify-content-center align-items-center gap-3 mt-3">
+                <button
+                    className="btn btn-outline-dark btn-sm"
+                    onClick={prevhandler}
+                    disabled={count === 0}
+                >
+                    ← Prev
+                </button>
+
+                <span className="fw-semibold">
+                    Page {count + 1} of {totalPages}
+                </span>
+
+                <button
+                    className="btn btn-outline-dark btn-sm"
+                    onClick={nexthandler}
+                    disabled={count === totalPages - 1}
+                >
+                    Next →
+                </button>
+            </div>
         </div>
     )
 }

@@ -26,6 +26,7 @@ export default function Login() {
             localStorage.setItem("role", res.data.role);
             localStorage.setItem("userName", res.data.userName);
             localStorage.setItem("userId", res.data.userId);
+            localStorage.setItem("email", res.data.email);
 
             const role = res.data.role;
             if (role === "ADMIN")                   navigate("/admindd");
@@ -36,7 +37,7 @@ export default function Login() {
             else if (role === "COMPLIANCE_OFFICER") navigate("/compilancedd");
         })
         .catch((err) => {
-            if(err.response.data.httpStatusCode==404){
+            if(err.response.data.errorMessage=="Your account is pending admin approval"){
                 setError("Your account is pending admin approval");
             }
             else{
@@ -51,19 +52,16 @@ export default function Login() {
             className="min-vh-100 d-flex align-items-center justify-content-center px-3"
             style={{ background: "#0f2d3d" }}
         >
-            {/* Split layout */}
             <div
                 className="card border-0 shadow-lg overflow-hidden"
                 style={{ width: "100%", maxWidth: 780, borderRadius: "18px", minHeight: "420px" }}
             >
                 <div className="row g-0 h-100">
 
-                    {/* Left panel — branding */}
                     <div
                         className="col-md-5 d-none d-md-flex flex-column align-items-center justify-content-center p-4 text-white text-center"
                         style={{ background: "linear-gradient(160deg, #1a73a7 0%, #0d4f73 100%)" }}
                     >
-                        {/* Pulse circle with cross */}
                         <div
                             className="rounded-circle d-flex align-items-center justify-content-center mb-4"
                             style={{ width: 88, height: 88, background: "rgba(255,255,255,0.15)", border: "2px solid rgba(255,255,255,0.3)" }}
@@ -91,11 +89,9 @@ export default function Login() {
                         </div>
                     </div>
 
-                    {/* Right panel — form */}
                     <div className="col-md-7 d-flex align-items-center bg-white">
                         <div className="w-100 p-4 p-md-5">
 
-                            {/* Mobile brand */}
                             <div className="d-flex d-md-none align-items-center gap-2 mb-4">
                                 <div
                                     className="rounded-circle d-flex align-items-center justify-content-center"
@@ -168,6 +164,12 @@ export default function Login() {
                                 Don't have an account?{" "}
                                 <Link to="/register" className="fw-semibold text-decoration-none" style={{ color: "#1a73a7" }}>
                                     Register
+                                </Link>
+                            </p>
+                            <p className="text-center small mb-0" style={{ color: "#5a8fa8" }}>
+                                Forgot password?{" "}
+                                <Link to="/updatepass" className="fw-semibold text-decoration-none" style={{ color: "#1a73a7" }}>
+                                    Change
                                 </Link>
                             </p>
 

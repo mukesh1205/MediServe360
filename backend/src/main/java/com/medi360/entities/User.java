@@ -35,10 +35,9 @@ public class User {
 	@JsonIgnore
 	private List<AuditLog> auditsLogs;
 	
-	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
-	@JsonIgnore
-	private List<Notification> notification;
-	
+//	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
+//	@JsonIgnore
+//	private List<Notification> notification;
 	
 	public List<AuditLog> getAuditsLogs() {
 		return auditsLogs;
@@ -46,13 +45,13 @@ public class User {
 	public void setAuditsLogs(List<AuditLog> auditsLogs) {
 		this.auditsLogs = auditsLogs;
 	}
-	public List<Notification> getNotification() {
-		return notification;
-	}
-	public void setNotification(List<Notification> notification) {
-		this.notification = notification;
-	}
-	
+//	public List<Notification> getNotification() {
+//		return notification;
+//	}
+//	public void setNotification(List<Notification> notification) {
+//		this.notification = notification;
+//	}
+//	
 	public String getPassword() {
 		return password;
 	}
