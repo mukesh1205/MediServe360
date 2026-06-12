@@ -782,3 +782,4 @@ function updateAppointment() {
     </div>
   );
 }
+
