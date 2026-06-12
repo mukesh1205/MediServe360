@@ -62,6 +62,10 @@ public class DoctorService {
 	    return doctorRepository.findByEmail(email)
 	        .orElseThrow(() -> new DoctorNotFoundException("Doctor not found"));
 	}
+	
+	public List<Doctor> getDoctorsByName(String name) {
+	    return doctorRepository.findByNameContainingIgnoreCase(name);
+	}
     
 }
 

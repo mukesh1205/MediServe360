@@ -1,11 +1,14 @@
 package com.medi360.service;
 
+import com.medi360.db.DoctorRepository;
 import com.medi360.db.UserRepository;
 import com.medi360.DTO.LoginRequestDTO;
 import com.medi360.DTO.LoginResponseDTO;
 import com.medi360.DTO.RegisterRequestDTO;
 import com.medi360.DTO.UserResponseDTO;
 import com.medi360.exception.BadRequestException;
+
+import com.medi360.entities.Doctor;
 import com.medi360.exception.ResourceNotFoundException;
 import com.medi360.entities.User;
 import com.medi360.security.JwtUtil;
@@ -18,6 +21,9 @@ public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private DoctorRepository doctorRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -45,6 +51,18 @@ public class AuthService {
         user.setUserPhone(dto.getPhoneNumber());
 
         User saved = userRepository.save(user);
+        
+     // Auto-create doctor profile when registering as DOCTOR
+        if ("DOCTOR".equalsIgnoreCase(dto.getRole())) {
+            Doctor doctor = new Doctor();
+            doctor.setName(dto.getUserName());
+            doctor.setEmail(dto.getEmail());
+            doctorRepository.save(doctor);
+
+            auditLogService.log(
+                "DOCTOR.PROFILE_CREATED | Auto-created doctor profile for: "
+                + dto.getEmail());
+        }
 
         auditLogService.log(
                 "AUTH.REGISTER_SUCCESS | UserID: " + saved.getUserId()
@@ -122,3 +140,5 @@ public String updatePassword(String email,String password) {
 	}
 
 }
+
+

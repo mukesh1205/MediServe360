@@ -2,133 +2,130 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+const BASE = "http://localhost:9002";
+
 export default function FindDoctor() {
-  const [id, setId] = useState("");
-  const [doctor, setDoctor] = useState(null);
-  const [searched, setSearched] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [searchType, setSearchType] = useState("id");
+  const [query,      setQuery]      = useState("");
+  const [results,    setResults]    = useState([]);
+  const [loading,    setLoading]    = useState(false);
 
-  const idHandler = (e) => {
-    setId(e.target.value);
-  };
+  const headers = { Authorization: "Bearer " + localStorage.getItem("token") };
 
-  const buttonHandler = async () => {
+  async function handleChange(e) {
+    const val = e.target.value;
+
+    // Validation
+    if (searchType === "id" && val !== "" && !/^\d+$/.test(val)) return;
+    if (searchType === "name" && val !== "" && !/^[a-zA-Z\s]*$/.test(val)) return;
+
+    setQuery(val);
+
+    if (!val.trim()) { setResults([]); return; }
+
+    setLoading(true);
     try {
-      if (!id.trim()) {
-        toast.warning("Please enter Doctor ID");
-        return;
-      }
-
-      setLoading(true);
-      setDoctor(null);
-      setSearched(false);
-
-      const url = `http://localhost:9002/api/doctor/get/${id.trim()}`;
-
-      const res = await axios.get(url, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
-
-      setDoctor(res.data); 
-    } catch (err) {
-      if (err.response && err.response.status === 404) {
-        setDoctor(null);
+      if (searchType === "id") {
+        const res = await axios.get(`${BASE}/api/doctor/get/${val.trim()}`, { headers });
+        setResults([res.data]);
       } else {
-        toast.error(err.response?.data || err.message);
+        const res = await axios.get(`${BASE}/api/doctor/search?name=${encodeURIComponent(val.trim())}`, { headers });
+        setResults(res.data || []);
       }
+    } catch (err) {
+      if (err.response?.status === 404) setResults([]);
+      else toast.error(err.response?.data?.message || err.message);
     } finally {
-      setSearched(true);
       setLoading(false);
     }
-  };
+  }
+
+  function handleTypeSwitch(type) {
+    setSearchType(type);
+    setQuery("");
+    setResults([]);
+  }
 
   return (
     <div className="mt-3">
 
-      {/*  Header + Search Bar */}
-      <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-        
-        <h4 className="mb-0">🩺 Find Doctor</h4>
+      {/* Header + Search */}
+      <div className="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+        <h4 className="mb-0 fw-bold">🩺 Find Doctor</h4>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            buttonHandler();
-          }}
-          className="d-flex gap-2"
-        >
-          <input
-            className="form-control"
-            type="number"
-            placeholder="Enter doctor ID"
-            value={id}
-            onChange={idHandler}
-            style={{ width: "200px" }}
-            required
-          />
+        <div className="d-flex align-items-center gap-2">
+          {/* Toggle */}
+          <div className="btn-group">
+            <button type="button"
+              className={`btn btn-sm ${searchType === "id" ? "btn-primary" : "btn-outline-secondary"}`}
+              onClick={() => handleTypeSwitch("id")}>By ID</button>
+            <button type="button"
+              className={`btn btn-sm ${searchType === "name" ? "btn-primary" : "btn-outline-secondary"}`}
+              onClick={() => handleTypeSwitch("name")}>By Name</button>
+          </div>
 
-          <button
-            className="btn btn-primary"
-            type="submit"
-            disabled={!id.trim() || loading}
-          >
-            {loading ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-1"></span>
-                Searching
-              </>
-            ) : (
-              <>
-                <i className="bi bi-search me-1"></i>
-                Search
-              </>
-            )}
-          </button>
-        </form>
-      </div>
-
-      {/* No result message */}
-      {searched && !doctor && id && (
-        <p className="text-danger fw-semibold">
-          No doctor found with this ID
-        </p>
-      )}
-
-      {/* Result Table */}
-      {doctor && (
-        <div>
-
-          <p className="mb-2 text-success">
-            {/* Doctor found */}
-          </p>
-
-          <div className="table-responsive">
-            <table className="table table-bordered table-hover table-striped">
-
-              <thead className="table-dark">
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Department</th>
-                  <th>Availability</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr>
-                  <td>{doctor.id}</td>
-                  <td>{doctor.name}</td>
-                  <td>{doctor.department}</td>
-                  <td>{doctor.availabilitySchedule}</td>
-                </tr>
-              </tbody>
-
-            </table>
+          {/* Input */}
+          <div className="input-group" style={{ width: 240 }}>
+            <span className="input-group-text">
+              {loading
+                ? <span className="spinner-border spinner-border-sm"></span>
+                : <i className="bi bi-search"></i>}
+            </span>
+            <input className="form-control"
+              type="text"
+              inputMode={searchType === "id" ? "numeric" : "text"}
+              placeholder={searchType === "id" ? "Enter doctor ID..." : "Search by name..."}
+              value={query}
+              onChange={handleChange}
+            />
           </div>
         </div>
+      </div>
+
+      {/* Empty state */}
+      {!query && (
+        <div className="text-center text-muted py-5">
+          <i className="bi bi-search fs-2 d-block mb-2"></i>
+          Search by ID or name to find a doctor
+        </div>
       )}
+
+      {/* No results */}
+      {query && results.length === 0 && !loading && (
+        <div className="text-center text-muted py-5">
+          <i className="bi bi-person-slash fs-2 d-block mb-2"></i>
+          No doctor found
+        </div>
+      )}
+
+      {/* Results Table */}
+      {results.length > 0 && (
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover table-striped">
+            <thead className="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Availability</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {results.map((d) => (
+                <tr key={d.id}>
+                  <td>{d.id}</td>
+                  <td>{d.name ?? "—"}</td>
+                  <td>{d.department ?? "—"}</td>
+                  <td>{d.availabilitySchedule ?? "—"}</td>
+                  <td>{d.email ?? "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
     </div>
   );
 }
