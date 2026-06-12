@@ -1,5 +1,6 @@
 // src/components/Nurse/CareNotes/AddCareNote.jsx
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import PatientSearch from "../PatientSearch";
 
@@ -20,28 +21,18 @@ export default function AddCareNote() {
     };
 
     const handleSubmit = () => {
-        if (!selectedPatient) {
-            setError("Please select a patient first.");
-            return;
-        }
-        if (!note.trim()) {
-            setError("Please enter a care note.");
-            return;
-        }
+        if (!selectedPatient) { setError("Please select a patient first."); return; }
+        if (!note.trim()) { setError("Please enter a care note."); return; }
 
         setLoading(true);
         setError("");
         setSuccess("");
 
-        const payload = {
+        axios.post("http://localhost:9002/api/care-notes/add", {
             patientId: selectedPatient.patientId,
-            nurseId: nurseId,
+            nurseId,
             note: note.trim()
-        };
-
-        axios.post("http://localhost:9002/api/care-notes/add", payload, {
-            headers: { Authorization: `Bearer ${token}` }
-        })
+        }, { headers: { Authorization: `Bearer ${token}` } })
         .then(() => {
             setSuccess(`Care note saved successfully for ${selectedPatient.patientName}!`);
             setNote("");
@@ -53,7 +44,36 @@ export default function AddCareNote() {
 
     return (
         <div>
-            <h5 className="mb-4">📝 Add Care Note</h5>
+
+            {/* Header */}
+            <div className="d-flex align-items-start justify-content-between mb-4">
+                <div>
+                    <h4 className="fw-bold text-dark mb-1">
+                        <i className="bi bi-pencil-square text-success me-2"></i>
+                        Add Care Note
+                    </h4>
+                    <p className="text-muted small mb-0">Search a patient and write a care note</p>
+                </div>
+                <div className="d-flex gap-2">
+                    <Link
+                        to="/nursedd/carenotes/view"
+                        className="btn btn-outline-success d-flex align-items-center gap-2 px-3 py-2"
+                        style={{ borderRadius: "10px", fontSize: "0.875rem", fontWeight: "500" }}
+                    >
+                        <i className="bi bi-journal-text"></i>
+                        View Notes
+                    </Link>
+                    <Link
+                        to="/nursedd/dashboard"
+                        className="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 shadow-sm"
+                        style={{ borderRadius: "10px", fontSize: "0.875rem", fontWeight: "500" }}
+                    >
+                        <i className="bi bi-grid-fill"></i>
+                        Nurse Dashboard
+                        <i className="bi bi-arrow-right" style={{ fontSize: "0.85rem" }}></i>
+                    </Link>
+                </div>
+            </div>
 
             {/* Step 1 - Search Patient */}
             <div className="card mb-4">
@@ -72,10 +92,7 @@ export default function AddCareNote() {
                         ✅ Selected: <strong>{selectedPatient.patientName}</strong>
                         &nbsp;(ID: {selectedPatient.patientId}, {selectedPatient.patientGender})
                     </span>
-                    <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => setSelectedPatient(null)}
-                    >
+                    <button className="btn btn-sm btn-outline-danger" onClick={() => setSelectedPatient(null)}>
                         Change
                     </button>
                 </div>
@@ -98,7 +115,6 @@ export default function AddCareNote() {
                         />
                         <div className="form-text text-end">{note.length} characters</div>
                     </div>
-
                     <button
                         className="btn btn-primary"
                         onClick={handleSubmit}
@@ -109,7 +125,6 @@ export default function AddCareNote() {
                 </div>
             </div>
 
-            {/* Feedback */}
             {success && <div className="alert alert-success">{success}</div>}
             {error && <div className="alert alert-danger">{error}</div>}
         </div>
