@@ -129,17 +129,34 @@ export default function DoctorDD() {
   const headers = { Authorization: "Bearer " + token };
 
   useEffect(() => {
-    if (!email) { setLoading(false); return; }
-    axios.get(`${BASE}/api/doctor/by-email?email=${encodeURIComponent(email)}`, { headers })
-      .then((res) => {
-        setDoctor(res.data);
-        setEditForm({ id: res.data.id, name: res.data.name || "", department: res.data.department || "", availabilitySchedule: res.data.availabilitySchedule || "", email: res.data.email || "" });
-        return axios.get(`${BASE}/api/appointment/doctor/${res.data.id}`, { headers });
-      })
-      .then((res) => setAppointments(res.data || []))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+  if (!email) { setLoading(false); return; }
+
+  axios.get(`${BASE}/api/doctor/by-email?email=${encodeURIComponent(email)}`, { headers })
+    .then((res) => {
+      const doctorData = res.data;
+
+      //if profile is incomplete — redirect to complete profile page
+      if (!doctorData.department || !doctorData.availabilitySchedule) {
+        navigate("/complete-profile");
+        return;
+      }
+
+      setDoctor(doctorData);
+      setEditForm({
+        id:                   doctorData.id,
+        name:                 doctorData.name || "",
+        department:           doctorData.department || "",
+        availabilitySchedule: doctorData.availabilitySchedule || "",
+        email:                doctorData.email || "",
+      });
+      return axios.get(`${BASE}/api/appointment/doctor/${doctorData.id}`, { headers });
+    })
+    .then((res) => {
+      if (res) setAppointments(res.data || []);
+    })
+    .catch(console.error)
+    .finally(() => setLoading(false));
+}, []);
 
   const today         = new Date().toISOString().split("T")[0];
   const todayAppts    = appointments.filter((a) => a.date === today);
@@ -191,9 +208,7 @@ export default function DoctorDD() {
       .then(() => { refreshNotes(notesModal.patient.patientId); showToast("Note deleted", "info"); }).catch(() => showToast("Failed to delete note", "error"));
   }
 
-  // function openManage(appt) { setApptModal(appt); setApptStatus(appt.status); }
-
-  // ── Replace your openManage function with this ───────────────────
+  //openManage function
 function openManage(appt) {
   setApptModal(appt);
   setApptStatus(appt.status);
@@ -202,21 +217,7 @@ function openManage(appt) {
   setRescheduleTime(appt.time?.slice(0, 5) ?? "");
 }
 
-  // function updateAppointment() {
-  //   if (!apptModal) return;
-  //   setApptUpdating(true);
-  //   axios.put(`${BASE}/api/appointment/update`, { appointment: { ...apptModal, status: apptStatus } }, { headers })
-  //     .then((res) => {
-  //       const updated = res.data.appointment;
-  //       setAppointments((prev) => prev.map((a) => a.id === updated.id ? updated : a));
-  //       setApptModal(null);
-  //       showToast(`Appointment status updated to ${updated.status}`);
-  //     })
-  //     .catch(() => showToast("Failed to update appointment", "error")).finally(() => setApptUpdating(false));
-  // }
-
-  
-// ── Replace your updateAppointment function with this ────────────
+//updateAppointment function
 function updateAppointment() {
   if (!apptModal) return;
   setApptUpdating(true);
@@ -225,7 +226,7 @@ function updateAppointment() {
     ...apptModal,
     status: apptStatus,
     reason: apptReason || null,
-    // For RESCHEDULED use new date/time, otherwise keep original
+    // For RESCHEDULED use new date/time
     date: apptStatus === "RESCHEDULED" ? rescheduleDate : apptModal.date,
     time: apptStatus === "RESCHEDULED"
       ? rescheduleTime + ":00"   // backend expects HH:mm:ss
@@ -245,7 +246,6 @@ function updateAppointment() {
     })
     .finally(() => setApptUpdating(false));
 }
-
 
   function saveProfile() {
     setEditSaving(true); setEditError("");
@@ -585,31 +585,6 @@ function updateAppointment() {
       )}
 
       {/* Manage Appointment Modal */}
-      {/* {apptModal && (
-        <Modal title="Manage Appointment" onClose={() => setApptModal(null)}>
-          <div className="bg-body-secondary p-3 rounded-3 mb-4">
-            <div className="fw-semibold mb-1">{apptModal.patient?.patientName}</div>
-            <div className="text-muted" style={{ fontSize: 13 }}>
-              {apptModal.date} · {apptModal.time?.slice(0, 5)}
-            </div>
-            <div className="mt-2"><StatusBadge status={apptModal.status} /></div>
-          </div>
-          <label className="form-label fw-semibold" style={{ fontSize: 13 }}>Update Status</label>
-          <div className="d-flex gap-2 flex-wrap mb-4">
-            {["BOOKED", "COMPLETED", "CANCELLED", "RESCHEDULED"].map((s) => (
-              <button key={s} onClick={() => setApptStatus(s)}
-                className={`btn btn-sm fw-semibold ${apptStatus === s ? "btn-primary" : "btn-outline-secondary"}`}
-                style={{ borderRadius: 8, minWidth: 110 }}>
-                {s}
-              </button>
-            ))}
-          </div>
-          <button onClick={updateAppointment} disabled={apptUpdating} className="btn btn-primary w-100">
-            {apptUpdating ? <><span className="spinner-border spinner-border-sm me-2" />Updating...</> : "Update Appointment"}
-          </button>
-        </Modal>
-      )} */}
-
 {apptModal && (
   <Modal title="Manage Appointment" onClose={() => setApptModal(null)}>
 
@@ -654,7 +629,7 @@ function updateAppointment() {
       })}
     </div>
 
-    {/* New date/time — only for RESCHEDULED */}
+    {/* New date/time - only for RESCHEDULED */}
     {apptStatus === "RESCHEDULED" && (
       <div className="bg-body-secondary p-3 rounded-3 mb-3">
         <label className="form-label fw-semibold" style={{ fontSize: 13 }}>
@@ -729,11 +704,11 @@ function updateAppointment() {
 
   </Modal>
 )}
-
-
-
       <ToastContainer toasts={toasts} />
 
     </div>
   );
 }
+
+
+
