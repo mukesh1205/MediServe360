@@ -37,11 +37,7 @@ public class Doctor {
 	@JsonIgnore
 	private List<Appointment> appointments;
 	
-	@OneToMany(mappedBy="doctor",cascade=CascadeType.ALL)
-	@JsonIgnore
-	private List<Notification> notification;
-	
-	
+
 	public List<Appointment> getAppointments() {
 		return appointments;
 	}
@@ -100,10 +96,4 @@ public class Doctor {
 	}
 	
 }
-
-
-
-
-
-
 
