@@ -34,7 +34,7 @@ public class DashboardController {
     @Autowired
     private InsuranceClaimRepository claimRepo;
 
-    // ✅ RECEPTION DASHBOARD
+    //RECEPTION DASHBOARD
     @GetMapping("/reception")
     public Map<String, Object> getReceptionStats() {
 
@@ -50,25 +50,25 @@ public class DashboardController {
         return data;
     }
 
-    // ✅ FINANCE DASHBOARD
+    //FINANCE DASHBOARD
     @GetMapping("/finance")
     public Map<String, Object> getFinanceStats() {
 
         Map<String, Object> data = new HashMap<>();
 
-        // ✅ Revenue
+        //Revenue
         data.put("totalRevenue", invoiceRepo.getTotalBilledAmount());
 
-        // ✅ Invoices
+        //Invoices
         data.put("totalInvoices", invoiceRepo.count());
         data.put("paidInvoices",
                 invoiceRepo.countByPaymentStatus("PAID"));
 
-        // ✅ Pending claims
+        //Pending claims
         data.put("pendingClaims",
                 claimRepo.countByStatus("PENDING"));
 
-        // ✅ Outstanding (unpaid invoices)
+        //Outstanding (unpaid invoices)
         Double outstanding = invoiceRepo
                 .getTotalAmountByStatus("UNPAID");
 
@@ -77,4 +77,9 @@ public class DashboardController {
         return data;
     }
 }
+
+
+
+
+
 

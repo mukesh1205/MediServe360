@@ -65,9 +65,6 @@ public class Patient {
 	@JsonIgnore
 	private List<InsuranceClaim> claims;
 	
-	@OneToMany(mappedBy="patient",cascade=CascadeType.ALL)
-	@JsonIgnore
-	private List<Notification> notification;
 	
 	public List<InsuranceClaim> getClaims() {
 		return claims;
@@ -165,3 +162,13 @@ public class Patient {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+

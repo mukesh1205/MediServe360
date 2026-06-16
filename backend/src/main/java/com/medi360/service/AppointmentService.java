@@ -45,12 +45,10 @@ public class AppointmentService {
         this.notificationService    = notificationService;
     }
 
-
     private void sendNotification(int userId, String message, String category) {
         try {
             NotificationDTO dto = new NotificationDTO();
-            dto.setDoctorID(userId);
-            dto.setPatientID(0);
+            dto.setUserID(userId);
             dto.setMessage(message);
             dto.setCategory(category);
             dto.setStatus("UNREAD");
@@ -383,6 +381,8 @@ public class AppointmentService {
         return appointmentRepository.findByDoctor_IdAndDateOrderByTimeAsc(doctorId, date);
     }
 }
+
+
 
 
 

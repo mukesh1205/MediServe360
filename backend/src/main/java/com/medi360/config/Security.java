@@ -27,7 +27,7 @@ public class Security {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configure(http)) // ADD THIS LINE — tells Spring Security to use CorsConfig
+                .cors(cors -> cors.configure(http)) 
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -35,12 +35,6 @@ public class Security {
                 			.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-//                        .requestMatchers("/user/insertuserdata").permitAll()
-//                        .requestMatchers("/api/compliance-reports/**").permitAll()
-//                        .requestMatchers("/api/kpi-reports/**").permitAll()
-//                        .requestMatchers("/user/findbyid/{id}").permitAll()
- 
-
 
                         .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/api/patient/**").hasAnyRole("ADMIN", "RECEPTIONIST","NURSE", "DOCTOR")
@@ -56,7 +50,6 @@ public class Security {
 
                         .requestMatchers("/api/kpi-report/**").hasAnyRole("ADMIN","COMPLIANCE_OFFICER")
 
-//                        .requestMatchers("/api/vitals/**").hasAnyRole("ADMIN", "NURSE") 
                         .requestMatchers(HttpMethod.GET, "/api/vitals/**").hasAnyRole("NURSE", "DOCTOR", "ADMIN")
                         .requestMatchers("/api/care-notes/**").hasAnyRole("ADMIN", "NURSE") 
                         
@@ -70,7 +63,7 @@ public class Security {
 
                         .requestMatchers("/api/medical-notes/**").hasAnyRole("ADMIN", "DOCTOR")
 
-//                         audit-logs — GET allowed, POST blocked
+                         //audit-logs : GET allowed, POST blocked
                         .requestMatchers(HttpMethod.GET, "/auditlog/**")
                         .hasAnyRole("ADMIN","COMPLIANCE_OFFICER")
                         .requestMatchers(HttpMethod.POST, "/auditlog/**")
@@ -95,6 +88,7 @@ public class Security {
         return config.getAuthenticationManager();
     }
 }
+
 
 
 
